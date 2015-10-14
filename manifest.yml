@@ -1,0 +1,7 @@
+applications:
+  host: een-api-doc-jp
+  name: een-api-doc-jp
+  path: .
+  domain: ng.bluemix.net
+  instances: 1
+  memory: 256M
