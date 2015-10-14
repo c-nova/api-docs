@@ -4,7 +4,7 @@ source 'http://rubygems.org'
 
 ruby '1.9.3'
 
-gem 'eventmachine', github: 'eventmachine/eventmachine', branch: :master
+# gem 'eventmachine', github: 'eventmachine/eventmachine', branch: :master
 
 gem "rouge", "1.7.2"
 
