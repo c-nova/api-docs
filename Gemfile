@@ -2,6 +2,8 @@
 # the following line to use "https"
 source 'http://rubygems.org'
 
+gem 'eventmachine', github: 'eventmachine/eventmachine', branch: :master
+
 gem "rouge", "1.7.2"
 
 gem "middleman", "~>3.3.0"
