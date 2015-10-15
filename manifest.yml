@@ -5,4 +5,5 @@ applications:
   domain: mybluemix.net
   instances: 1
   memory: 256M
+  buildpack: https://github.com/cloudfoundry/ruby-buildpack#5eac13b5944c4e49ffa7a9fd3ea7ff6daa0ea831
   
