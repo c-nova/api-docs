@@ -2,27 +2,26 @@
 
 ## 概要
 
-Eagle Eye APIにアクセスするには2ステージのプロセスが必要です：
-Gaining access to the Eagle Eye API is a two-stage process: Clients first present their credentials and Realm to obtain a single use Authentication Token. This single use token is valid for 30 seconds or until it has been used. Once the Authentication Token is obtained the Client must utilize it in an Authorize service call to obtain a session ID (via the "auth_key" Cookie) that provides access to resources. This two phase approach allows Clients to authenticate and operate in multiple domains. The first step is done using Authenticate. The second step is done using Authorize. Note that the Authenticate call must be done over an https connection.
+Eagle Eye APIにアクセスするには2ステージのプロセスが必要です： クライアントは初めに使い捨ての認証トークンを取得するために証明書とレルムを示します。この使い捨てトークンは発行されて30秒間または使用されるまで有効です。一度認証トークンを取得した場合は、リソースへのアクセスを行うためのセッションID ("auth-key"クッキーを通じて)を認可サービスを呼び出して利用しなければなりません。この2つのフェーズの手法は、複数のドメインで認証と操作を行うことを提供します。この最初のステップは認証することで完了します。次のステップは認可することで完了します。認証コールはHTTPS接続を使用する必要があることに注意してください。
 
-Once the "auth_key" cookie is obtained from the "Authorize" call, there are 2 methods for which you can use the session ID to make subsequent calls to the API. The first, is simply to pass the "auth_key" cookie with all API requests. The second method, is to take the value of the "auth_key" cookie and pass it in the request as the "A" parameter. The "A" parameter can be used with any method (GET, PUT, POST, DELETE). The order of precedence for session ID retrieval is as follows:
+一度認可コールによって "auth_key" クッキーを取得すると、引き続きAPIをコールするために2つの方法でセッションIDを使用することができます。最初は全てのAPI要求に対して "auth_key" クッキーを単純に渡す方法です。2つ目は"auth_key" クッキーの値を "A" パラメータとして渡す方法です。"A" パラメータはあらゆるメソッド(GET, PUT, POST, DELETE)で使用することが可能です。セッションIDを検索する優先順位は以下のとおりです：
 
-1. "A" parameter in the query string of any method (GET, PUT, POST, DELETE)
-2. "A" parameter in the POST data
-3. "A" parameter in the request body (e.g. PUT)
-4. "auth_key" cookie
+1. 全てのメソッド(GET, PUT, POST, DELETE) のクエリ文字列に含まれる "A" パラメータ
+2. POSTデータ内の "A" パラメータ
+3. 要求ボディ(PUTなど)に含まれる "A" パラメータ
+4. "auth_key" クッキー
 
-All status codes are listed in order of precedence, meaning the first one listed is the one returned if its respective conditions are met, and the last one listed is the one that will be returned if none of the preceding codes' conditions are met.
+ステータス・コードはすべて優先順位でリストされます。最初にリストされたものは、それぞれの条件が満たされる場合に返されたものを意味します。また最後にリストされたものは、それ以前のコードの条件のどれにも合致しなかったことを意味します。
 
 <!--===================================================================-->
-## Step 1: Authenticate
-> Request
+## ステップ 1: 認証
+> 要求
 
 ```shell
 curl -v --request POST https://login.eagleeyenetworks.com/g/aaa/authenticate --data-urlencode "username=[USERNAME]" --data-urlencode "password=[PASSWORD]"
 ```
 
-> Json Response
+> Json応答
 
 ```json
 {
@@ -30,40 +29,40 @@ curl -v --request POST https://login.eagleeyenetworks.com/g/aaa/authenticate --d
 }
 ```
 
-Login is a 2 step process: Authenticate, then Authorize with the token returned by Authenticate.
+ログインは2ステップのプロセスがあります：認証と認証時に返されたトークンを使用した認可です。
 
-### HTTP Request
+### HTTPリクエスト
 
 `POST https://login.eagleeyenetworks.com/g/aaa/authenticate`
 
-Parameter   	| Data Type   
+パラメータ   	| データ形式
 ---------   	| ----------- 
-**username** 	| string      
-**password** 	| string     
+**username** 	| 文字列     
+**password** 	| 文字列    
 
-### Error Status Codes
+### エラー ステータス コード
 
-HTTP Status Code    | Data Type   
+HTTP ステータス コード    | データ形式
 ---------           | ----------- 
-400 | Some argument(s) are missing or invalid
-401 | Supplied credentials are not valid
-402 | Account is suspended
-460 | Account is inactive
-461 | Account is pending
-412 | User is disabled
-462 | User is pending. This will be thrown before 401 if username is valid and Account is active.
-200 | User has been authenticated. Body contains JSON encoded result
+400 | いくつかの引数が不足しているか不正です
+401 | 与えられた認証情報が不正です
+402 | アカウントは休止中です
+460 | アカウントは非アクティブです
+461 | アカウントは保留中です
+412 | アカウントは無効です
+462 | ユーザーは保留中です。これはユーザー名が正しく、アカウントがアクティブな際に 401 の前に投げられます。
+200 | ユーザーが認証されました。ボディにはJSON形式の結果が含まれます
 
 <!--===================================================================-->
-## Step 2: Authorize
+## Step 2: 認可
 
-> Request
+> 要求
 
 ```shell
 curl -D - --request POST https://login.eagleeyenetworks.com/g/aaa/authorize --data-urlencode token=[TOKEN]
 ```
 
-> Json Response
+> Json応答
 
 ```json
 {
@@ -136,29 +135,29 @@ curl -D - --request POST https://login.eagleeyenetworks.com/g/aaa/authorize --da
 }
 ```
 
-Authorize is the second step of the Login process, by using the token from the first step (Authenticate). This returns an authorized user object, and sets the 'auth_key' cookie. For all subsequent API calls, either the cookie can be sent or the value of the cookie can be sent as the 'A' parameter.
+認可はログイン プロセスの2ステップ目で、最初のステップ(認証)で作成されたトークンを使用します。この応答はユーザーオブジェクトの認可を行い、'auth_key'クッキーに設定します。この後に実行するAPIコールでは、可能であればクッキー、またはクッキー内の値を 'A' パラメータとしての、いずれかの方法で送信します。
 
-The host url for API calls can originally be done against "https://login.eagleeyenetworks.com", but after authorization is returned the API should then use the **branded subdomain** as returned from authorization.
-As such the branded host url will become "https://[active_brand_subdomain].eagleeyenetworks.com" where the **active_brand_subdomain** field is returned in the authorization response.
+APIコールを行うホストURLはオリジナルの  "https://login.eagleeyenetworks.com" に対して行いますが、APIは認可後に返される **ブランド サブドメイン** に対して実行しなければなりません。ブランドホストURLは "https://[アクティブなブランド サブドメイン].eagleeyenetworks.com" となり、**アクティブなブランド サブドメイン** フィールドは認可の応答で返されます。
 
-For example after the authorization in the example on the right, the host url should be changed to "https://c001.eagleyenetworks.com".
+認可後の例が右側に表示されていますが、ホストURLは "https://c001.eagleyenetworks.com" に変更されています。
 
-Each account will consistently have the same **branded subdomain** and as such will not change throughout the life of the session.
-Caching the subdomain is safe to do as long as the client software validates against the active_brand_subdomain after authorization.  Using the **branded subdomain** is important for speed and robustness.
+それぞれのアカウントは常に同じ **ブランド サブドメイン** が使用され、同様に同一セッション中も変更されません。
+サブドメインのキャッシュは、認可後の active_brand_subdomain に対してクライアント ソフトウェアの確認をより長期間にすることで安全に保ちます。
+**ブランド サブドメイン**を使用することは、速度と頑健性上重要です。
 
 
-### HTTP Request
+### HTTP要求
 
 `POST https://login.eagleeyenetworks.com/g/aaa/authorize`
 
-Parameter   | Data Type		
+パラメータ   | データ形式
 ---------	| -----------   
-**token**   | string      	
+**token**   | 文字列
 
-### Error Status Codes
+### エラー ステータス コード
 
-HTTP Status Code    | Data Type   
----------           | ----------- 
-400 | Some argument(s) are missing or invalid
-401 | Invalid Token supplied
-200 | User has been authorized for access to the realm
+HTTP ステータス コード    | データ形式
+----------           | ----------- 
+400 | いくつかの引数が不足しているか不正です
+401 | 不正なトークンが渡されました
+200 | ユーザーはレルムに対してのアクセスを認可されました
