@@ -1,13 +1,13 @@
-# User
+# ユーザー
 
 <!--===================================================================-->
-## Overview
-If a user isn't requesting their own user record, these apis requires SuperUser or AccountSuperUser (if accounts match) permissions. If no id is passed in the request, then it will attempt to get the data for the user that is authenticated and making the call.
+## 概要
+もしユーザーが自分自身以外の情報を要求する場合は、これらのAPIはスーパーユーザーまたはアカウント スーパーユーザー (もしアカウントが適合する場合) 権限を必要とします。もしユーザーIDを指定しなかった場合、APIは認証されコールしたユーザーのデータを取得しようと試みます。
 
 <!--===================================================================-->
-## User Model
+## ユーザー モデル
 
-> User Model
+> ユーザー モデル
 
 ```json
 {
@@ -78,53 +78,53 @@ If a user isn't requesting their own user record, these apis requires SuperUser 
 }
 ```
 
-### User Attributes
+### ユーザー属性
 
-Parameter               | Data Type     | Description
+パラメータ               | データ形式     | 説明
 ---------               | -----------   | -----------
-id                      | string        | Unique identifier for Authorized User
-first_name              | string        | First name of Authorized User
-last_name               | string        | Last name of Authorized User
-email                   | string        | Email of Authorized User (* this email must only contain ASCII characters)
-owner_account_id        | string        | Unique identifier of user's Account
-active_account_id       | string        | Unique identifier of user's active Account
-uid                     | string        | UID
-is_superuser            | int           | Is the user a Super User
-is_account_superuser    | int           | Is the user an Account Super User
-is_staff                | int           | Is the user a Staff User
-is_active               | int           | Is the user Active
-is_pending              | int           | Is the user a Pending user
-is_master               | int           | Is the user in a Master Account
-is_user_admin           | int           | Is the user a User Admin
-is_layout_admin         | int           | Is the user a Layout Admin
-is_live_video           | int           | Is the user authorized to access Live Video
-is_device_admin         | int           | Is the user a Device Admin
-is_export_video         | int           | Is the user authorized to Export Video
-is_recorded_video       | int           | Is the user authorized to view Recorded Video
-street                  | array[string] | Street Address as array [address line 1, address line 2, ...])
-city                    | string        | City
-state                   | string        | State
-country                 | string        | Country
-postal_code             | string        | Postal Code
-phone                   | string        | Phone number
-mobile_phone            | string        | Mobile phone number
-utc_offset              | int           | Timezone offset from UTC in seconds (signed integer)
-timezone                | string        | Timezone
-last_login              | string        | Last time the user logged in, in EEN timestamp format: YYYYMMDDHHMMSS.NNN
-alternate_email         | string        | Alternate email address
-sms_phone               | string        | SMS phone number
-is_sms_include_picture  | int           | Include picture in sms notifications
+id                      | 文字列        | 認可されたユーザーの一意な識別子
+first_name              | 文字列        | 認可されたユーザーの名
+last_name               | 文字列        | 認可されたユーザーの姓
+email                   | 文字列        | 認可されたユーザーのEメール (* このEメールはASCII文字のみ必要)
+owner_account_id        | 文字列        | ユーザーアカウントの一意な識別子
+active_account_id       | 文字列        | アクティブなユーザーアカウントの一意な識別子
+uid                     | 文字列        | UID
+is_superuser            | 整数           | ユーザーはスーパーユーザーか
+is_account_superuser    | 整数           | ユーザーはアカウント スーパーユーザーか
+is_staff                | 整数           | ユーザーはスタッフ ユーザーか
+is_active               | 整数           | ユーザーはアクティブか
+is_pending              | 整数           | ユーザーは保留されたユーザーか
+is_master               | 整数           | マスターアカウントのユーザーか
+is_user_admin           | 整数           | ユーザーユーザーユーザー管理者か
+is_layout_admin         | 整数           | ユーザーはレイアウト管理者か
+is_live_video           | 整数           | ユーザーはライブ動画へのアクセス認可があるか
+is_device_admin         | 整数           | ユーザーはデバイス管理者か
+is_export_video         | 整数           | ユーザーは動画のエクスポート認可があるか
+is_recorded_video       | 整数           | ユーザーは録画された動画の閲覧認可があるか
+street                  | 配列[文字列] | 配列化された住所 [住所 1, 住所 2, ...])
+city                    | 文字列        | 都市、市区町村
+state                   | 文字列        | 州、都道府県
+country                 | 文字列        | 国
+postal_code             | 文字列        | 郵便番号
+phone                   | 文字列        | 電話番号
+mobile_phone            | 文字列        | 携帯電話番号
+utc_offset              | 整数           | UTCと設定タイムゾーンとの差分秒 (符号付き整数)
+timezone                | 文字列        | タイムゾーン
+last_login              | 文字列        | ユーザーのEENタイムスタンプ形式 (YYYYMMDDHHMMSS.NNN) での最終ログイン時間 
+alternate_email         | 文字列        | その他のEメールアドレス
+sms_phone               | 文字列        | SMS 電話番号
+is_sms_include_picture  | 整数           | SMS通知に写真を含めるか
 json                    | [UserJson](#userjson-attributes) | Misc settings for the user as a JSON string
-camera_access           | array[string] | List of devices (IDs) the user has access to
-layouts                 | array[string] | List of layouts (IDs) the user has access to
-is_notify_enable        | int           | Is notifications enabled for the User
-notify_period           | array[string] | List of notification time periods, in the form: D-HHMM-HHMM
-notify_rule             | array[string] | List of notification rules, in the form: id-type-delay (e.g. one-email-0)
-is_branded              | int           | Is the user associated with an account that currently has branding enabled
-active_brand_subdomain  | string        | If the user is associated with an account that has brandinge enabled, this will have that brand's subdomain if one exists
+camera_access           | 配列[文字列] | List of devices (IDs) the user has access to
+layouts                 | 配列[文字列] | List of layouts (IDs) the user has access to
+is_notify_enable        | 整数           | Is notifications enabled for the User
+notify_period           | 配列[文字列] | List of notification time periods, in the form: D-HHMM-HHMM
+notify_rule             | 配列[文字列] | List of notification rules, in the form: id-type-delay (e.g. one-email-0)
+is_branded              | 整数           | Is the user associated with an account that currently has branding enabled
+active_brand_subdomain  | 文字列        | If the user is associated with an account that has brandinge enabled, this will have that brand's subdomain if one exists
 account_map_lines       | ???           | 
 access_period           | ???           | 
-is_terms_noncompliant   | int           | True if user has not accepted terms of service
+is_terms_noncompliant   | 整数           | True if user has not accepted terms of service
 
 ### UserJson Attributes
 
