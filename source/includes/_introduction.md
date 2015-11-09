@@ -1,5 +1,11 @@
 # はじめに
 
+このAPIドキュメントページはEagle Eye Networksが作成したものを、株式会社イグアスが独自に日本語化したものです。
+
+**最新版または英語版のAPIドキュメントは、[こちら](http://www.eagleeyenetworks.com/cloud-video-surveillance-API/)を御覧ください。**
+
+**またEagle Eye製品の詳しい説明は、[株式会社イグアス Eagle Eye製品ページ](http://www.iguazu-eagleeye.jp/)を御覧ください。**
+
 Eagle Eye ビデオAPIは録画やインデックス化、カメラ動画の保管を包括的にサポートするRESTベースのAPIです。
 Eagle Eye ビデオAPIはカメラに関連する動画の録画やクラウドへのセキュアなビデオ転送、動画保管、自分のアプリケーションで利用するための動画作成など、負荷の高い作業を取り扱います。
 Eagle Eye セキュリティ カメラ VMSのユーザーインターフェース（Web、iOS、Android）は、全てこのAPIを使用して作られています。
