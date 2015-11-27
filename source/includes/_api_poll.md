@@ -1,7 +1,7 @@
-# Poll
+# ポーリング
 
 <!--===================================================================-->
-## Overview
+## 概要
 
 The poll service provides a mechanism for an application to receive notifications of events or spans from the Eagle Eye service. These entities are grouped by resource. There are five main resources:
 

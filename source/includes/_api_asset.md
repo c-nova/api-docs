@@ -1,7 +1,7 @@
-# Images and Video
+# 画像と動画
 
 <!--===================================================================-->
-## Overview
+## 概要
 
 Asset services provide access to media assets - previews and video in appropriate formats. Asset services are used in conjunction with list transactions to enumerate and identify assets.
 

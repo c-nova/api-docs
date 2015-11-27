@@ -1,9 +1,9 @@
-# Account
+# アカウント
 
 <!--===================================================================-->
-## Overview
+## 概要
 
-The account service allows managing accounts by superusers and account_superusers.
+アカウントサービスはスーパーユーザー及びアカウントスーパーユーザーによって管理します。
 
 <!--===================================================================-->
 ## Account Model

@@ -1,7 +1,7 @@
-# Png Span
+# PGスパン
 
 <!--===================================================================-->
-## Overview
+## 概要
 
 This service offers native PNG span rendering to support metric visualization. For spans, the image is filled with the foreground color where the specified span is active, and with the background where it is inactive. At least one pixel will be filled for a span, independent of scale, though the span may overlap others. For etags, one pixel is filled for each active event, but as with spans the pixel may overlap others.
 

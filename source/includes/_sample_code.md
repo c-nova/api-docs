@@ -1,7 +1,7 @@
-# How To's and Example Code
+# 使い方とサンプルコード
 
 <!--===================================================================-->
-## Making API Calls With Curl
+## Curlを使ってAPIコールを作成するには
 In this section, we will walk you through the process of making API requests using the ‘curl’ command line tool. The Eagle Eye APIs are platform agnostic and we use them to create the web, Android, and iOS Eagle Eye clients. Curl is a tool for transferring data to and from a server, using a wide range of supported protocols, including HTTP/HTTPS, which is what we are interested in. Curl can be installed by going to this site. http://curl.haxx.se/.
 
 With curl installed, the next step is to log in and have a valid session, so that we can freely use any of the APIs. Logging in, is a two step process consisting of authentication and authorization. The authentication API takes in 2 parameters. Our curl common will look like this. The [USERNAME] and [PASSWORD] need to be valid for the API request to return successfully.
@@ -37,7 +37,7 @@ curl --cookie "auth_key=[AUTH_KEY]" --request GET https://login.eagleeyenetworks
 The ‘auth_key’ cookie will need to be set for any other Eagle Eye API that requires a valid session.
 
 <!--===================================================================-->
-## Constructing Layouts
+## レイアウトを作成する
 
 > Get /layout/list
 
@@ -152,7 +152,7 @@ This is the algorithm at a high level, though the specifics can get a little mor
 The ease of constructing layouts is highly dependent on the robustness of the 3rd party library. In the case that one does not exist, we fall back to our home grown packing algorithm.
 
 <!--===================================================================-->
-## Playing Live Video
+## ライブビデオを再生する
 Video playback functionality can be accessed through the ‘/asset/play/video.{video_format}’ API. We will show you how to use this API to play live video, though the same API can also be used to play historic video.
 
 Below is the Javascript code that creates the URL for playing live video footage with a HTML flash video player. You can run the javascript code on this site to generate the URL string. http://writecodeonline.com/javascript/.
@@ -182,7 +182,7 @@ https://login.eagleeyenetworks.com/strobe/embed.html?autoPlay=true&src=https%3A%
 `
 
 <!--===================================================================-->
-## Long Polling
+## 長期ポーリング
 
 > Json Request for Post /poll
 

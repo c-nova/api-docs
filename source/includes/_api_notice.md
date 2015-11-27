@@ -1,4 +1,4 @@
-# Terms of Service
+# 利用規約
 
 The following API endpoints are to facilitate presenting and accepting the **Terms of Service**.
 Eagle Eye Networks has their own terms of services which will be presented through the [Get Terms of Service for User](#get-terms-of-service-for-user).

@@ -1,7 +1,7 @@
-# Feedback
+# フィードバック
 
 <!--===================================================================-->
-## Overview
+## 概要
 
 This service allows users to send feedback to support.
 

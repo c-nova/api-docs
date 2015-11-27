@@ -1,4 +1,4 @@
-# Definition of Terms
+# 用語
 
 **Eagle Eye Video Bank (EEVB)**
 <br>The service that Eagle Eye provides that safely, securely, and easily stores video from surveillance and other cameras, allows access via the world wide web, and provides a comprehensive control and management platform for multi camera surveillance.

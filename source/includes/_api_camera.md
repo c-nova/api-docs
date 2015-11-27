@@ -1,13 +1,13 @@
-# Camera
+# カメラ
 
 <!--===================================================================-->
-## Overview
+## 概要
 
 The Device service allows access to create new logical devices (Cameras or Bridges) and establish a relationship between logical and physical devices. Get method is available to any user with camera ‘R’ (read) permission. Methods Post, Delete are available to account super users and users with Camera ‘W’ (write) permissions for the indicated camera. Put method is only available to account super users.
 
 When adding a new camera, the name and settings parameters are required. The settings parameter should contain the id of the bridge and the guid of the camera.
 
-### Camera Settings Overview
+### カメラ設定の概要
 
 The camera setting system is based on an inheritance model. User settings are “overlayed” on top of default settings for a device. By removing the user settings, the camera setting will automatically go back to the default value provided and maintained by Eagle Eye for the camera.
 
@@ -26,7 +26,7 @@ The set of all settings is potentially large, and far more than most users will 
 
 An implication of this model the “user settings” object is a generic object that is only lightly interpreted by the device. Settings that match a known names (ie are within the camera base or mmv settings) will be utilized, but all values will be stored and returned as part of the “user settings” field. This can be used to support user interface elements on a per camera basis with values the bridge/camera do not interpret.
 
-### Read Camera Settings (GET device "camera_settings" property)
+### カメラ設定の読込 (GET device "camera_settings" property)
 
 When getting the camera settings, a JSON string representing a JSON object is returned containing:
 
@@ -66,21 +66,21 @@ When getting the camera settings, a JSON string representing a JSON object is re
           * list of integers
       * if both “days” fields are set, the action will be run on the union
 
-### Update Camera Settings (POST device "camera_settings_add" argument)
+### カメラ設定の更新 (POST device "camera_settings_add" argument)
 
 To update/set settings (i.e. override default setting value with a "user" setting), a JSON string is sent representing a JSON object containing:
 
 * “settings”: an optional object with members to be overlayed over base settings value. Values are bare (that is simply replacements for the “v” field of base)
 * “schedules”: an optional object with 1 or more members, each a schedule object per the get description. Note schedules with the same name will be replaced in the their entirety with the new value.
 
-### Delete Camera Settings (POST device "camera_settings_delete" argument)
+### カメラ設定の削除 (POST device "camera_settings_delete" argument)
 
 To delete/unset settings (i.e. return to default setting value), a JSON string is sent representing a JSON object containing:
 
 * “settings”: an optional object with members to be removed from user settings. Values ignored.
 * “schedules”: an optional object with 1 or more members, each a the name of a current schedule. Value of the members are ignored.
 
-### Camera Settings Currently Supported
+### 現在サポートしているカメラ設定
 
 Each camera make/model/version is different, thus not every setting is supported for some cameras, but here is list of core camera settings that are relevant to most applications:
 
@@ -116,7 +116,7 @@ Each camera make/model/version is different, thus not every setting is supported
 * "video_quality": string indicating the quality of the video
 * "video_config": READ-ONLY object defining all the preview/video configuration parameters for each available resolution. Helps give useful information for display purposes of the "preview_resolution", "video_resolution", and "video_bandwidth_factor" settings/options.
 
-### Regions of Interest (ROIs)
+### 注目画像領域 (ROIs)
 
 ROIs will be defined by simple polygons - sequences of x,y coordinates that form a closed object, edge crosses are illegal and will have bizarre results. Each ROI will describe a portion of the screen. ROIs can overlap, and priority (higher wins) determines what sensitivity settings to use. For overlapping ROIs, all will get motion block detection and can trigger ROI motion spans.
 
@@ -148,7 +148,7 @@ ROME
 * eventid(guint32) - unique to this event
 
 <!--===================================================================-->
-## Camera Model
+## カメラのモデル
 
 > Camera Model
 
@@ -962,7 +962,7 @@ ROME
 }
 ```
 
-### Device Attributes
+### デバイスの属性
 
 Parameter                     | Data Type         | Description
 ---------                     | ---------------   | -----------
@@ -980,7 +980,7 @@ camera_parameters_status_code | int               | 200 if camera_parameters wer
 camera_info                   | [DeviceCameraInfo](#devicecamerainfo-attributes)  | Camera related info, which only applies to devices that are cameras
 camera_info_status_code       | int               | 200 if camera_info was retrieved. 404 if camera_info was unable to be retrieved.
 
-### DeviceSettings Attributes
+### DeviceSettingsの属性
 
 Parameter           | Data Type                         | Description
 ---------           | ---------------                   | -----------
@@ -1005,7 +1005,7 @@ cloud_retention_days| json                              | JSON object of retenti
 bridge_retention_days| json                             | JSON object of retention days on the bridge e.g. ``{"max": 10000,"min": 1,"d": 14,"v": 14}``
 * Note local_retention_days and cloud_retention_days are meaningless in **CMVR** mode
 
-### DeviceCameraInfo Attributes
+### DeviceCameraInfoの属性
 
 Parameter           | Data Type         | Description
 ---------           | ---------------   | -----------
@@ -1036,38 +1036,38 @@ esn                 | string            | ESN id
 admin_user          | string            | Web Username
 admin_password      | string            | Web Password
 
-### DeviceSettingsRoiNames Attributes
+### DeviceSettingsRoiNamesの属性
 
 Parameter   | Data Type         | Description
 ---------   | ---------------   | -----------
 roi_id      | string            | Object with keys being ROI IDs, and values being the name.
 
-### DeviceSettingsAlertNotifications Attributes
+### DeviceSettingsAlertNotificationsの属性
 
 Parameter   | Data Type         | Description
 ---------   | ---------------   | -----------
 roi_id      | array[string]     | Object with keys being ROI IDs, and values being the array of User IDs
 
-### DeviceSettingsAlertModes Attributes
+### DeviceSettingsAlertModesの属性
 
 Parameter   | Data Type         | Description
 ---------   | ---------------   | -----------
 roi_id      | array[string]     | Object with keys being ROI IDs, and values being the array of alert modes
 
-### DeviceSettingsAlertLevels Attributes
+### DeviceSettingsAlertLevelsの属性
 
 Parameter   | Data Type         | Description
 ---------   | ---------------   | -----------
 roi_id      | array[string]     | Object with keys being ROI IDs, and values being the array of alert levels
 
-### DeviceBridges Attributes
+### DeviceBridgesの属性
 
 Parameter   | Data Type         | Description
 ---------   | ---------------   | -----------
 device_id   | string            | Object with keys being Bridge Device IDs, and values being the service status of the camera on that bridge
 
 <!--===================================================================-->
-## Get Camera
+## カメラの取得
 
 > Request
 
@@ -1077,7 +1077,7 @@ curl -G https://login.eagleeyenetworks.com/g/device -d "A=[AUTH_KEY]&id=[CAMERA_
 
 Returns camera object by id
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/g/device`
 
@@ -1085,7 +1085,7 @@ Parameter     | Data Type   | Description
 ---------     | ----------- | ----------- 
 **id**        | string      | Camera Id
 
-### Error Status Codes
+### エラー状態コード
 
 HTTP Status Code    | Data Type   
 ------------------- | ----------- 
@@ -1095,7 +1095,7 @@ HTTP Status Code    | Data Type
 403 | Forbidden due to the user missing the necessary privileges
 
 <!--===================================================================-->
-## Add Camera to Bridge
+## ブリッジにカメラを追加する
 
 > Request
 
@@ -1113,7 +1113,7 @@ curl --cookie "auth_key=[AUTH_KEY]" -X PUT -v -H "Authentication: [API_KEY]:" -H
 
 Adds an Unattached Camera to the Bridge
 
-### HTTP Request
+### HTTP要求
 
 `PUT https://login.eagleeyenetworks.com/g/device`
 

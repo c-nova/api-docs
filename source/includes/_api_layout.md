@@ -1,7 +1,7 @@
-# Layout
+# レイアウト
 
 <!--===================================================================-->
-## Overview
+## 概要
 
 Layouts contain panes, which is a group of cameras arranged for viewing on screen. Layouts are associated with an account and account users are granted view/write/share permissions for the layout. Users who would otherwise have no access to a cameras, gain access to all cameras included in layouts shared with them.
 

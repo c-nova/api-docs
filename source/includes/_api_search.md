@@ -1,7 +1,7 @@
-# Search
+# 検索
 
 <!--===================================================================-->
-## Overview
+## 概要
 
 This service allows for search across various types of data. Currenlty only supports recordings and annotations, but support for other types of data is coming soon.
 

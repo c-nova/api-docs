@@ -1,7 +1,7 @@
-# Action
+# アクション
 
 <!--===================================================================-->
-## Overview
+## 概要
 
 This service defines several macro actions that can be attached to devices. These are convenience functions. The same functionality provided herein can also be accomplished via individual setting calls. Most actions can be scheduled to occur now or at some point in the future.
 

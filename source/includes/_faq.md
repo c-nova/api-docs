@@ -1,4 +1,4 @@
-# FAQ
+# よくある質問
 
 **Who can use the Eagle Eye APIs?**
 <br>The Eagle Eye Video API are publicly open for anyone to use. Users will need a valid API key to successfully make API calls.
