@@ -3,32 +3,38 @@
 <!--===================================================================-->
 ## 概要
 
-The Device service allows access to create new logical devices (Cameras or Bridges) and establish a relationship between logical and physical devices. Get method is available to any user with camera ‘R’ (read) permission. Methods Post, Delete are available to account super users and users with Camera ‘W’ (write) permissions for the indicated camera. Put method is only available to account super users.
+デバイスサービスはアクセスを行うために、新しい論理デバイス（カメラまたはブリッジ）の作成と、論理及び物理デバイス間の関係性を成立させることを許可します。
+Getメソッドは全てのユーザーに対し 'R'（読み取り）権限を有効にします。
+Post及びDeleteメソッドはアカウントスーパーユーザーとユーザーに対し、選択されたカメラについての 'W'（書き込み）権限を有効にします。
+Putメソッドはアカウントスーパーユーザーでのみ有効です。
 
-When adding a new camera, the name and settings parameters are required. The settings parameter should contain the id of the bridge and the guid of the camera.
+新規カメラを追加する際には、名前と設定パラメータが必要です。
+設定パラメータにはブリッジIDとカメラのGUIDが含まれます。
 
 ### カメラ設定の概要
 
-The camera setting system is based on an inheritance model. User settings are “overlayed” on top of default settings for a device. By removing the user settings, the camera setting will automatically go back to the default value provided and maintained by Eagle Eye for the camera.
+カメラ設定システムは継承モデルを基本とします。
+ユーザー設定はデバイスのデフォルト設定の最上位を "覆って" います。
+ユーザー設定を消去すると、カメラ設定は自動的にEagle Eyeが用意したそのカメラのデフォルトの値に戻されます。
 
-Under the covers this works as follows:
+この作業は以下の内容を包括します:
 
-* There is a default setting, range, and value for everything built into the code, guaranteeing there are always settings for any feature supported by the software. These values are defined when the feature is implemented in software.
-* There is an optional "global" setting file that can/will be distributed during patches/updates that can override and extend default settings, including changing valid ranges etc. As with 1, this is a constant across all bridges that get the upgrade. It is tweaked for system policy changes like different upload bandwidth, default schedules etc. which do not imply code changes.
-* There is an optional per make/model/version file, part of the make/model/version driver deployment, that can add and adjust settings for anything above. This is used to optimize things like sensitivity or codec parameters while building the driver for the specific device, and is released a camera driver is updated. This is also where camera specific features (audio availability) is announced.
-* The first three get merged to produce the base settings for the the camera, which defines the value, min, and max for every supported feature.
-* User settings (things the user has consciously "taken control of") are dynamically overlay-ed on the above settings inheritance to produce the active settings on the camera.
-* Any scheduled or triggered changes are then overlayed on top create the running settings (so upload bandwidth can be changed in a schedule to something different from the users settings, which is also different from the system default, and when the schedule is “removed” the bandwidth will go back to the user value.
+* コードに組み込まれたデフォルトの設定、範囲と値は保証されたいかなる設定も、ソフトウェアの全ての機能についてサポートされます。これらの値はソフトウェアに実装される際に定義されます。
+* オプションとして存在する "グローバル"設定ファイルは パッチまたは更新によってデフォルトの値及び範囲などは上書きまたは拡張されます。上記と同様に、これはアップグレードされる全てのブリッジに適用されます。これらはコードの変更を伴わない、異なるアップロード帯域幅やデフォルトのスケジュールのようなシステムポリシーについても変更を及ぼします。
+* オプションとして make/model/version ファイル（make/model/version ドライバデプロイメントの一部）については、上記にまつわる設定の追加、調整が可能です。これらは特定の装置用にビルドされたドライバの感度やコーデックパラメータの最適化やカメラドライバの更新に使用されます。これは同じくカメラの特定の機能（音声の有効化）のアナウンスにも使用されます。
+* 上記3点は各サポートされる機能ごとに、値や最大、最小値の定義などカメラの基本設定として結合して提供されます。
+* ユーザーが設定（ユーザーが意図的に変更したもの）したものについては、上記の設定に対し動的に覆い、継承してカメラに設定されます。
+* あらゆるスケジュールまたはトリガーは、実行中の設定によって最上位に覆われて変更されることがあります（アップロード帯域幅はユーザー設定とも、システムのデフォルトとも異なるスケジュールに変更されることがあります）が、スケジュールが"除去"されることでユーザー設定の値に戻ります。
 
-The implication of this is that if a user has not "pinned" a setting by changing/managing it, it will track any system or make/model/version release updates. That is, EEN can optimize operating parameters and they will automatically propagate unless the user has changed/pinned them. Further, the user should be "aware" of this, which works well with an open/closed control metaphor or a check box - an y setting control that is open/checked is "manually" set by the user, whereas closed controls will track EEN system wide recommendations. Finally, it is expected that the “user” settings will be managed to be only the value specifically modified by users, not all settings.
+この実装はユーザーがその設定の変更/管理によって "ピン留め" されていない場合、全てのシステムまたは make/model/version リリースのアップデートに追従します。つまり、ユーザーがそれら設定の変更/ピン留めをしていない限り、EENは操作パラメータを最適化させ、自動的に伝播させることが可能となります。さらに、ユーザーは特に オープン/クローズ制御型やチェックボックスによる項目- ユーザーによって "手動で" オープン設定にされた制御項目は問題なく動作しますが、クローズ設定はEENによってシステム全体で推奨設定に追随して設定されることに注意が必要です。最後に、全ての設定ではありませんが、特にユーザーによって変更された値は、"ユーザー"によってのみ管理が行われ、これらの追随から除外されます。
 
-The set of all settings is potentially large, and far more than most users will ever want or need to manage. A separate table will be maintained which lists the “normal” settings - settings most users may want to interact with. This is standard across all devices, and contains a list of settings names that should be accessible to the user. This list should be “joined” with the list of all settings to result in a subset of controls to be displayed in basic mode. An advanced mode should make all settings available with primitive controls to set or delete a value.
+全ての設定セットは、多くののユーザーにとって必要であるよりも潜在的に大きいか、はるかに大きくなっています。ほとんどのユーザーが相互に必要とする設定 - "通常"設定は、それぞれのテーブルで管理されています。このリストは、リスト内の通常モードで表示されるコントロールのサブセットに含まれる全ての設定と"結合"されている必要があります。高度なモードでは全ての設定項目は基本設定と共に値のセットまたは削除が可能です。
 
-An implication of this model the “user settings” object is a generic object that is only lightly interpreted by the device. Settings that match a known names (ie are within the camera base or mmv settings) will be utilized, but all values will be stored and returned as part of the “user settings” field. This can be used to support user interface elements on a per camera basis with values the bridge/camera do not interpret.
+このモデルに反する "ユーザー設定" オブジェクトは、デバイスによって必要最小限の介入を受ける一般オブジェクトです。既知の名前（例えばカメラベースまたはmmv設定）に合致する設定は利用されますが、全ての値は"ユーザー設定"フィールドに格納され、返されます。これはブリッジ/カメラが介入しない値を持つカメラの原則により、ユーザー インターフェイス要素をサポートするために利用されます。
 
 ### カメラ設定の読込 (GET device "camera_settings" property)
 
-When getting the camera settings, a JSON string representing a JSON object is returned containing:
+カメラ設定を取得すると、JSONオブジェクトは以下のJSON文字列として返されます:
 
   * “active_settings”: A set of named entities encapsulating all settings understood for this device. Each entity contains an object of
     * “v”: the current value of the setting, as influenced by filters on top of base settings
