@@ -56,7 +56,7 @@ The third way is to get the next 500 images after April 1st:
 
 <h3>Retrieve Video</h3>
 <p>
-    Video is accessed via the “play” command.  Video is captured in segments, and is limited to 5 minutes per segment in storage.  The video command will seamlessly rewrite headers within the video format to join segments as necessary to deliver the requested data span.
+    Video is accessed via the “play” command.  Video is captured in segments, and is limited to 5 minutes per segment in storage.  The video command will seamlessly rewrite headers within the video format to join segments as necessary to deliver the requested data span. However, we highly encourage developers to fetch only 5 minutes at a time to ensure that users aren't filling storage on their bridge needlessly.
 </p>
 <p>
     If the end time of the segment is in the future, the video will follow the data stream as it arrives, delivering live video streaming with minimal latency.  MP4 format cannot be live streamed.  Note: if the camera is not streaming video, the video will stop (and start again) as video is captured, which is typically not what is desired.

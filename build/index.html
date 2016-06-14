@@ -116,7 +116,7 @@
 <blockquote>
 <p>Request</p>
 </blockquote>
-<pre><code class="highlight shell">curl --request POST https://login.eagleeyenetworks.com/g/aaa/authenticate --data <span class="s2">"username=[USERNAME]&amp;password=[PASSWORD]"</span>
+<pre><code class="highlight shell">curl -v --request POST https://login.eagleeyenetworks.com/g/aaa/authenticate --data-urlencode <span class="s2">"username=[USERNAME]"</span> --data-urlencode <span class="s2">"password=[PASSWORD]"</span>
 </code></pre>
 
 <blockquote>
@@ -400,7 +400,8 @@ Caching the subdomain is safe to do as long as the client software validates aga
     </span><span class="s2">"is_branded"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
     </span><span class="s2">"active_brand_subdomain"</span><span class="p">:</span><span class="w"> </span><span class="s2">"login"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"account_map_lines"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"access_period"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+    </span><span class="s2">"access_period"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="s2">"is_terms_noncompliant"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
@@ -623,6 +624,11 @@ Caching the subdomain is safe to do as long as the client software validates aga
 <td>???</td>
 <td></td>
 </tr>
+<tr>
+<td>is_terms_noncompliant</td>
+<td>int</td>
+<td>True if user has not accepted terms of service</td>
+</tr>
 </tbody></table>
 
 <h3 id="userjson-attributes">UserJson Attributes</h3>
@@ -664,6 +670,16 @@ Caching the subdomain is safe to do as long as the client software validates aga
 <td>layout_rotation_seconds</td>
 <td>int</td>
 <td>If set, indicates how long to wait between layout changes during auto-rotation. If not set or set to 0, then no auto-rotation will occur.</td>
+</tr>
+<tr>
+<td>motion_boxes</td>
+<td>boolean</td>
+<td>Determines if motion boxes should be shown</td>
+</tr>
+<tr>
+<td>notify_levels</td>
+<td>array[int]</td>
+<td></td>
 </tr>
 </tbody></table>
 
@@ -4072,7 +4088,7 @@ notify_rule           | array   | Contains alert notification rules Each rule co
 
 <h3 id="retrieve-video">Retrieve Video</h3>
 
-<p>Video is accessed via the “play” command. Video is captured in segments, and is limited to 5 minutes per segment in storage. The video command will seamlessly rewrite headers within the video format to join segments as necessary to deliver the requested data span.</p>
+<p>Video is accessed via the “play” command. Video is captured in segments, and is limited to 5 minutes per segment in storage. The video command will seamlessly rewrite headers within the video format to join segments as necessary to deliver the requested data span. However, we highly encourage developers to fetch only 5 minutes at a time to ensure that users aren&rsquo;t filling storage on their bridge needlessly.</p>
 
 <p>If the end time of the segment is in the future, the video will follow the data stream as it arrives, delivering live video streaming with minimal latency. MP4 format cannot be live streamed. Note: if the camera is not streaming video, the video will stop (and start again) as video is captured, which is typically not what is desired.</p>
 
@@ -4093,6 +4109,8 @@ notify_rule           | array   | Contains alert notification rules Each rule co
 <li>mp4: MPEG4 files have very broad playback compatibility - all major video player are compatible. However, mp4 is NOT a streamable format, so it is only used for download functionality and will return an error if the video is live.</li>
 <li>m3u8: Use the M3U8 play list format. Use this for mobile devices as it uses the HTTP layer to stream MPEG TS files with instructions in the M3U8 playlist file. Continue polling for this playlist until the playlist indicates it is complete.</li>
 </ul>
+
+<p>Note: If you choose to stream any video format on the web other than FLV (Our native format as mentioned above), you may initially get a 502 response. This means that the video is currently being transcoded within our system and therefore couldn&rsquo;t be found. Assuming the data actually exists (check against the video list call), the video will eventually be ready for you to fetch in the desired format, but, for the time being, you will have to wait and refetch until the requested video is ready. </p>
 
 <h3 id="video-quality">Video Quality</h3>
 
@@ -4226,7 +4244,7 @@ content-type: image/jpeg </li>
 <p>Returns a video stream in the requested format. Formats include</p>
 
 <ul>
-<li>flv</li>
+<li>flv (The recommended format for web streaming)</li>
 <li>mp4</li>
 <li>m3u8</li>
 <li>webm</li>
@@ -8596,22 +8614,23 @@ Users are not required to accept terms of the same version again, so if users sh
 <pre><code class="highlight json"><span class="p">[</span><span class="w">
     </span><span class="p">[</span><span class="w">
         </span><span class="s2">"00004206"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"Greater Good"</span><span class="p">,</span><span class="w">
-        </span><span class="mi">2</span><span class="p">,</span><span class="w">
-        </span><span class="mi">2</span><span class="p">,</span><span class="w">
-        </span><span class="mi">2</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"Greater God"</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">1</span><span class="p">,</span><span class="w">
         </span><span class="mi">0</span><span class="p">,</span><span class="w">
         </span><span class="mi">0</span><span class="p">,</span><span class="w">
         </span><span class="mi">1</span><span class="p">,</span><span class="w">
         </span><span class="kc">null</span><span class="p">,</span><span class="w">
-        </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="mi">1</span><span class="p">,</span><span class="w">
         </span><span class="mi">0</span><span class="p">,</span><span class="w">
         </span><span class="mi">0</span><span class="p">,</span><span class="w">
-        </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"20141022214539.000"</span><span class="p">,</span><span class="w">
-        </span><span class="mf">14.0</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"20160228234555.722"</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"Greater ID"</span><span class="w">
     </span><span class="p">],</span><span class="w">
     </span><span class="p">[</span><span class="err">...</span><span class="p">],</span><span class="w">
     </span><span class="p">[</span><span class="err">...</span><span class="p">]</span><span class="w">
@@ -8687,6 +8706,60 @@ Users are not required to accept terms of the same version again, so if users sh
 <td>product_edition</td>
 <td>string</td>
 <td>Product edition in use by the account</td>
+</tr>
+<tr>
+<td>9</td>
+<td>bridge_online_count</td>
+<td>int</td>
+<td>Number of online bridges owned by the account</td>
+</tr>
+<tr>
+<td>10</td>
+<td>bridge_active_count</td>
+<td>int</td>
+<td>Number of active bridges owned by the account</td>
+</tr>
+<tr>
+<td>11</td>
+<td>bridge_count</td>
+<td>int</td>
+<td>Number of bridges owned by the account</td>
+</tr>
+<tr>
+<td>12</td>
+<td>camera_off_count</td>
+<td>int</td>
+<td>Number of account cameras that are currently offline</td>
+</tr>
+<tr>
+<td>13</td>
+<td>camera_available_count</td>
+<td>int</td>
+<td>Number of available cameras in the account</td>
+</tr>
+<tr>
+<td>14</td>
+<td>is_account_active</td>
+<td>int</td>
+<td>1 or 0 dennoting if account is active</td>
+</tr>
+<tr>
+<td>15</td>
+<td>last_login</td>
+<td>string</td>
+<td>EEN Timestamp of the last login by this account</td>
+</tr>
+<tr>
+<td>16</td>
+<td>aberage_retention_days</td>
+<td>int</td>
+<td>The average number of retention days for the account</td>
+</tr>
+<tr>
+<td>17</td>
+<td>customer_id</td>
+<td>string</td>
+<td>The customer id assigned this account</td>
 </tr>
 </tbody></table>
 

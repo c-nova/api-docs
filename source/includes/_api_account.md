@@ -316,22 +316,23 @@ curl --cookie "auth_key=[AUTH_KEY]" --request GET https://login.eagleeyenetworks
 [
     [
         "00004206",
-        "Greater Good",
-        2,
-        2,
-        2,
+        "Greater God",
+        0,
+        0,
+        1,
         0,
         0,
         1,
         null,
-        1,
-        1,
-        1,
         0,
         0,
-        1,
-        "20141022214539.000",
-        14.0
+        0,
+        0,
+        0,
+        0,
+        "20160228234555.722",
+        0,
+        "Greater ID"
     ],
     [...],
     [...]
@@ -357,6 +358,15 @@ Array Index		| Attribute   			| Data Type  	| Description
 6 				| is_inactive 			| int 			| Indicates the account is Inactive (1) or not (0)
 7 				| is_active 			| int 			| Indicates the account is Active (1) or not (0)
 8 				| product_edition 		| string 		| Product edition in use by the account
+9               | bridge_online_count   | int           | Number of online bridges owned by the account
+10              | bridge_active_count   | int           | Number of active bridges owned by the account
+11              | bridge_count          | int           | Number of bridges owned by the account
+12              | camera_off_count      | int           | Number of account cameras that are currently offline
+13              | camera_available_count| int           | Number of available cameras in the account
+14              | is_account_active     | int           | 1 or 0 dennoting if account is active
+15              | last_login            | string        | EEN Timestamp of the last login by this account
+16              | aberage_retention_days| int           | The average number of retention days for the account
+17              | customer_id           | string        | The customer id assigned this account
 
 <!---TODO Update Account Array Attributes-->
 

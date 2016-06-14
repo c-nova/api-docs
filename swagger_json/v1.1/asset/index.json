@@ -342,7 +342,7 @@
                             "type": "string",
                             "paramType": "path",
                             "enum":[
-                                "flv",
+                                "flv (recommended format for web streaming)",
                                 "mp4",
                                 "ts",
                                 "m3u",
