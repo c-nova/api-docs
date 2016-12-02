@@ -8,7 +8,7 @@ This service defines metrics that can be queried from the system.
 <!--===================================================================-->
 ## Camera Bandwidth
 
-> Request
+> 要求
 
 ```shell
 curl -G https://login.eagleeyenetworks.com/g/metric/camerabandwidth -d "A=[AUTH_KEY]&id=[CAMERA_ID]"
@@ -16,20 +16,20 @@ curl -G https://login.eagleeyenetworks.com/g/metric/camerabandwidth -d "A=[AUTH_
 
 Used to query the bandwidth usage for a particular camera device.
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/g/metric/camerabandwidth`
 
-Parameter       | Data Type   	| Description  	| Is Required
+パラメータ       | データ型式   	| 詳細         	| 必須？
 ---------       | ----------- 	| -----------  	| ----------- 
-**id**   		| string      	| Bridge Id 	| true
-start_timestamp | string      	| Start timestamp of query, in EEN format: YYYYMMDDHHMMSS.NNN. Defaults to 7 days ago.
-end_timestamp  	| string   		| End timestamp of query, in EEN format: YYYYMMDDHHMMSS.NNN. Defaults to now.
-group_by 		| string, enum  | Hour or Day, indicating how the results should be grouped. <br><br>enum: day, hour, minute
-motion_interval | int      		| Motion Interval used for Motion Activity metric, in milliseconds. Defaults to 15000.
-metric          | string, enum  | String delimited list used to filter which metrics gets returned. Setting this parameter to 'core,motion' will return data only for core and motion. <br><br>enum: core, packets, motion
+**id**   		| 文字列      	| Bridge Id 	| true
+start_timestamp | 文字列      	| Start timestamp of query, in EEN format: YYYYMMDDHHMMSS.NNN. Defaults to 7 days ago.
+end_timestamp  	| 文字列   		| End timestamp of query, in EEN format: YYYYMMDDHHMMSS.NNN. Defaults to now.
+group_by 		| 文字列, enum  | Hour or Day, indicating how the results should be grouped. <br><br>enum: day, hour, minute
+motion_interval | 整数      		| Motion Interval used for Motion Activity metric, in milliseconds. Defaults to 15000.
+metric          | 文字列, enum  | String delimited list used to filter which metrics gets returned. Setting this parameter to 'core,motion' will return data only for core and motion. <br><br>enum: core, packets, motion
 
-> Json Response
+> JSON応答
 
 ```json
 {
@@ -86,9 +86,9 @@ metric          | string, enum  | String delimited list used to filter which met
 }
 ```
 
-### Response Json Attributes
+### 応答JSON属性
 
-Parameter       | Data Type                     | Description   
+パラメータ       | データ型式                     | 詳細          
 ---------       | -----------                   | -----------  
 core            | array[[CameraCore](#cameracore-json-array-elements)]     | Array of core metrics
 packets         | array[[CameraPackets](#camerapackets-json-array-elements)]  | Array of packet metrics
@@ -96,33 +96,33 @@ motion          | array[[CameraMotion](#cameramotion-json-array-elements)] | Arr
 
 ### CameraCore Json Array Elements
 
-Index       | Data Type     | Description
+Index       | データ型式     | 詳細       
 ---------   | -----------   | -----------  
-0           | string        | EEN Timestamp: YYYYMMDDHHMMSS.NNN
-1           | float         | Average Kilobytes on Disk
-2           | float         | Average Days on Disk
-3           | float         | Bytes Stored
-4           | float         | Bytes Shaped
-5           | float         | Bytes Streamed
-6           | float         | Bytes Freed
+0           | 文字列        | EEN Timestamp: YYYYMMDDHHMMSS.NNN
+1           | 浮動小数点         | Average Kilobytes on Disk
+2           | 浮動小数点         | Average Days on Disk
+3           | 浮動小数点         | Bytes Stored
+4           | 浮動小数点         | Bytes Shaped
+5           | 浮動小数点         | Bytes Streamed
+6           | 浮動小数点         | Bytes Freed
 
 ### CameraPackets Json Array Elements
 
-Index       | Data Type     | Description
+Index       | データ型式     | 詳細       
 ---------   | -----------   | -----------  
-0           | string        | EEN Timestamp: YYYYMMDDHHMMSS.NNN
-1           | float         | Packet loss percentage (decimal)
+0           | 文字列        | EEN Timestamp: YYYYMMDDHHMMSS.NNN
+1           | 浮動小数点         | Packet loss percentage (decimal)
 
 ### CameraMotion Json Array Elements
 
-Index       | Data Type     | Description
+Index       | データ型式     | 詳細       
 ---------   | -----------   | -----------  
-0           | string        | EEN Timestamp: YYYYMMDDHHMMSS.NNN
-1           | int           | motion activity value
+0           | 文字列        | EEN Timestamp: YYYYMMDDHHMMSS.NNN
+1           | 整数           | motion activity value
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied
@@ -133,7 +133,7 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Bridge Bandwidth
 
-> Request
+> 要求
 
 ```shell
 curl -G https://login.eagleeyenetworks.com/g/metric/bridgebandwidth -d "A=[AUTH_KEY]&id=[BRIDGE_ID]"
@@ -141,18 +141,18 @@ curl -G https://login.eagleeyenetworks.com/g/metric/bridgebandwidth -d "A=[AUTH_
 
 Used to query the bandwidth usage for a particular bridge device.
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/g/metric/bridgebandwidth`
 
-Parameter       | Data Type   	| Description  	| Is Required
+パラメータ       | データ型式   	| 詳細         	| 必須？
 ---------       | ----------- 	| -----------  	| ----------- 
-**id**   		| string      	| Bridge Id 	| true
-start_timestamp | string      	| Start timestamp of query, in EEN format: YYYYMMDDHHMMSS.NNN. Defaults to 7 days ago.
-end_timestamp  	| string   		| End timestamp of query, in EEN format: YYYYMMDDHHMMSS.NNN. Defaults to now.
-group_by 		| string, enum  | Hour or Day, indicating how the results should be grouped. <br><br>enum: day, hour, minute
+**id**   		| 文字列      	| Bridge Id 	| true
+start_timestamp | 文字列      	| Start timestamp of query, in EEN format: YYYYMMDDHHMMSS.NNN. Defaults to 7 days ago.
+end_timestamp  	| 文字列   		| End timestamp of query, in EEN format: YYYYMMDDHHMMSS.NNN. Defaults to now.
+group_by 		| 文字列, enum  | Hour or Day, indicating how the results should be grouped. <br><br>enum: day, hour, minute
 
-> Json Response
+> JSON応答
 
 ```json
 {
@@ -225,9 +225,9 @@ group_by 		| string, enum  | Hour or Day, indicating how the results should be g
 }
 ```
 
-### Response Json Attributes
+### 応答JSON属性
 
-Parameter       | Data Type         | Description   
+パラメータ       | データ型式         | 詳細          
 ---------       | -----------       | -----------  
 core            | array[[BridgeCore](#bridgecore-json-array-elements)]       | Array of core metrics
 bandwith        | array[[BridgeBandwidth](#bridgecore-json-array-elements)]  | Array of bandwidth metrics
@@ -235,33 +235,33 @@ storage         | array[BridgeStorage](#bridgestorage-json-array-elements)]    |
 
 ### BridgeCore Json Array Elements
 
-Index       | Data Type     | Description
+Index       | データ型式     | 詳細       
 ---------   | -----------   | -----------  
-0           | string        | EEN Timestamp: YYYYMMDDHHMMSS.NNN
-1           | float         | Average Kilobytes on Disk
-2           | float         | Average Days on Disk
-3           | float         | Bytes Stored
-4           | float         | Bytes Shaped
-5           | float         | Bytes Streamed
-6           | float         | Bytes Freed
+0           | 文字列        | EEN Timestamp: YYYYMMDDHHMMSS.NNN
+1           | 浮動小数点         | Average Kilobytes on Disk
+2           | 浮動小数点         | Average Days on Disk
+3           | 浮動小数点         | Bytes Stored
+4           | 浮動小数点         | Bytes Shaped
+5           | 浮動小数点         | Bytes Streamed
+6           | 浮動小数点         | Bytes Freed
 
 ### BridgeBandwidth Json Array Elements
 
-Index       | Data Type     | Description
+Index       | データ型式     | 詳細       
 ---------   | -----------   | -----------  
-0           | string        | EEN Timestamp: YYYYMMDDHHMMSS.NNN
-1           | float         | Bytes per second
+0           | 文字列        | EEN Timestamp: YYYYMMDDHHMMSS.NNN
+1           | 浮動小数点         | Bytes per second
 
 ### BandwidthStorage Json Array Elements
 
-Index       | Data Type     | Description
+Index       | データ型式     | 詳細       
 ---------   | -----------   | -----------  
-0           | string        | EEN Timestamp: YYYYMMDDHHMMSS.NNN
-1           | float         | Bytes Diff
+0           | 文字列        | EEN Timestamp: YYYYMMDDHHMMSS.NNN
+1           | 浮動小数点         | Bytes Diff
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied

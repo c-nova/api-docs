@@ -16,7 +16,7 @@ The basic work process is as follows:
 <!--===================================================================-->
 ## Get Terms of Service for User
 
-> Request
+> 要求
 
 ```shell
 curl -X GET https://28888.eagleeyenetworks.com/g/account/terms?id=00009436 --cookie "auth_key=[AUTH_KEY]"
@@ -36,27 +36,27 @@ It is preferred to have this as a single combined message box.
 If the user agrees to the terms then a **PUT** call should be placed containing array all of the notices.
 A past due user is subject to suspension of services, and may not be allowed to login.
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/g/user/terms`
 
-Parameter  		| Data Type   | Description   	| Is Required
+パラメータ  		| データ型式   | 詳細          	| 必須？
 ---------  		| ----------- | -----------   	| -----------
-**id**   		| string      | User Id 		| false
+**id**   		| 文字列      | User Id 		| false
 
 ### HTTP List Attributes
 
-Parameter 	| Data Type     | Description
+パラメータ 	| データ型式     | 詳細       
 ---------  	| -----------   | -----------
-user_id 	| string 		| Unique identifier for validated user
-title       | string 		| Title of the terms of service
-url         | string        | Url of a file with the text of the terms of service
-version     | string  		| Version string for the title of the terms of service
+user_id 	| 文字列 		| Unique identifier for validated user
+title       | 文字列 		| Title of the terms of service
+url         | 文字列        | Url of a file with the text of the terms of service
+version     | 文字列  		| Version string for the title of the terms of service
 is_compliant| bool          | If False then the user needs to accept the terms of service
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type
+HTTP 状態コード    | データ型式
 ------------------- | -----------
 400 | Unexpected or non-identifiable arguments are supplied
 406	| Information supplied could not be verified
@@ -72,7 +72,7 @@ HTTP Status Code    | Data Type
   This is called to record acceptance of the notice.
   Account Super Users will not be able to accept for other people.
 
-> Request
+> 要求
 
 ```shell
 curl -X PUT https://28888.eagleeyenetworks.com/g/user/terms -d '{"id": "cafe81f5", "urls": ["https://login.eagleeyenetworks.com/static_assets/terms_of_service/00009074/Test_Terms_of_Service2~2~20150626191625.txt", "https://login.eagleeyenetworks.com/static_assets/terms_of_service/00000001/EEN_Terms_of_Service~1.2~20150626191610.txt"]}' -H "content-type: application/json" --cookie "auth_key=[AUTH_KEY]"
@@ -84,21 +84,21 @@ curl -X PUT https://28888.eagleeyenetworks.com/g/user/terms -d '{"id": "cafe81f5
 {'id': 'cafe81f5'}
 ```
 
-### HTTP Request
+### HTTP要求
 
 `PUT https://login.eagleeyenetworks.com/g/user/terms`
 
-Parameter  		| Data Type     | Description                     | Is Required
+パラメータ  		| データ型式     | 詳細                            | 必須？
 ---------  		| -----------   | -----------   	              | -----------
-**urls**        | array[string] | Array of urls that are accepted | true
+**urls**        | 配列[文字列] | Array of urls that are accepted | true
 
 ### HTTP Json
-Parameter  		| Data Type   | Description
+パラメータ  		| データ型式   | 詳細       
 ---------  		| ----------- | -----------
-**id**          | string      | user id
+**id**          | 文字列      | user id
 
-### Error Status Codes
- Code    | Data Type
+### エラー状態コード
+ Code    | データ型式
 -------- | -----------
 400 | Unexpected or non-identifiable arguments are supplied
 402	| Account is suspended
@@ -123,7 +123,7 @@ Resellers are limited to 5 terms of service titles and each title will only have
 * Only master accounts can **PUT** an account's terms of service
 
 
-> Request
+> 要求
 
 ```shell
 curl -X PUT https://28888.eagleeyenetworks.com/g/account/terms -d '{"is_admin_required": 1, "is_user_required": 1, "title": "Test Terms of Service", "text": "This is a test terms and service from resellers", "version": "1", "id": "00009436"}' -H "content-type: application/json" --cookie "auth_key=[AUTH_KEY]"
@@ -135,33 +135,33 @@ curl -X PUT https://28888.eagleeyenetworks.com/g/account/terms -d '{"is_admin_re
 {'status': 'active', 'is_admin_required': 1, 'is_user_required': 1, 'title': 'Test_Terms_of_Service', 'url': 'https://login.eagleeyenetworks.com/static_assets/terms_of_service/00009074/Test_Terms_of_Service~1~20150626191617.txt', 'timestamp': '20150626191617', 'version': '1', 'user': 'cafebead', 'account_id': '00009074'}
 ```
 
-### HTTP Request
+### HTTP要求
 
 `PUT https://login.eagleeyenetworks.com/g/account/terms`
 
-Parameter  		   | Data Type       | Description   	                            | Is Required   | Default                  | Limitation
+パラメータ  		   | データ型式       | 詳細          	                            | 必須？   | Default                  | Limitation
 ---------  		   | -----------     | -----------                  	            | -----------   | -------                  | ----------
-text               | string          | Text of the terms to accept                  | true          |                          |  use single LF character for line break
-id                 | string          | Unique id of the Account                     | false         | requester's account      |
-title              | string          | Title of the terms to accept                 | false         | "Terms and Conditions"   | 32 bytes of alpha numeric characters
-version            | string          | Version of the title, which should be unique | false         | auto incrementing number | 32 bytes of alpha numeric characters
+text               | 文字列          | Text of the terms to accept                  | true          |                          |  use single LF character for line break
+id                 | 文字列          | Unique id of the Account                     | false         | requester's account      |
+title              | 文字列          | Title of the terms to accept                 | false         | "Terms and Conditions"   | 32 bytes of alpha numeric characters
+version            | 文字列          | Version of the title, which should be unique | false         | auto incrementing number | 32 bytes of alpha numeric characters
 is_admin_required  | bool            | If admins have to accept                     | false         | not updating             |
 is_user_required   | bool            | If users have to accept                      | false         | not updating             |
-timestamp          | string          | Date the terms goes into affect              | false         | now                      |
+timestamp          | 文字列          | Date the terms goes into affect              | false         | now                      |
 
 ### HTTP JSON Attributes
-Parameter 	           | Data Type     | Description
+パラメータ 	           | データ型式     | 詳細       
 ---------  	           | -----------   | -----------
-title                  | string        | Title of the notice
-version                | int           | Version number for the notice title, a larger version number will retire other versions
+title                  | 文字列        | Title of the notice
+version                | 整数           | Version number for the notice title, a larger version number will retire other versions
 is_admin_required      | bool          | If admins have to accept
 is_user_required       | bool          | If users have to accept
-timestamp              | string        | date of the  term of service
-url                    | string        | URL of the file containing the text for the notice
-status                 | string        | Status of the term of service (active, retired)
+timestamp              | 文字列        | date of the  term of service
+url                    | 文字列        | URL of the file containing the text for the notice
+status                 | 文字列        | Status of the term of service (active, retired)
 
-### Error Status Codes
- Code    | Data Type
+### エラー状態コード
+ Code    | データ型式
 -------- | -----------
 400 | Unexpected or non-identifiable arguments are supplied
 402	| Account is suspended
@@ -180,7 +180,7 @@ Users are not required to accept terms of the same version again, so if users sh
 
 * Only master account can **Post** an account's terms of service
 
-> Request
+> 要求
 
 ```shell
 curl -X POST https://28888.eagleeyenetworks.com/g/account/terms -d '{"is_admin_required": 0, "is_user_required": 1, "title": "Test Terms of Service", "text": "This is a test terms and service from resellers", "version": "2", "id": "00009436"}' -H "content-type: application/json" --cookie "auth_key=[AUTH_KEY]"
@@ -192,34 +192,34 @@ curl -X POST https://28888.eagleeyenetworks.com/g/account/terms -d '{"is_admin_r
 {'status': 'active', 'is_admin_required': 0, 'is_user_required': 1, 'title': 'Test_Terms_of_Service', 'url': 'https://login.eagleeyenetworks.com/static_assets/terms_of_service/00009074/Test_Terms_of_Service~2~20150626191622.txt', 'timestamp': '20150626191622', 'version': '1', 'user': 'cafebead', 'account_id': '00009074'}
 ```
 
-### HTTP Request
+### HTTP要求
 
 `POST https://login.eagleeyenetworks.com/g/account/terms`
 
-Parameter  		   | Data Type       | Description   	                            | Is Required   | Default                  | Limitation
+パラメータ  		   | データ型式       | 詳細          	                            | 必須？   | Default                  | Limitation
 ---------  		   | -----------     | -----------                  	            | -----------   | -------                  | ----------
-text               | string          | Text of the terms to accept                  | false         |                          |  use single LF character for line break
-id                 | string          | Unique id of the Account                     | false         | requester's account      |
-title              | string          | Title of the terms to accept                 | false         | "Terms and Conditions"   | 32 bytes of alpha numeric characters
-version            | string          | Version of the title, which should be unique | false         | auto incrementing number | 32 bytes of alpha numeric characters
+text               | 文字列          | Text of the terms to accept                  | false         |                          |  use single LF character for line break
+id                 | 文字列          | Unique id of the Account                     | false         | requester's account      |
+title              | 文字列          | Title of the terms to accept                 | false         | "Terms and Conditions"   | 32 bytes of alpha numeric characters
+version            | 文字列          | Version of the title, which should be unique | false         | auto incrementing number | 32 bytes of alpha numeric characters
 is_admin_required  | bool            | If admins have to accept                     | false         | not updating             |
 is_user_required   | bool            | If users have to accept                      | false         | not updating             |
-timestamp          | string          | Date the term of service goes into affect    | false         | now                      |
+timestamp          | 文字列          | Date the term of service goes into affect    | false         | now                      |
 
 
 ### HTTP JSON Attributes
-Parameter 	           | Data Type     | Description
+パラメータ 	           | データ型式     | 詳細       
 ---------  	           | -----------   | -----------
-title                  | string        | Title of the notice
-version                | int           | Version number for the notice title, a larger version number will retire other versions
+title                  | 文字列        | Title of the notice
+version                | 整数           | Version number for the notice title, a larger version number will retire other versions
 is_admin_required      | bool          | If admins have to accept
 is_user_required       | bool          | If users have to accept
-timestamp              | string        | date of the  term of service
-url                    | string        | URL of the file containing the text for the notice
-status                 | string        | Status of the term of service (active, retired)
+timestamp              | 文字列        | date of the  term of service
+url                    | 文字列        | URL of the file containing the text for the notice
+status                 | 文字列        | Status of the term of service (active, retired)
 
-### Error Status Codes
- Code    | Data Type
+### エラー状態コード
+ Code    | データ型式
 -------- | -----------
 400 | Unexpected or non-identifiable arguments are supplied
 402	| Account is suspended
@@ -252,26 +252,26 @@ curl -X DELETE https://28888.eagleeyenetworks.com/g/user/terms?id=cafe81f5 --coo
 
 `DELETE https://login.eagleeyenetworks.com/g/account/terms`
 
-Parameter  		| Data Type   | Description      	| Is Required
+パラメータ  		| データ型式   | 詳細             	| 必須？
 ---------  		| ----------- | -----------      	| -----------
-id   		    | string      | Account Id 		    | false
-title           | string      | Title of the terms  | false
+id   		    | 文字列      | Account Id 		    | false
+title           | 文字列      | Title of the terms  | false
 
 ### HTTP List Attributes
-Parameter 	       | Data Type     | Description
+パラメータ 	       | データ型式     | 詳細       
 ---------  	       | -----------   | -----------
-account_id         | string        | Unique Id of the account that is requesting this term of service
-account_name       | string        | Name of the account that is requesting this term of service
-title              | string        | Title of the term of service
-version            | int           | Version number for the term title
+account_id         | 文字列        | Unique Id of the account that is requesting this term of service
+account_name       | 文字列        | Name of the account that is requesting this term of service
+title              | 文字列        | Title of the term of service
+version            | 整数           | Version number for the term title
 is_admin_required  | bool          | If admins have to accept
 is_user_required   | bool          | If users have to accept
-timestamp          | string        | date of the term of service
-url                | string        | URL of the file containing the text for the term of service
-status             | string        | This will be **retired**
+timestamp          | 文字列        | date of the term of service
+url                | 文字列        | URL of the file containing the text for the term of service
+status             | 文字列        | This will be **retired**
 
-### Error Status Codes
- Code    | Data Type
+### エラー状態コード
+ Code    | データ型式
 -------- | -----------
 400 | Unexpected or non-identifiable arguments are supplied
 402	| Account is suspended
@@ -287,7 +287,7 @@ status             | string        | This will be **retired**
 
 ## Get Terms of Service for Account
 
-> Request
+> 要求
 
 ```shell
 curl -X GET https://28888.eagleeyenetworks.com/g/account/terms?id=00009436 --cookie "auth_key=[AUTH_KEY]"
@@ -299,30 +299,30 @@ curl -X GET https://28888.eagleeyenetworks.com/g/account/terms?id=00009436 --coo
 [['00009436', 'UNIT_TEST_SUB_ACCOUNT', 'Test_Terms_of_Service2', '2', 1, 0, '20150626191625', 'https://login.eagleeyenetworks.com/static_assets/terms_of_service/00009074/Test_Terms_of_Service2~2~20150626191625.txt', 'active'], ['00009436', 'UNIT_TEST_SUB_ACCOUNT', 'Test_Terms_of_Service', '1', 1, 1, '20150626191617', 'https://login.eagleeyenetworks.com/static_assets/terms_of_service/00009074/Test_Terms_of_Service~1~20150626191617.txt', 'retired'], ['00009436', 'UNIT_TEST_SUB_ACCOUNT', 'Test_Terms_of_Service', '2', 0, 1, '20150626191622', 'https://login.eagleeyenetworks.com/static_assets/terms_of_service/00009074/Test_Terms_of_Service~2~20150626191622.txt', 'active'], ['00009436', 'UNIT_TEST_SUB_ACCOUNT', 'EEN_Terms_of_Service', '1.2', 1, 1, '20150626191610', 'https://login.eagleeyenetworks.com/static_assets/terms_of_service/00000001/EEN_Terms_of_Service~1.2~20150626191610.txt', 'active']]
 ```
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/g/account/terms`
 
-Parameter  		| Data Type   | Description   	| Is Required
+パラメータ  		| データ型式   | 詳細          	| 必須？
 ---------  		| ----------- | -----------   	| -----------
-**id**   		| string      | Account Id 		| false
+**id**   		| 文字列      | Account Id 		| false
 
 ### HTTP List Attributes
-Parameter 	           | Data Type     | Description
+パラメータ 	           | データ型式     | 詳細       
 ---------  	           | -----------   | -----------
-account_id             | string        | Unique Id of the account that is requesting this notice
-account_name           | string        | Name of the account that is requesting this notice
-title                  | string        | Title of the notice
-version                | int           | Version number for the notice title, a larger version number will retire other versions
+account_id             | 文字列        | Unique Id of the account that is requesting this notice
+account_name           | 文字列        | Name of the account that is requesting this notice
+title                  | 文字列        | Title of the notice
+version                | 整数           | Version number for the notice title, a larger version number will retire other versions
 is_admin_required      | bool          | If admins have to accept
 is_user_required       | bool          | If users have to accept
-timestamp              | string        | date of the term of service
-url                    | string        | URL of the file containing the text for the notice
-status                 | string        | Status of the term of service (active, retired)
+timestamp              | 文字列        | date of the term of service
+url                    | 文字列        | URL of the file containing the text for the notice
+status                 | 文字列        | Status of the term of service (active, retired)
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type
+HTTP 状態コード    | データ型式
 ------------------- | -----------
 400 | Unexpected or non-identifiable arguments are supplied
 406	| Information supplied could not be verified

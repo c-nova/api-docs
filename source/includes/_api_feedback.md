@@ -8,7 +8,7 @@ This service allows users to send feedback to support.
 <!--===================================================================-->
 ## Send Feedback
 
-> Request
+> 要求
 
 ```shell
 curl --cookie "auth_key=[AUTH_KEY]" --request POST https://login.eagleeyenetworks.com/g/feedback --data "subject=[SUBJECT]&message=[MESSAGE]"
@@ -16,18 +16,18 @@ curl --cookie "auth_key=[AUTH_KEY]" --request POST https://login.eagleeyenetwork
 
 Sends feedback to support
 
-### HTTP Request
+### HTTP要求
 
 `POST https://login.eagleeyenetworks.com/g/feedback`
 
-Parameter       | Data Type   	| Description  
+パラメータ       | データ型式   	| 詳細         
 ---------       | ----------- 	| -----------  
-**subject**   	| string      	| Subject of the feedback
-**message**   	| string      	| Feedback message
+**subject**   	| 文字列      	| Subject of the feedback
+**message**   	| 文字列      	| Feedback message
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 202 | Request succeeded
 400	| Unexpected or non-identifiable arguments are supplied

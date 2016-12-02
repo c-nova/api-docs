@@ -179,7 +179,7 @@ id        | 文字列      | ユーザーID     | false
 curl --cookie "auth_key=[AUTH_KEY]" -X PUT -v -H "Authentication: [API_KEY]:" -H "content-type: application/json" https://login.eagleeyenetworks.com/g/user -d '{"first_name": "[FIRST_NAME]", "last_name": "[LAST_NAME]", "email": "[EMAIL]"}'
 ```
 
-> Json応答
+> JSON応答
 
 ```json
 {
@@ -248,7 +248,7 @@ id              | 文字列      | ユーザーの一意の識別子
 curl --cookie "auth_key=[AUTH_KEY]" -X POST -v -H "Authentication: [API_KEY]:" -H "content-type: application/json" https://login.eagleeyenetworks.com/g/user -d '{"id": "[USER_ID]", "first_name": "[FIRST_NAME]"}'
 ```
 
-> Json応答
+> JSON応答
 
 ```json
 {
@@ -327,7 +327,7 @@ curl --cookie "auth_key=[AUTH_KEY]" -X DELETE -v -H "Authentication: [API_KEY]:"
 curl --cookie "auth_key=[AUTH_KEY]" --request GET https://login.eagleeyenetworks.com/g/user/list
 ```
 
-> Json応答
+> JSON応答
 
 ```json
 [

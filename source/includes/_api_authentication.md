@@ -21,7 +21,7 @@ Eagle Eye APIにアクセスするには2ステージのプロセスが必要で
 curl -v --request POST https://login.eagleeyenetworks.com/g/aaa/authenticate --data-urlencode "username=[USERNAME]" --data-urlencode "password=[PASSWORD]"
 ```
 
-> Json応答
+> JSON応答
 
 ```json
 {
@@ -62,7 +62,7 @@ HTTP ステータス コード    | データ形式
 curl -D - --request POST https://login.eagleeyenetworks.com/g/aaa/authorize --data-urlencode token=[TOKEN]
 ```
 
-> Json応答
+> JSON応答
 
 ```json
 {

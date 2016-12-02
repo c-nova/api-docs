@@ -87,46 +87,46 @@ Visual Examples:
 
 ### Layout Attributes
 
-Parameter               | Data Type             | Description
+パラメータ               | データ型式             | 詳細       
 ---------               | -----------           | -----------
-id                      | string                | Unique identifier for the Layout
-name                    | string                | Name of the layout
-types                   | array[string]         | Specifies target(s) for layout. Multiple values are allowed.
-permissions             | string                | String of zero or more characters. Each character defines a permission. Permissions include: 'R' - user can view this layout. 'W' - user can modify this layout. 'D' - user can delete this layout. 'S' - user can share this layout
-current_recording_key   | string          | String key representing a recording currently being made with the cameras in the layout, which was initiated using the action/recordnow service.
+id                      | 文字列                | Unique identifier for the Layout
+name                    | 文字列                | Name of the layout
+types                   | 配列[文字列]         | Specifies target(s) for layout. Multiple values are allowed.
+permissions             | 文字列                | String of zero or more characters. Each character defines a permission. Permissions include: 'R' - user can view this layout. 'W' - user can modify this layout. 'D' - user can delete this layout. 'S' - user can share this layout
+current_recording_key   | 文字列          | String key representing a recording currently being made with the cameras in the layout, which was initiated using the action/recordnow service.
 shares                  | array[array[string]]) | Array of arrays, one per account user for whom sharing is enabled for this layout. Each string contains two field separated by comma. The first field is a user aid and the second field are permissions for the user. Two special user ID exist: ‘account’ specifies that the layout is shared with all users of the account. Second field contains permissions for users in the account. Example: [‘cafedead’,’RWDS’] = user can view, change, delete or share this layout. [‘cafe0001’,’RW’] = user can view this layout and change this layout. [‘account’, ‘R’] = All users of the account can view this layout. Permissions for the user issuing the /layout GET are not included in this array.
 configuration           | LayoutConfiguration   | JSON object that defines the layout configuration
 
 ### LayoutConfiguration Attributes
 
-Parameter               | Data Type                     | Description
+パラメータ               | データ型式                     | 詳細       
 ---------               | -----------                   | -----------
 panes                   | array[LayoutConfigurationPane]| Array of Panes
 settings                | LayoutConfigurationSettings   | Settings object
 
 ### LayoutConfigurationPane Attributes
 
-Parameter               | Data Type                     | Description
+パラメータ               | データ型式                     | 詳細       
 ---------               | -----------                   | -----------
-name                    | string                        | Layout pane name
-type                    | string                        | ‘preview’ - shows live preview images form cameras. ‘carousel’- rotates between preview images, ids of cameras needs to be include in the cameras array along with an integer in the delay array. The delay is an integer value of milliseconds as too how long the Camera will be displayed before switching to the next Camera. A “carousel” with only one camera is the same as preview. ‘click’ - respond to click for other cameras in layout. ‘motion’ - respond to motion for other cameras in layout. ‘map’ - a static map with camera icons located on it. ‘url’ - displays the contents of the url in the pane as a frame.
-pane_id                 | int                           | ID given to pane when created from Layout Manager
-size                    | int                           | ['1' or '2' or '3']: Size to display image: 1 = small, 2 = medium, 3 = large
-cameras                 | array[string]                 | )Array of camera ids. For ‘carousel’, cycle through the camera ids with the delay setting in the corresponding ‘delay’ property
+name                    | 文字列                        | Layout pane name
+type                    | 文字列                        | ‘preview’ - shows live preview images form cameras. ‘carousel’- rotates between preview images, ids of cameras needs to be include in the cameras array along with an integer in the delay array. The delay is an integer value of milliseconds as too how long the Camera will be displayed before switching to the next Camera. A “carousel” with only one camera is the same as preview. ‘click’ - respond to click for other cameras in layout. ‘motion’ - respond to motion for other cameras in layout. ‘map’ - a static map with camera icons located on it. ‘url’ - displays the contents of the url in the pane as a frame.
+pane_id                 | 整数                           | ID given to pane when created from Layout Manager
+size                    | 整数                           | ['1' or '2' or '3']: Size to display image: 1 = small, 2 = medium, 3 = large
+cameras                 | 配列[文字列]                 | )Array of camera ids. For ‘carousel’, cycle through the camera ids with the delay setting in the corresponding ‘delay’ property
 
 ### LayoutConfigurationSettings Attributes
 
-Parameter               | Data Type         | Description
+パラメータ               | データ型式         | 詳細       
 ---------               | -----------       | -----------
 camera_border           | boolean           | Show camera pane borders
 camera_name             | boolean           | Show camera name
-camera_aspect_ratio     | float             | ['0.5625' or '0.75']: Aspect ratio of images. .5625 = 16x9, .75 = 4x3
-camera_row_limit        | int               | ['3' or '4' or '5']: Max number of cameras to show per row
+camera_aspect_ratio     | 浮動小数点             | ['0.5625' or '0.75']: Aspect ratio of images. .5625 = 16x9, .75 = 4x3
+camera_row_limit        | 整数               | ['3' or '4' or '5']: Max number of cameras to show per row
 
 <!--===================================================================-->
 ## Get Layout
 
-> Request
+> 要求
 
 ```shell
 curl -G https://login.eagleeyenetworks.com/g/layout -d "A=[AUTH_KEY]&id=[LAYOUT_ID]"
@@ -134,17 +134,17 @@ curl -G https://login.eagleeyenetworks.com/g/layout -d "A=[AUTH_KEY]&id=[LAYOUT_
 
 Returns layout object by Id
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/g/layout`
 
-Parameter     | Data Type   | Description
+パラメータ     | データ型式   | 詳細
 ---------     | ----------- | -----------
-**id**        | string      | Layout Id
+**id**        | 文字列      | Layout Id
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied
@@ -154,13 +154,13 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Create Layout
 
-> Request
+> 要求
 
 ```shell
 curl --cookie "auth_key=[AUTH_KEY]" -X PUT -v -H "Authentication: [API_KEY]:" -H "content-type: application/json" https://login.eagleeyenetworks.com/g/layout -d '{"name": "[NAME]", "json":"{\"panes\":[ {} ] }", "types":[""]}'
 ```
 
-> Json Response
+> JSON応答
 
 ```json
 {
@@ -170,20 +170,20 @@ curl --cookie "auth_key=[AUTH_KEY]" -X PUT -v -H "Authentication: [API_KEY]:" -H
 
 Creates a new layout
 
-### HTTP Request
+### HTTP要求
 
 `PUT https://login.eagleeyenetworks.com/g/layout`
 
-Parameter     | Data Type     | Description | Is Required
+パラメータ     | データ型式     | 詳細        | 必須？
 ---------     | -----------   | ----------- | -----------
-**name**      | string        | Layout Name | true
-**types**     | array[string] | Specifies target(s) for layout. Multiple values are allowed. | true
+**name**      | 文字列        | Layout Name | true
+**types**     | 配列[文字列] | Specifies target(s) for layout. Multiple values are allowed. | true
 configuration | json          | JSON object that defines the layout configuration
 shares        | ???           | Array of arrays, one per account user for whom sharing is enabled for this layout. Each string contains two fields separated by a comma. The first field is a user id and the second field is the list of permissions for the user. Two special user IDs exist: 'account' specifies that the layout is shared with all users of the account. The second field contains permissions for users in the account. Example: ['cafedead', 'RWDS'] = user can view, change, delete or share this layout. ['cafe0001', 'RW'] = user can view and change this layout. ['account', 'R'] = All users in the account can view the layout. Permissions for the user issuing the /layout GET are not included in this array.
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied
@@ -193,20 +193,20 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Update Layout
 
-### HTTP Request
+### HTTP要求
 `POST https://login/eagleeyenetworks.com/g/layout`
 
-Parameter     | Data Type     | Description | Is Required
+パラメータ     | データ型式     | 詳細        | 必須？
 ---------     | -----------   | ----------- | -----------
-**name**      | string        | Unique identifier of layout | true
-**id**      | string        | Layout Name | true
-**types**     | array[string] | Specifies target(s) for layout. Multiple values are allowed. | true
+**name**      | 文字列        | Unique identifier of layout | true
+**id**      | 文字列        | Layout Name | true
+**types**     | 配列[文字列] | Specifies target(s) for layout. Multiple values are allowed. | true
 configuration | json          | JSON object that defines the layout configuration
 shares        | array of array           | Array of arrays, one per account user for whom sharing is enabled for this layout. Each string contains two fields separated by a comma. The first field is a user id and the second field is the list of permissions for the user. Two special user IDs exist: 'account' specifies that the layout is shared with all users of the account. The second field contains permissions for users in the account. Example: ['cafedead', 'RWDS'] = user can view, change, delete or share this layout. ['cafe0001', 'RW'] = user can view and change this layout. ['account', 'R'] = All users in the account can view the layout. Permissions for the user issuing the /layout GET are not included in this array.
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied
@@ -216,23 +216,23 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Delete Layout
 
-> Request
+> 要求
 
 ```shell
 curl --cookie "auth_key=[AUTH_KEY]" -X DELETE -v -H "Authentication: [API_KEY]:" -H "content-type: application/json" https://login.eagleeyenetworks.com/g/layout -d "id=[LAYOUT_ID]" -G
 ```
 
-### HTTP Request
+### HTTP要求
 
 `DELETE https://login.eagleeyenetworks.com/g/layout`
 
-Parameter     | Data Type   | Description
+パラメータ     | データ型式   | 詳細
 ---------     | ----------- | -----------
-**id**        | string      | Layout Id
+**id**        | 文字列      | Layout Id
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied
@@ -243,13 +243,13 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Get List of Layouts
 
-> Request
+> 要求
 
 ```shell
 curl --cookie "auth_key=[AUTH_KEY]" --request GET https://login.eagleeyenetworks.com/g/layout/list
 ```
 
-> Json Response
+> JSON応答
 
 ```json
 [
@@ -277,22 +277,22 @@ curl --cookie "auth_key=[AUTH_KEY]" --request GET https://login.eagleeyenetworks
 
 Returns array of arrays, with each sub-array representing a layout available to the user. Please note that the ListLayout model definition below has property keys, but that's only for reference purposes since it's actually just a standard array.
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/g/layout/list`
 
 ### Response: Layout Model
 
-Array Index     | Attribute   | Data Type       | Description
+Array Index     | Attribute   | データ型式       | 詳細       
 ---------       | ----------- | -----------     | -----------
-0               | id          | string          | Unique identifier for the Layout
-1               | name        | string          | Name of the layout
-2               | types       | array[string]   | Array of types defined for the layout. This attribute has not yet been implemented.
-3               | permissions | string          | String of zero or more characters. Each character defines a permission that the current user has for the layout. Permissions include: 'R' - user can view this layout. 'W' - user can modify this layout. 'D' - user can delete this layout. 'S' - user can share this layout.
+0               | id          | 文字列          | Unique identifier for the Layout
+1               | name        | 文字列          | Name of the layout
+2               | types       | 配列[文字列]   | Array of types defined for the layout. This attribute has not yet been implemented.
+3               | permissions | 文字列          | String of zero or more characters. Each character defines a permission that the current user has for the layout. Permissions include: 'R' - user can view this layout. 'W' - user can modify this layout. 'D' - user can delete this layout. 'S' - user can share this layout.
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied

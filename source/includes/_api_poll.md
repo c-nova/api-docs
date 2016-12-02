@@ -33,7 +33,7 @@ video       | [startts, endts]  | List of start, end Timestamps for video segmen
 thumb       | thumbts           | Timestamp of latest thumbnail image
 pre         | prets             | Timestamp of latest preview image
 [status](#status-bitmask) | bitmask           | A numerical bitmask defining the status. Bit position defines status. The meaning of each bit is defined in the table below.
-event       | object            | Events are a key value pair, where the key is the four CC of the event, and event structure are the actual meta data for that specific event. Available events are shown in the table below.
+event       | オブジェクト            | Events are a key value pair, where the key is the four CC of the event, and event structure are the actual meta data for that specific event. Available events are shown in the table below.
 
 ## Status Bitmask
 
@@ -77,7 +77,7 @@ IF "Invalid" (bit 16)==1 THEN no status change (use whatever status bits were se
 
 ## Event Objects
 
-Four CC   | Description
+Four CC   | 詳細       
 --------- | -----------      
 VRES      | Video start event
 VREE      | Video end event
@@ -138,7 +138,7 @@ ALRE      | Alert Region Of Interest End
 <!--===================================================================-->
 ## Initialize Poll
 
-> Request Json
+> JSON要求
 
 ```json
 {
@@ -175,29 +175,29 @@ Subscribe to poll service, which is required for GET /poll.
 Response headers: set_cookie: ee-poll-ses=xxxxxx
 
 
-### HTTP Request
+### HTTP要求
 
 `POST https://login.eagleeyenetworks.com/poll`
 
-Parameter       | Data Type   | Description
+パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
 cameras 		| [PostPollCameras](#postpollcameras-attributes) | Cameras
 
 ### PostPollCameras Attributes
 
-Parameter       | Data Type   | Description
+パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
 <camera_id> 	| [PostPollCamera](#postpollcamera-attributes) | camera_id holding the data structure for the camera
 * Note This json attribute contains as many PostPollCamera json objects as the user desires. The key for each PostPollCamera is the camera_id.
 
 ### PostPollCamera Attributes
 
-Parameter       | Data Type   | Description
+パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
 resource 		| array[string, enum] | enum: pre, thumb, status, event
 event 			| array[string, enum] | enum: [event objects](#event-objects)
 
-> Json Response
+> JSON応答
 
 ```json
 {
@@ -217,49 +217,49 @@ event 			| array[string, enum] | enum: [event objects](#event-objects)
 ```
 <!---TODO Ask TOM about this-->
 
-### Response Json Attributes
+### 応答JSON属性
 
-Parameter       | Data Type   	| Description
+パラメータ       | データ型式   	| 詳細       
 ---------       | ----------- 	| -----------
 cameras         | [PostPollResponseCameras](#postpollresponsecameras-json-attributes) | Objects keyed by camera id
-token 			| string 		| Token to be used for subsequent GET /poll requests
+token 			| 文字列 		| Token to be used for subsequent GET /poll requests
 
 ### PostPollResponseCameras Json Attributes
 
-Parameter       | Data Type   | Description
+パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
 <camera_id> 	| [PostPollResponseCamera](#postpollresponsecamera-json-attributes) | PostPollResponse keyed on camera_id
 
 ### PostPollResponseCamera Json Attributes
 
-Parameter       | Data Type   	| Description
+パラメータ       | データ型式   	| 詳細       
 ---------       | ----------- 	| -----------
-status          | string 		| A bitmask flag defining the state of a bridge or a camera. [More Info](#status-bitmask)
+status          | 文字列 		| A bitmask flag defining the state of a bridge or a camera. [More Info](#status-bitmask)
 event 			| [PostPollResponseCameraEvents](#postpollresponsecameraevents-json-attributes) |  Object of events keyed by event id
 
 ### PostPollResponseCameraEvents Json Attributes
 
-Parameter       | Data Type   | Description
+パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
 <event_id> 	| [PostPollResponseCameraEvent](#postpollresponsecameraevent-json-attributes) | PostPollResponseCameraEvent keyed on event_id
 
 ### PostPollResponseCameraEvent Json Attributes
 
-Parameter       | Data Type   	| Description
+パラメータ       | データ型式   	| 詳細       
 ---------       | ------------- | -----------
-timestamp 		| string 		| Timestamp in EEN format: YYYYMMDDHHMMSS.NNN
-cameraid 		| string 		| internal unique identifier
+timestamp 		| 文字列 		| Timestamp in EEN format: YYYYMMDDHHMMSS.NNN
+cameraid 		| 文字列 		| internal unique identifier
 
 <!--===================================================================-->
 ## Polling
 
 Used to receive updates on real-time changes. This API call requires a valid 'ee-poll-ses' cookie from POST /poll.
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/poll`
 
-> Json Response
+> JSON応答
 
 ```json
 {
@@ -316,41 +316,41 @@ Used to receive updates on real-time changes. This API call requires a valid 'ee
 }
 ```
 
-### Response Json Attributes
+### 応答JSON属性
 
-Parameter       | Data Type   	| Description
+パラメータ       | データ型式   	| 詳細       
 ---------       | ----------- 	| -----------
 cameras         | [GetPollResponseCameras](#getpollresponsecameras-json-attributes) | Objects keyed by camera id
 
 ### GetPollResponseCameras Json Attributes
 
-Parameter       | Data Type   | Description
+パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
 <camera_id> 	| [GetPollResponseCamera](#getpollresponsecamera-json-attributes) | GetPollResponseCamera keyed on camera_id
 
 ### GetPollResponseCamera Json Attributes
 
-Parameter       | Data Type   	| Description
+パラメータ       | データ型式   	| 詳細       
 ---------       | ----------- 	| -----------
-pre          	| string 		| Timestamp in EEN format: YYYYMMDDHHMMSS.NNN
+pre          	| 文字列 		| Timestamp in EEN format: YYYYMMDDHHMMSS.NNN
 event 			| [GetPollResponseCameraEvents](#getpollresponsecameraevents-json-attributes) |  Object of events keyed by event id
 
 ### GetPollResponseCameraEvents Json Attributes
 
-Parameter       | Data Type   | Description
+パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
 <event_id> 	| [GetPollResponseCameraEvent](#getpollresponsecameraevent-json-attributes) | GetPollResponseCameraEvent keyed on event_id
 
 ### GetPollResponseCameraEvent Json Attributes
 
-Parameter       | Data Type   	| Description
+パラメータ       | データ型式   	| 詳細       
 ---------       | ------------- | -----------
-timestamp 		| string 		| Timestamp in EEN format: YYYYMMDDHHMMSS.NNN
-cameraid 		| string 		| internal unique identifier
+timestamp 		| 文字列 		| Timestamp in EEN format: YYYYMMDDHHMMSS.NNN
+cameraid 		| 文字列 		| internal unique identifier
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400	| Unexpected or non-identifiable arguments are supplied

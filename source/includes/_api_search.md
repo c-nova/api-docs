@@ -8,49 +8,49 @@ This service allows for search across various types of data. Currenlty only supp
 <!--===================================================================-->
 ## Search Recordings
 
-> Request TODO
+> 要求 記述予定
 
 ```shell
 ```
 
-> Json Response TODO
+> JSON応答 記述予定
 
 ```json
 ```
 
 Returns array of recording objects that match a search value.
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/g/search/recordings`
 
-Parameter  	| Data Type   | Description   
+パラメータ  	| データ型式   | 詳細          
 ---------  	| ----------- | -----------   
-**value**   | string      | Value to search for
+**value**   | 文字列      | Value to search for
 
-### Response Json Attributes
+### 応答JSON属性
 
-Parameter               	| Data Type     | Description
+パラメータ               	| データ型式     | 詳細       
 ---------               	| -----------   | -----------
-_key 						| string 		| Unique identifier (within the user's account) of the recording
-current_recording_timestamp | string 		| Timestamp of when the current recording (if any) was started
+_key 						| 文字列 		| Unique identifier (within the user's account) of the recording
+current_recording_timestamp | 文字列 		| Timestamp of when the current recording (if any) was started
 recording_%s_start 			| RecordingInfo | Object of info about the recording start event, where '%s' is the timestamp it started. Could be N number of these.
 recording_%s_stop 			| RecordingInfo | Object of info about the recording stop event, where '%s' is the timestamp it started. Must have a matching 'recording_%s_start' event. Could be N number of these.
-recording_%s_meta 			| object 		| Object of info about the recording, where '%s' is the timestamp it started. Must have a matching 'recording_%s_start' event.
+recording_%s_meta 			| オブジェクト 		| Object of info about the recording, where '%s' is the timestamp it started. Must have a matching 'recording_%s_start' event.
 
 ### RecordingInfo Json Attributes
 
-Parameter   | Data Type     | Description
+パラメータ   | データ型式     | 詳細       
 ---------   | -----------   | -----------
-timestamp 	| string 		| Timestamp the recording was started, in EEN format.
+timestamp 	| 文字列 		| Timestamp the recording was started, in EEN format.
 layout_id 	| boolean 		| Id of a layout the recording was started for
-camera_ids 	| array[string] | Array of camera ids who had recording started for
-layout_name | string 		| Name of layout at the time the recording started
-user_id 	| string 		| Id of the user who started/stopped the recording
+camera_ids 	| 配列[文字列] | Array of camera ids who had recording started for
+layout_name | 文字列 		| Name of layout at the time the recording started
+user_id 	| 文字列 		| Id of the user who started/stopped the recording
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied
@@ -60,27 +60,27 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Search Annotations
 
-> Request TODO
+> 要求 記述予定
 
 ```shell
 ```
 
-> Json Response TODO
+> JSON応答 記述予定
 
 ```json
 ```
 
 Returns array of annotation objects that match a search value.
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/g/search/recordings`
 
-Parameter  			| Data Type   | Description   			| Is Required
+パラメータ  			| データ型式   | 詳細          			| 必須？
 ---------  			| ----------- | -----------   			| -----------
-**value**   		| string      | Value to search for 	| true
-**start_timestamp** | string      | Start timestamp (in EEN format) to use to limit search results 	| true
-end_timestamp 		| string      | End timestamp (in EEN format) to use to limit search results. Defaults to now. 	| 
+**value**   		| 文字列      | Value to search for 	| true
+**start_timestamp** | 文字列      | Start timestamp (in EEN format) to use to limit search results 	| true
+end_timestamp 		| 文字列      | End timestamp (in EEN format) to use to limit search results. Defaults to now. 	| 
 
 ### Response
 
@@ -88,9 +88,9 @@ end_timestamp 		| string      | End timestamp (in EEN format) to use to limit se
 ------------------- |
 array[object] 		| 
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied

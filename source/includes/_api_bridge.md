@@ -7,13 +7,13 @@ The Bridge is a product of Eagle Eye that sits at the customer location and talk
 <!--===================================================================-->
 ## Get Bridge
 
-> Request
+> 要求
 
 ```shell
 curl -G https://login.eagleeyenetworks.com/g/device -d "A=[AUTH_KEY]&id=[BRIDGE_ID]"
 ```
 
-> Json Response
+> JSON応答
 
 ```json
 {
@@ -172,17 +172,17 @@ curl -G https://login.eagleeyenetworks.com/g/device -d "A=[AUTH_KEY]&id=[BRIDGE_
 
 Returns user object by id. Not passing an id will return the current authorized user.
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/g/device`
 
-Parameter     | Data Type   | Description
+パラメータ     | データ型式   | 詳細
 ---------     | ----------- | -----------
-**id**        | string      | Bridge Id
+**id**        | 文字列      | Bridge Id
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied
@@ -192,13 +192,13 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Add Bridge to EEVB
 
-> Request
+> 要求
 
 ```shell
 curl --cookie "auth_key=[AUTH_KEY]" -X PUT -v -H "Authentication: [API_KEY]:" -H "content-type: application/json" https://login.eagleeyenetworks.com/g/device -d '{"name":"[NAME]","connectID":[CONNECT_ID]}'
 ```
 
-> Json Response
+> JSON応答
 
 ```json
 {
@@ -208,24 +208,24 @@ curl --cookie "auth_key=[AUTH_KEY]" -X PUT -v -H "Authentication: [API_KEY]:" -H
 
 Adds a bridge to the Eagle Eye Video Bank
 
-### HTTP Request
+### HTTP要求
 
 `PUT https://login.eagleeyenetworks.com/g/device`
 
-Parameter | Data Type     | Description 
+パラメータ | データ型式     | 詳細        
 --------- | -----------   | ----------- 
-name      | string        | Bridge Name
-connectID | string        | Connect ID is needed to add and activate bridge to account. All non-alphanumeric characters will be stripped.
+name      | 文字列        | Bridge Name
+connectID | 文字列        | Connect ID is needed to add and activate bridge to account. All non-alphanumeric characters will be stripped.
 
-### Response Json Attributes
+### 応答JSON属性
 
-Parameter       | Data Type   | Description
+パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
-id              | string      | Unique identifier for the device
+id              | 文字列      | Unique identifier for the device
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied
@@ -239,13 +239,13 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Update Bridge
 
-> Request
+> 要求
 
 ```shell
 curl --cookie "auth_key=[AUTH_KEY]" -X POST -v -H "Authentication: [API_KEY]:" -H "content-type: application/json" https://login.eagleeyenetworks.com/g/device -d '{"id": "[BRIDGE_ID], "name": "[NAME]"}'
 ```
 
-> Json Response
+> JSON応答
 
 ```json
 {
@@ -253,29 +253,29 @@ curl --cookie "auth_key=[AUTH_KEY]" -X POST -v -H "Authentication: [API_KEY]:" -
 }
 ```
 
-### HTTP Request
+### HTTP要求
 
 `POST https://login.eagleeyenetworks.com/g/device`
 
-Parameter                 | Data Type     | Description   | Is Required
+パラメータ                 | データ型式     | 詳細          | 必須？
 ---------                 | -----------   | -----------   | -----------
-**id**                    | string        | Bridge Id     | true
-name                      | string        | Bridge Name
-timezone                  | strings       | If unspecified, this will default to the camera’s Bridge timezone
-tags                      | array[string] | Array of strings, which each string representing a "tag"
+**id**                    | 文字列        | Bridge Id     | true
+name                      | 文字列        | Bridge Name
+timezone                  | 文字列s       | If unspecified, this will default to the camera’s Bridge timezone
+tags                      | 配列[文字列] | Array of strings, which each string representing a "tag"
 settings                  | json          | Misc Settings
 camera_parameters_add     | json          | JSON object of camera parameters/settings to add/update
 camera_parameters_delete  | json          | JSON object of camera parameters/settings to delete
 
-### Response Json Attributes
+### 応答JSON属性
 
-Parameter       | Data Type   | Description
+パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
-id              | string      | Unique identifier for the device
+id              | 文字列      | Unique identifier for the device
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied
@@ -287,23 +287,23 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Delete Bridge
 
-> Request
+> 要求
 
 ```shell
 curl --cookie "auth_key=[AUTH_KEY]" -X DELETE -v -H "Authentication: [API_KEY]:" -H "content-type: application/json" https://login.eagleeyenetworks.com/g/device -d "id=[BRIDGE_ID]" -G
 ```
 
-### HTTP Request
+### HTTP要求
 
 `DELETE https://login.eagleeyenetworks.com/g/device`
 
-Parameter     | Data Type   | Description
+パラメータ     | データ型式   | 詳細
 ---------     | ----------- | -----------
-**id**        | string      | Bridge Id
+**id**        | 文字列      | Bridge Id
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied
@@ -315,13 +315,13 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Get List of Bridges
 
-> Request
+> 要求
 
 ```shell
 curl --cookie "auth_key=[AUTH_KEY]" --request GET https://login.eagleeyenetworks.com/g/device/list
 ```
 
-> Json Response
+> JSON応答
 
 ```json
 [
@@ -439,45 +439,45 @@ curl --cookie "auth_key=[AUTH_KEY]" --request GET https://login.eagleeyenetworks
 
 Returns array of arrays, with each sub-array representing a device available to the user. The 'service_status' attribute either be set to 'ATTD' or 'IGND'. If the service_status is 'ATTD', the camera is attached to a bridge. If the service_status is 'IGND', the camera is unattached from any bridge and is available to be attached. Please note that the ListDevice model definition below has property keys, but that's only for reference purposes since it's actually just a standard array.
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/g/device/list`
 
-Parameter | Data Type   | Description           
+パラメータ | データ型式   | 詳細                  
 --------- | ----------- | -----------           
-e         | string      | Bridge Id             
-n         | string      | Bridge Name           
-t         | string      | Device Type           
-s         | string      | Device Service Status
+e         | 文字列      | Bridge Id             
+n         | 文字列      | Bridge Name           
+t         | 文字列      | Device Type           
+s         | 文字列      | Device Service Status
 
 ### Response: Bridge Model
 
-Array Index | Attribute       | Data Type  
+Array Index | Attribute       | データ型式  
 ---------   | -----------     | -----------
-0           | account_id      | string
-1           | id              | string
-2           | name            | string
-3           | type            | string
+0           | account_id      | 文字列
+1           | id              | 文字列
+2           | name            | 文字列
+3           | type            | 文字列
 4           | bridges         | json
-5           | service_status  | string
-6           | permissions     | string
-7           | tags            | array[string]
-8           | guid            | string
-9           | serial_number   | string
-10          | [device_status](#status-bitmask)   | int
-11          | timezone        | string
-12          | timezone_utc_offset | int
-13          | is_unsupported  | int
-14          | ip_address      | string
-15          | is_shared       | int
-16          | owner_account_name | string
+5           | service_status  | 文字列
+6           | permissions     | 文字列
+7           | tags            | 配列[文字列]
+8           | guid            | 文字列
+9           | serial_number   | 文字列
+10          | [device_status](#status-bitmask)   | 整数
+11          | timezone        | 文字列
+12          | timezone_utc_offset | 整数
+13          | is_unsupported  | 整数
+14          | ip_address      | 文字列
+15          | is_shared       | 整数
+16          | owner_account_name | 文字列
 17          | is_upnp         | boolean
-18          | video_input     | string
-19          | video_status    | string
+18          | video_input     | 文字列
+19          | video_status    | 文字列
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400 | Unexpected or non-identifiable arguments are supplied

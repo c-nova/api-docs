@@ -1,78 +1,78 @@
-# 注釈（アノテーション）
+# アノテーション（注釈）
 
 <!--===================================================================-->
-## Overview
+## 概要
 
-The annotation service allows you to push data into the event stream to add additional information about a camera/video.
+アノテーションサービスはカメラやビデオについての付加情報データをイベントストリームに追加することを可能にします。
 
-Annotations are associated with a device and a timestamp. They are subject to normal retention logic, such that they will be discarded when the annotated time has passed beyond the retention interval.
+アノテーションはデバイスとタイムスタンプに関連付けられます。これらは保存期間を超えると消去されてしまうような、通常の保管ロジックの影響を受けます。
 
 <!--===================================================================-->
-## Create Annotation
+## アノテーションの作成
 
-> Request TODO
+> 要求 記述予定
 
 ```shell
 ```
 
-> Json Response TODO
+> JSON応答 記述予定
 
 ```json
 ```
 
-Create an annotation for a device at a particular timestamp, with data describing the annotation.
+デバイス用のアノテーションは特定のタイムスタンプと、アノテーションを記載したデータと共に作成してください。
 
-### HTTP Request
+### HTTP要求
 
 `PUT https://login.eagleeyenetworks.com/g/annotation`
 
-Parameter       | Data Type   	| Description
+パラメータ       | データ型式   	| 詳細       
 ---------       | ----------- 	| -----------
-**device_id**   | string      	| ID of the device the annotation should be associated with
-**timestamp**   | string      	| Timestamp associated with the annotation, in EEN format.
-**data**   		| json   		| JSON Object representing the data associated with the annotation. No predefined data fields required.
+**device_id**   | 文字列      	| アノテーションと関連付けるデバイスIDを指定します
+**timestamp**   | 文字列      	| アノテーションと関連付けるタイムスタンプをEENフォーマットで指定します
+**data**   		| json   		| アノテーションと関連付けるデータをJSON形式で指定します。データフィールド上の事前定義は不要です。
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200	| Request succeeded
-400	| Unexpected or non-identifiable arguments are supplied
-401	| Unauthorized due to invalid session cookie
-403	| Forbidden due to the user missing the necessary privileges
+200	| 要求は成功しました
+400	| 予期しないまたは認識できない属性が与えられました
+401	| 無効なセッションクッキーによって許可されませんでした
+403	| 必要な権限が足りないためユーザーは禁止されました
 
 <!--===================================================================-->
-## Update Annotation
+## アノテーションの更新
 
-> Request TODO
+> 要求 記述予定
 
 ```shell
 ```
 
-> Json Response TODO
+> JSON応答 記述予定
 
 ```json
 ```
 
-Update an annotation for a device at a particular timestamp. Simple modifications ('atype'='mod') can be made and require you to pass the original 'timestamp' from when the annotation was created. Zero to N 'heartbeats' ('atype'='hb') can also be applied to describe changes over time for the annotation. The annotation can be ended ('atype'='end') which closes the annotation and lets you attach additional information. Each annotation event is assumed to last for 10 seconds in the absence of a heartbeat extending it. After a heartbeat, it is assumed to last for another 10 seconds. Annotations can be truncated by specifying an end event ('atype'='end').
+特定のタイムスタンプによってデバイスのアノテーションを更新します。単純な変更 ('atype'='mod') の場合にはアノテーションが作成された時の 'タイムスタンプ' を渡すこともできます。ゼロからNへの 'ハートビート'('atype'='hb') を変更する場合には、アノテーションに対して詳細な変更時間が必要になります。アノテーションは終了 ('atype'='end') させることができ、その場合には付加情報の添付ができます。それぞれのアノテーション イベントはイベントを拡張するハートビートが無くなるとその後10秒間継続していると仮定されます。ハートビートの後ろにはもう10秒続くことが仮定されます。アノテーションは終了イベント ('atype'='end') が指定されることにより、短縮することが可能になります。
 
-### HTTP Request
+### HTTP要求
 
 `POST https://login.eagleeyenetworks.com/g/annotation`
 
-Parameter       | Data Type   	| Description  | Is Required
+パラメータ       | データ型式   	| 詳細         | 必須？
 ---------       | ----------- 	| -----------  | -----------
-**id**   		| string      	| ID of the annotation being updated, which is returned by PUT /annotation | true
-**device_id**   | string      	| ID of the device the associated with the annotation being updated | true
-**timestamp**   | string      	| If atype='mod', then this must be the timestamp associated with the annotation when originally created. If atype is 'hb' or 'end', this timestamp can be a different timestamp than the original. | true
-**data**   		| json   		| JSON Object representing the data to update the annotation with. No predefined data fields required. | true
-atype  			| string, enum  | The type of annotation update to make. Defaults to 'mod'. 'mod' is a simple modification of the annotation. 'hb' indicates a heartbeat event, adding information on parameters that have changed and extending duration. 'end' indicates the end of the event, and no 'hb' with a later timestamp will be accepted. <br><br>enum: end, hb, mod |
+**id**   		| 文字列      	| 更新するアノテーションIDであり、PUT /annotation 時に返されます | true
+**device_id**   | 文字列      	| 更新するアノテーションに関連付けられたデバイスID | true
+**timestamp**   | 文字列      	| atype='mod' が指定される場合、アノテーション作成時のタイムスタンプを指定する必要があります。もし atype が 'hb' または 'end'の場合、このタイムスタンプはオリジナルと異なるタイムスタンプを指定する必要があります。 | true
+**data**   		| json   		| 更新するアノテーションのデータをJSON形式で指定します。データフィールド上の事前定義は不要です。 | true
+atype  			| 文字列, enum  | 更新するアノテーションの型式を指定します。デフォルトは 'mod' です。'mod' はアノテーションの単純な変更を行います。'hb' を指定した場合はハートビート イベントとなり、期間の変更または拡張のパラメータを情報として追加します。'end' が指定された場合は終了イベントとなり、この後には 'hb' が無いものとして受け付けられます。 <br><br>enum: end, hb, mod |
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-400	| Unexpected or non-identifiable arguments are supplied
-401	| Unauthorized due to invalid session cookie
-403	| Forbidden due to the user missing the necessary privileges
+200	| 要求は成功しました
+400	| 予期しないまたは認識できない属性が与えられました
+401	| 無効なセッションクッキーによって許可されませんでした
+403	| 必要な権限が足りないためユーザーは禁止されました

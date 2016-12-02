@@ -3,12 +3,13 @@
 <!--===================================================================-->
 ## 概要
 
-Asset services provide access to media assets - previews and video in appropriate formats. Asset services are used in conjunction with list transactions to enumerate and identify assets.
+アセットサービスは適切なフォーマットのプレビューと動画によるメディアアセットへのアクセスを提供します。アセットサービスは列挙と識別のためにリストトランザクションと連携して使用されます。
 
-Assets are identified by a tuple of timestamp, cameraid, quality, and format.
+アセットはタイムスタンプ、カメラID、品質、そしてフォーマットのタプルによって識別されます。
 
-  * Timestamp: Eagle Eye timestamps have the format YYYYMMDDhhmmss.xxx and are always specifined in GMT time. In most contexts, special tokens can also be used to specify relative times - “now” is the current time, a value starting with + or - is an offset from the current time.
+  * タイムスタンプ: Eagle EyeタイムスタンプはGMT時間でYYYYMMDDhhmmss.xxx書式で表されます。殆どの状況では、特殊なトークンは相対的な時間を指定して使用することができます。"now"は現在の時間を指し、+または-で始まる値は現在時間からのオフセットを示します。
   * CameraID: Cameras are identified by a 8 character hexadecimal string, representing a unique 32 bit id associated with a specific camera. Note CameraID are not necessarily linked to specific hardware devices to allow device upgrade and replacement without disruption of history storage.
+  * カメラID: カメラは8文字の16進数文字列で識別され、
   * Quality: (low,med,high) **Future Feature:** Images and video may have multiple quality levels, each representing the same base asset. Video can be transcoded between quality levels on demand (at some point) to support reduced bandwidth for mobile devices. Normally cameras will capture at medium or high quality. For video, low quality is targeted at around 100kbps, medium quality is under 500kbps, and high quality is around 1mbps. Additional quality levels will be supported in time.
   * Format: Images are always returned as JPEG images. Video can currently returned as either FLV format (playback in browsers via Flash), MP4 (download and export format), and m3u/mpegts (HttpStreaming for iOS and newer android devices).
 
@@ -80,7 +81,7 @@ All Assets have an EEN timestamp attached. Timestamps are always in UTC and main
 <!--===================================================================-->
 ## Get Image
 
-> Request
+> 要求
 
 ```shell
 curl -v -G "https://login.eagleeyenetworks.com/asset/prev/image.jpeg?id=[CAMERA_ID];timestamp=[TIMESTAMP];asset_class=[ASSET_CLASS];A=[AUTH_KEY]"
@@ -96,7 +97,7 @@ Headers: cache control headers to allow asset caching if no now relative:
 content-type: image/jpeg 
   * location: /asset/asset/image.jpeg?t=20120917213405.700;q=low;c=thumb (identifies actual asset time of image in response).Returns user object by ID. Not passing an ID will return the current authorized user.
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/asset/asset/image.jpeg`
 <br> Get the image at the specified timestamp
@@ -107,16 +108,16 @@ content-type: image/jpeg
 `GET https://login.eagleeyenetworks.com/asset/after/image.jpeg`
 <br> Get the first image after the specified timestamp
 
-Parameter         | Data Type     | Description   | Is Required
+パラメータ         | データ型式     | 詳細          | 必須？
 ---------         | -----------   | -----------   | -----------
-**id**            | string        | Camera Id     | true
-**timestamp**     | string        | Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**asset_class**   | string, enum  | Asset class of the image <br><br>enum: all, pre, thumb | true
-quality           | string, enum  | **Future Feature:** Quality of image <br><br>enum: low, med, high
+**id**            | 文字列        | Camera Id     | true
+**timestamp**     | 文字列        | Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
+**asset_class**   | 文字列, enum  | Asset class of the image <br><br>enum: all, pre, thumb | true
+quality           | 文字列, enum  | **Future Feature:** Quality of image <br><br>enum: low, med, high
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 301 | Asset has been moved to a different archiver
@@ -128,7 +129,7 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Get Video
 
-> Request
+> 要求
 
 ```shell
 curl -v -G "https://login.eagleeyenetworks.com/asset/play/video.flv?id=[CAMERA_ID];start_timestamp=[START_TIMESTAMP];end_timestamp=[END_TIMESTAMP];A=[AUTH_KEY]"
@@ -141,20 +142,20 @@ Returns a video stream in the requested format. Formats include
   * m3u8
   * webm
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/asset/play/video.{video_format}`
 
-Parameter                 | Data Type     | Description   | Is Required
+パラメータ                 | データ型式     | 詳細          | 必須？
 ---------                 | -----------   | -----------   | -----------
-**id**                    | string        | Camera Id     | true
-**start_timestamp**       | string        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**end_timestamp**         | string        | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-quality                   | string, enum  | **Future Feature:** Indicates requested resolution if multiple are available. <br><br>enum: low, mid, high
+**id**                    | 文字列        | Camera Id     | true
+**start_timestamp**       | 文字列        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
+**end_timestamp**         | 文字列        | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
+quality                   | 文字列, enum  | **Future Feature:** Indicates requested resolution if multiple are available. <br><br>enum: low, mid, high
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 301 | Asset has been moved to a different archiver
@@ -169,7 +170,7 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Prefetch Image
 
-> Request
+> 要求
 
 ```shell
 curl -v -G "https://login.eagleeyenetworks.com/asset/cloud/image.jpg?start_timestamp=[START_TIMESTAMP];id=[CAMERA_ID];webhook_url=[WEBHOOK_URL]A=[AUTH_KEY]"
@@ -183,17 +184,17 @@ curl -v -G "https://login.eagleeyenetworks.com/asset/cloud/image.jpg?start_times
 
 This API call will ensure the image is in the cloud. If the image is not in the cloud it will do a background upload request to the bridge to aquire the image into the cloud. A webhook provided with the call will be triggered when the upload is successful or an error has occurred. The webhook will be triggered as a POST with JSON formatted data.
 
-### HTTP Request
+### HTTP要求
 `GET https://login.eagleeyenetworks.com/asset/cloud/image.jpg`
 
-Parameter           | Data Type     | Description   | Is Required
+パラメータ           | データ型式     | 詳細          | 必須？
 ---------           | -----------   | -----------   | -----------
-**id**              | string        | Camera Id     | true
-**start_timestamp** | string        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**webhook_url**     | string        | The webhook url (must be urlencoded) to trigger | true
+**id**              | 文字列        | Camera Id     | true
+**start_timestamp** | 文字列        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
+**webhook_url**     | 文字列        | The webhook url (must be urlencoded) to trigger | true
 
 ### JSON **EVENT** Values
-Value                              | Description
+Value                              | 詳細       
 ---------                          | ---------
 ASSET_CLOUD_EVENT_UPLOADED         | The image has been successfully uploaded into the cloud.
 ASSET_CLOUD_EVENT_DEMAND_FAILED    | The image failed aquiring a connection to the bridge.
@@ -201,15 +202,15 @@ ASSET_CLOUD_EVENT_NOTHING_UPLOAD   | Nothing was uploaded since the image was al
 ASSET_CLOUD_EVENT_INVALID_RANGE    | An invalid range (timestamp) was requested.
 ASSET_CLOUD_EVENT_ABORT            | General error occurred.
 
-### HTTP Status Codes
-HTTP Status Code    | Data Type   
+### HTTP 状態コードs
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 201 | Request has been created and webhook will be triggered upon completion or error.
 
 <!--===================================================================-->
 ## Prefetch Video
 
-> Request
+> 要求
 
 ```shell
 curl -v -G "https://login.eagleeyenetworks.com/asset/cloud/video.flv?start_timestamp=[START_TIMESTAMP];end_timestamp=[END_TIMESTAMP];id=[CAMERA_ID];webhook_url=[WEBHOOK_URL]A=[AUTH_KEY]"
@@ -223,18 +224,18 @@ curl -v -G "https://login.eagleeyenetworks.com/asset/cloud/video.flv?start_times
 
 This API call will ensure the video is in the cloud. If the video is not in the cloud it will do a background upload request to the bridge to aquire the video into the cloud. A webhook provided with the call will be triggered when the upload is successful or an error has occurred. The webhook will be triggered as a POST with JSON formatted data.
 
-### HTTP Request
+### HTTP要求
 `GET https://login.eagleeyenetworks.com/asset/cloud/video.flv`
 
-Parameter           | Data Type     | Description   | Is Required
+パラメータ           | データ型式     | 詳細          | 必須？
 ---------           | -----------   | -----------   | -----------
-**id**              | string        | Camera Id     | true
-**start_timestamp** | string        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**end_timestamp**   | string        | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**webhook_url**         | string        | The webhook url (must be urlencoded) to trigger | true
+**id**              | 文字列        | Camera Id     | true
+**start_timestamp** | 文字列        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
+**end_timestamp**   | 文字列        | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
+**webhook_url**         | 文字列        | The webhook url (must be urlencoded) to trigger | true
 
 ### JSON **EVENT** Values
-Value                              | Description
+Value                              | 詳細       
 ---------                          | ---------
 ASSET_CLOUD_EVENT_UPLOADED         | The video has been successfully uploaded into the cloud.
 ASSET_CLOUD_EVENT_DEMAND_FAILED    | The video failed aquiring a connection to the bridge.
@@ -242,21 +243,21 @@ ASSET_CLOUD_EVENT_NOTHING_UPLOAD   | Nothing was uploaded since the video was al
 ASSET_CLOUD_EVENT_INVALID_RANGE    | An invalid range (timestamp) was requested.
 ASSET_CLOUD_EVENT_ABORT            | General error occurred.
 
-### HTTP Status Codes
-HTTP Status Code    | Data Type   
+### HTTP 状態コードs
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 201 | Request has been created and webhook will be triggered upon completion or error.
 
 <!--===================================================================-->
 ## Get List of Images
 
-> Request
+> 要求
 
 ```shell
 curl -v -G "https://login.eagleeyenetworks.com/asset/list/image?start_timestamp=[START_TIMESTAMP];end_timestamp=[END_TIMESTAMP];id=[CAMERA_ID];asset_class=[ASSET_CLASS];A=[AUTH_KEY]"
 ```
 
-> Json Response
+> JSON応答
 
 ```json
 [{"t":"PRFR","s":"20141001000000.045"},{"t":"PRFR","s":"20141001000001.045"},{"t":"PRFR","s":"20141001000002.064"},{"t":"PRFR","s":"20141001000003.064"},{"t":"PRFR","s":"20141001000004.064"},{"t":"PRFR","s":"20141001000005.063"},{"t":"PRFR","s":"20141001000006.063"},{"t":"PRFR","s":"20141001000007.096"}]
@@ -264,21 +265,21 @@ curl -v -G "https://login.eagleeyenetworks.com/asset/list/image?start_timestamp=
 
 This returns a list of objects, where each object contains the timestamp and type of an image jpeg. When formatting the request, either the 'end_timestamp' or 'count' parameter is required.
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/asset/list/image`
 
-Parameter           | Data Type     | Description   | Is Required
+パラメータ           | データ型式     | 詳細          | 必須？
 ---------           | -----------   | -----------   | -----------
-**id**              | string        | Camera Id     | true
-**start_timestamp** | string        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**asset_class**     | string, enum  | Asset class of the image <br><br>enum: all, pre, thumb | true
-end_timestamp       | string        | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN
-count               | int           | Used instead or with an 'end_timestamp' argument. If used with an 'end_timestamp' argument, the count is a limit on the number of entries to return, starting at the starting timestamp. If used without the e argument, returns N entries. Support negative value, which returns N entries before, sorted in reverse order - example -5 return 5 events previous to the specified time.
+**id**              | 文字列        | Camera Id     | true
+**start_timestamp** | 文字列        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
+**asset_class**     | 文字列, enum  | Asset class of the image <br><br>enum: all, pre, thumb | true
+end_timestamp       | 文字列        | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN
+count               | 整数           | Used instead or with an 'end_timestamp' argument. If used with an 'end_timestamp' argument, the count is a limit on the number of entries to return, starting at the starting timestamp. If used without the e argument, returns N entries. Support negative value, which returns N entries before, sorted in reverse order - example -5 return 5 events previous to the specified time.
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 301 | Asset has been moved to a different archiver
@@ -289,13 +290,13 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Get List of Videos
 
-> Request
+> 要求
 
 ```shell
 curl -v -G "https://login.eagleeyenetworks.com/asset/list/video?start_timestamp=[START_TIMESTAMP];end_timestamp=[END_TIMESTAMP];id=[CAMERA_ID];options=coalesce;A=[AUTH_KEY]"
 ```
 
-> Json Response
+> JSON応答
 
 ```json
 [{"s":"20141001000016.768","e":"20141001000100.758"},{"s":"20141001000220.825","e":"20141001000242.774"},{"s":"20141001000256.811","e":"20141001000320.869"},{"s":"20141001000354.761","e":"20141001000422.812"},{"s":"20141001000526.821","e":"20141001000632.829"},{"s":"20141001000746.836","e":"20141001000834.757"},{"s":"20141001000904.749","e":"20141001000932.767"},{"s":"20141001000934.766","e":"20141001001002.777"}]
@@ -303,21 +304,21 @@ curl -v -G "https://login.eagleeyenetworks.com/asset/list/video?start_timestamp=
 
 This returns a list of objects, where each object contains the start and end timestamp of a single video clip. When formatting the request, either the 'end_timestamp' or 'count' parameter is required.
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/asset/list/video`
 
-Parameter           | Data Type     | Description   | Is Required
+パラメータ           | データ型式     | 詳細          | 必須？
 ---------           | -----------   | -----------   | -----------
-**id**              | string        | Camera Id     | true
-**start_timestamp** | string        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-end_timestamp       | string        | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN
-count               | int           | Used instead or with an 'end_timestamp' argument. If used with an 'end_timestamp' argument, the count is a limit on the number of entries to return, starting at the starting timestamp. If used without the e argument, returns N entries. Support negative value, which returns N entries before, sorted in reverse order - example -5 return 5 events previous to the specified time.
-options             | string, enum  | Additional modifier options. 'coalesce' = coalesces spans together. <br><br>enum: coalesce
+**id**              | 文字列        | Camera Id     | true
+**start_timestamp** | 文字列        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
+end_timestamp       | 文字列        | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN
+count               | 整数           | Used instead or with an 'end_timestamp' argument. If used with an 'end_timestamp' argument, the count is a limit on the number of entries to return, starting at the starting timestamp. If used without the e argument, returns N entries. Support negative value, which returns N entries before, sorted in reverse order - example -5 return 5 events previous to the specified time.
+options             | 文字列, enum  | Additional modifier options. 'coalesce' = coalesces spans together. <br><br>enum: coalesce
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 301 | Asset has been moved to a different archiver

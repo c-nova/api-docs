@@ -8,29 +8,29 @@ This service is used to retrieve and update recording info for recordings that w
 <!--===================================================================-->
 ## Get Recording Object
 
-> Request TODO
+> 要求 記述予定
 
 ```shell
 ```
 
-> Json Response TODO
+> JSON応答 記述予定
 
 ```json
 ```
 
 Returns recording object by recording_key.
 
-### HTTP Request
+### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/g/recording`
 
-Parameter       	| Data Type   	| Description
+パラメータ       	| データ型式   	| 詳細       
 ---------       	| ----------- 	| -----------
-**recording_key**   | string      	| Recording Key
+**recording_key**   | 文字列      	| Recording Key
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400	| Unexpected or non-identifiable arguments are supplied
@@ -40,30 +40,30 @@ HTTP Status Code    | Data Type
 <!--===================================================================-->
 ## Update Recording Object
 
-> Request TODO
+> 要求 記述予定
 
 ```shell
 ```
 
-> Json Response TODO
+> JSON応答 記述予定
 
 ```json
 ```
 
 Update a Recording
 
-### HTTP Request
+### HTTP要求
 
 `POST https://login.eagleeyenetworks.com/g/recording`
 
-Parameter       	| Data Type   	| Description
+パラメータ       	| データ型式   	| 詳細       
 ---------       	| ----------- 	| -----------
-**recording_key**   | string      	| Unique identifier (within an account) of a recording
-meta 				| object 		| Meta data. This is meant to be a generic object that can store any data that is needed, so the properties are not predefined.
+**recording_key**   | 文字列      	| Unique identifier (within an account) of a recording
+meta 				| オブジェクト 		| Meta data. This is meant to be a generic object that can store any data that is needed, so the properties are not predefined.
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code    | Data Type   
+HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
 200 | Request succeeded
 400	| Unexpected or non-identifiable arguments are supplied
