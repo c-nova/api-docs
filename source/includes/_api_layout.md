@@ -87,34 +87,19 @@ Rendered Layouts on Web and Mobile:
 
 ### Layout Attributes
 
-<<<<<<< HEAD
-パラメータ               | データ型式             | 詳細       
----------               | -----------           | -----------
-id                      | 文字列                | Unique identifier for the Layout
-name                    | 文字列                | Name of the layout
-types                   | 配列[文字列]         | Specifies target(s) for layout. Multiple values are allowed.
-permissions             | 文字列                | String of zero or more characters. Each character defines a permission. Permissions include: 'R' - user can view this layout. 'W' - user can modify this layout. 'D' - user can delete this layout. 'S' - user can share this layout
-current_recording_key   | 文字列          | String key representing a recording currently being made with the cameras in the layout, which was initiated using the action/recordnow service.
-shares                  | array[array[string]]) | Array of arrays, one per account user for whom sharing is enabled for this layout. Each string contains two field separated by comma. The first field is a user aid and the second field are permissions for the user. Two special user ID exist: ‘account’ specifies that the layout is shared with all users of the account. Second field contains permissions for users in the account. Example: [‘cafedead’,’RWDS’] = user can view, change, delete or share this layout. [‘cafe0001’,’RW’] = user can view this layout and change this layout. [‘account’, ‘R’] = All users of the account can view this layout. Permissions for the user issuing the /layout GET are not included in this array.
-configuration           | LayoutConfiguration   | JSON object that defines the layout configuration
+パラメータ               | データ型式             | 詳細         | 編集可       | 必須
+----------     | ---------      | ----------        | ---------------     |---------------
+id                      | 文字列                | Unique identifier for the Layout     | false | GET, POST, PUT, DELETE
+name                    | 文字列                | Name of the layout  | true | PUT
+types                   | 配列[文字列]         | Specifies target(s) for layout. Multiple values are allowed. | true | PUT
+permissions             | 文字列                | String of zero or more characters. Each character defines a permission. Permissions include: 'R' - user can view this layout. 'W' - user can modify this layout. 'D' - user can delete this layout. 'S' - user can share this layout | false |
+current_recording_key   | 文字列          | String key representing a recording currently being made with the cameras in the layout, which was initiated using the action/recordnow service. | false | 
+shares                  | 配列[配列[文字列]]) | Array of arrays, one per account user for whom sharing is enabled for this layout. Each string contains two field separated by comma. The first field is a user aid and the second field are permissions for the user. Two special user ID exist: ‘account’ specifies that the layout is shared with all users of the account. Second field contains permissions for users in the account. Example: [‘cafedead’,’RWDS’] = user can view, change, delete or share this layout. [‘cafe0001’,’RW’] = user can view this layout and change this layout. [‘account’, ‘R’] = All users of the account can view this layout. Permissions for the user issuing the /layout GET are not included in this array. | false |
+configuration           | [LayoutConfiguration](#layoutconfiguration-attributes)   | JSON object that defines the layout configuration | true |
 
 ### LayoutConfiguration Attributes
 
 パラメータ               | データ型式                     | 詳細       
-=======
-Property               | Data Type             | Description         | Editable       | Required
-----------     | ---------      | ----------        | ---------------     |---------------
-id                      | string                | Unique identifier for the Layout     | false | GET, POST, PUT, DELETE
-name                    | string                | Name of the layout  | true | PUT
-types                   | array[string]         | Specifies target(s) for layout. Multiple values are allowed. | true | PUT
-permissions             | string                | String of zero or more characters. Each character defines a permission. Permissions include: 'R' - user can view this layout. 'W' - user can modify this layout. 'D' - user can delete this layout. 'S' - user can share this layout | false |
-current_recording_key   | string          | String key representing a recording currently being made with the cameras in the layout, which was initiated using the action/recordnow service. | false | 
-shares                  | array[array[string]]) | Array of arrays, one per account user for whom sharing is enabled for this layout. Each string contains two field separated by comma. The first field is a user aid and the second field are permissions for the user. Two special user ID exist: ‘account’ specifies that the layout is shared with all users of the account. Second field contains permissions for users in the account. Example: [‘cafedead’,’RWDS’] = user can view, change, delete or share this layout. [‘cafe0001’,’RW’] = user can view this layout and change this layout. [‘account’, ‘R’] = All users of the account can view this layout. Permissions for the user issuing the /layout GET are not included in this array. | false |
-configuration           | [LayoutConfiguration](#layoutconfiguration-attributes)   | JSON object that defines the layout configuration | true |
-### LayoutConfiguration Attributes
-
-Parameter               | Data Type                     | Description 
->>>>>>> root_branch/master
 ---------               | -----------                   | -----------
 panes                   | array[[LayoutConfigurationPane](#layoutconfigurationpane-attributes)]| Array of Panes
 settings                | [LayoutConfigurationSettings](#layoutconfigurationsettings-attributes)   | Settings object
@@ -153,15 +138,9 @@ Returns layout object by Id
 
 `GET https://login.eagleeyenetworks.com/g/layout`
 
-<<<<<<< HEAD
-パラメータ     | データ型式   | 詳細
----------     | ----------- | -----------
-**id**        | 文字列      | Layout Id
-=======
-Parameter     | Data Type   | Description | Is Required
+パラメータ     | データ型式   | 詳細 | 必須
 ---------     | ----------- | ----------- | -----------
-**id**        | string      | Layout Id   | true
->>>>>>> root_branch/master
+**id**        | 文字列      | Layout Id   | true
 
 ### エラー状態コード
 

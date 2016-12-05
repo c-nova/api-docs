@@ -136,103 +136,59 @@
 <!--Need to update the recording and search sections-->
 ### Account Attributes
 
-<<<<<<< HEAD
-パラメータ               | データ型式     | 詳細       
------------------------ | -------------	| -----------
-id 						| 文字列 		| Unique identifier for the Account
-name 					| 文字列 		| Name of the account
-owner_account_id 		| 文字列 		| Id of parent account
-contact_first_name 		| 文字列 		| First name of primary contact for account
-contact_last_name  		| 文字列 		| Last name of primary contact for account
-contact_email 			| 文字列 		| Email of primary contact for account
-contact_street 			| 配列[文字列] | Array of strings representing 1 or more parts of a street address of primary contact for account
-contact_city 			| 文字列 		| City of primary contact for account
-contact_state 			| 文字列 		| State/province of primary contact for account
-contact_postal_code 	| 文字列 		| Zip/postal code of primary contact for account
-contact_country 		| 文字列 		| Country of primary contact for account
-timezone 				| 文字列 		| ['US/Alaska' or 'US/Arizona' or 'US/Central' or 'US/Pacific' or 'US/Eastern' or 'US/Mountain' or 'US/Hawaii' or 'UTC']: Timezone of the account. Defaults to US/Pacific.
-utc_offset 				| 整数 			| Signed integer offset in seconds of the timezone from UTC
-access_restriction 		| 配列[文字列] | ['enable_mobile' or 'enable_ip_restrictions']: Each entry in the list contains a restriction. Possible values: 'enable_mobile' = If present this account can has access to mobile clients. 'enable_ip_restrictions' = if present, and if allowable_ip_address_ranges has been specified, limits logins to the address ranges specified.,
-allowable_ip_address_range | 配列[文字列] | Each entry in the list specifies one address range. Entries use the ‘/’ format. For example, to limit access to 192.168.123.0-192.168.123.255, the entry would be 192.168.123.0/24. If no entries are present, 0.0.0.0/0 i s implied.
-session_duration 		| 整数 			| session duration in minutes. Session duration of 0 means 'stay logged in forever'
-holiday 				| 配列[文字列] | List of dates that during which holidays are observed. Format for dates is YYYYMMDD
-work_days 				| 文字列 		| String of length 7. Each position in the string corresponds to a day of the week. Monday is position 0, Tuesday is position 1, etc... Each character in the string can have a value of 1 or 0. 1 means that this day is a work day.
-work_hours 				| 配列[文字列] | Two entries. Each entry contains a time expressed in local time. The first entry in the list is the work day start time . The second entry in the list is the stop time. Times are represented using a 24 hour clock and are formatted as HHMM. For example, 8AM would be 0800 and 5PM would be 1700.
-alert_mode 				| 配列[文字列] | List of possible alert modes as defined for this account.
-active_alert_mode 		| 文字列 		| Must be blank or one of the values defined in alert_mode list.
-default_colo  			| 文字列 		| Name of the colo in which this account data for this account will be stored by default.
-default_camera_passwords| 文字列 		| Comma-delimited string of default camera passwords
-camera_shares 			| array[array[string]]) | Array of arrays, with each sub array representing a camera to be shared to 1 or more email addresses. First element of sub array is action, with 'm' for add/update, and 'd' for delete. Second element of sub array is camera ID. Third element of sub array is an array of email addresses, but only applies to the 'm' action. Example: [['m', '12345678', ['test@testing.com','test2@testing.com]]]
-is_master 				| 整数 			| ['0' or '1']: Indicates whether the account is a Master account (1) or not (0)
-is_active 				| 整数 			| ['0' or '1']: Indicates whether the account is Active (1) or not (0)
-is_inactive 			| 整数 			| ['0' or '1']: Indicates whether the account is inactive (1) or not (0)
-is_suspended 			| 整数 			| ['0' or '1']: Indicates whether the account is Suspended (1) or not (0)
-product_edition 		| 文字列 		| The product edition the account is using
-camera_quantity 		| 整数 			| The total number of cameras the account is allowed to use,
-is_custom_brand_allowed | 整数 			| ['0' or '1']: Indicates whether the account is allowed to have branding (1) or not (0)
-is_custom_brand 		| 整数 			| ['0' or '1']: Indicates whether the account has branding enabled (1) or not (0)
-brand_logo_small 		| 文字列 		| Base64 encoded image for the branded small logo
-brand_logo_large 		| 文字列 		| Base64 encoded image for the branded large logo
-brand_subdomain 		| 文字列 		| Sub domain for the branded url
-brand_corp_url 			| 文字列 		| Corporate web site url
-brand_name 				| 文字列 		| Branded company name
-brand_saml_publickey_cert | 文字列      | Public Certificate that Eagle Eye Networks will use to decrypt the SAML for SSO
-brand_saml_nameid_path | 文字列      | The path within the SAML xml to find the users email address
-=======
-Parameter  | Data Type     | Description | Editable | Required
+パラメータ  | データ形式     | 詳細 | 編集可 | 必須
 ------------ | ----------- | -------- | --------  | ---------
-id 						| string 		| Unique identifier for the Account |false | GET, POST, DELETE
-name 					| string 		| Name of the account | true | PUT
-owner_account_id 		| string 		| Id of parent account | false | 
-contact_first_name 		| string 		| First name of primary contact for account | true | PUT
-contact_last_name  		| string 		| Last name of primary contact for account | true | PUT
-contact_email 			| string 		| Email of primary contact for account | true | 
-contact_street 			| array[string] | Array of strings representing 1 or more parts of a street address of primary contact for account | true | 
-contact_city 			| string 		| City of primary contact for account | true | 
-contact_state 			| string 		| State/province of primary contact for account | true | 
-contact_postal_code 	| string 		| Zip/postal code of primary contact for account | true | 
-contact_country 		| string 		| Country of primary contact for account | true | 
-timezone 				| string 		| ['US/Alaska' or 'US/Arizona' or 'US/Central' or 'US/Pacific' or 'US/Eastern' or 'US/Mountain' or 'US/Hawaii' or 'UTC']: Timezone of the account. Defaults to US/Pacific. | true | 
-utc_offset 				| int 			| Signed integer offset in seconds of the timezone from UTC | false | 
-access_restriction 		| array[string] | ['enable_mobile' or 'enable_ip_restrictions']: Each entry in the list contains a restriction. Possible values: 'enable_mobile' = If present this account can has access to mobile clients. 'enable_ip_restrictions' = if present, and if allowable_ip_address_ranges has been specified, limits logins to the address ranges specified. | false |
-allowable_ip_address_range | array[string] | Each entry in the list specifies one address range. Entries use the ‘/’ format. For example, to limit access to 192.168.123.0-192.168.123.255, the entry would be 192.168.123.0/24. If no entries are present, 0.0.0.0/0 i s implied. | false |
-session_duration 		| int 			| session duration in minutes. Session duration of 0 means 'stay logged in forever' | true|
-holiday 				| array[string] | List of dates that during which holidays are observed. Format for dates is YYYYMMDD | true | 
-work_days 				| string 		| String of length 7. Each position in the string corresponds to a day of the week. Monday is position 0, Tuesday is position 1, etc... Each character in the string can have a value of 1 or 0. 1 means that this day is a work day.| true | 
-work_hours 				| array[string] | Two entries. Each entry contains a time expressed in local time. The first entry in the list is the work day start time . The second entry in the list is the stop time. Times are represented using a 24 hour clock and are formatted as HHMM. For example, 8AM would be 0800 and 5PM would be 1700.| true | 
-alert_mode 				| array[string] | List of possible alert modes as defined for this account.| true | 
-active_alert_mode 		| string 		| Must be blank or one of the values defined in alert_mode list.| true | 
-default_colo  			| string 		| Name of the colo in which this account data for this account will be stored by default.| falae | 
-default_camera_passwords| string 		| Comma-delimited string of default camera passwords | true | 
-camera_shares 			| array[array[string]]) | Array of arrays, with each sub array representing a camera to be shared to 1 or more email addresses. First element of sub array is action, with 'm' for add/update, and 'd' for delete. Second element of sub array is camera ID. Third element of sub array is an array of email addresses, but only applies to the 'm' action. Example: [['m', '12345678', ['test@testing.com','test2@testing.com]]] | true | 
-is_master 				| int 			| ['0' or '1']: Indicates whether the account is a Master account (1) or not (0) | false | 
-is_active 				| int 			| ['0' or '1']: Indicates whether the account is Active (1) or not (0)   | false |
-is_inactive 			| int 			| ['0' or '1']: Indicates whether the account is inactive (1) or not (0) | true |
-is_suspended 			| int 			| ['0' or '1']: Indicates whether the account is Suspended (1) or not (0) | true |
-product_edition 		| string 		| The product edition the account is using | false |
-camera_quantity 		| int 			| The total number of cameras the account is allowed to use, | false |
-is_custom_brand_allowed | int 			| ['0' or '1']: Indicates whether the account is allowed to have branding (1) or not (0) | true |
-is_custom_brand 		| int 			| ['0' or '1']: Indicates whether the account has branding enabled (1) or not (0)  | true |
-brand_logo_small 		| string 		| Base64 encoded image for the branded small logo | true |
-brand_logo_large 		| string 		| Base64 encoded image for the branded large logo | true |
-brand_subdomain 		| string 		| Sub domain for the branded url | true |
-brand_corp_url 			| string 		| Corporate web site url | true |
-brand_name 				| string 		| Branded company name | true |
-brand_saml_publickey_cert | string      | Public Certificate that Eagle Eye Networks will use to decrypt the SAML for SSO | true |
-brand_saml_nameid_path | string      | The path within the SAML xml to find the users email address | true |
-is_without_initial_user | string | desiginates an account at creation to not have a contact user created automatically | true |
-customer_id | string | an arbitrary id assigned to a sub account by a master | true |
-is_master_video_disabled_allowed | int | 1 or 0 designating whether or not a sub account can block video access to reseller | true |
-is_master_video_disabled | int | 1 or 0 designating whether or not video access is blocked to reseller | true |
-is_contract_recording | int | 1 or 0 designating if the account is of type contract_recording | true |
-is_advanced_disabled | int | 1 or 0 set by reseller disabling advanced functionality | true |
-is_billing_disabled | int | 1 or 0 set by reseller disables setting settings in a sub that affect billing | true |
-is_add_delete_disabled | int | 1 or 0 set by reseller disables adding or deleting devices | true|
-is_disable_all_settings | int | 1 or 0 set by reseller disables all device and most account settings | true |
-first_responders | array[array[string]] | array[[responder_email,responder_first_name,responder_last_name,responder_organization]] | true |
-responder_cameras | array[esn] | array of camera esns that are shared to first responders | true |
-inactive_session_timeout | int | time without activity until the web session expires | true |
->>>>>>> root_branch/master
+id 						| 文字列 		| Unique identifier for the Account |false | GET, POST, DELETE
+name 					| 文字列 		| Name of the account | true | PUT
+owner_account_id 		| 文字列 		| Id of parent account | false | 
+contact_first_name 		| 文字列 		| First name of primary contact for account | true | PUT
+contact_last_name  		| 文字列 		| Last name of primary contact for account | true | PUT
+contact_email 			| 文字列 		| Email of primary contact for account | true | 
+contact_street 			| 配列[文字列] | Array of 文字列s representing 1 or more parts of a street address of primary contact for account | true | 
+contact_city 			| 文字列 		| City of primary contact for account | true | 
+contact_state 			| 文字列 		| State/province of primary contact for account | true | 
+contact_postal_code 	| 文字列 		| Zip/postal code of primary contact for account | true | 
+contact_country 		| 文字列 		| Country of primary contact for account | true | 
+timezone 				| 文字列 		| ['US/Alaska' or 'US/Arizona' or 'US/Central' or 'US/Pacific' or 'US/Eastern' or 'US/Mountain' or 'US/Hawaii' or 'UTC']: Timezone of the account. Defaults to US/Pacific. | true | 
+utc_offset 				| 整数 			| Signed 整数eger offset in seconds of the timezone from UTC | false | 
+access_restriction 		| 配列[文字列] | ['enable_mobile' or 'enable_ip_restrictions']: Each entry in the list contains a restriction. Possible values: 'enable_mobile' = If present this account can has access to mobile clients. 'enable_ip_restrictions' = if present, and if allowable_ip_address_ranges has been specified, limits logins to the address ranges specified. | false |
+allowable_ip_address_range | 配列[文字列] | Each entry in the list specifies one address range. Entries use the ‘/’ format. For example, to limit access to 192.168.123.0-192.168.123.255, the entry would be 192.168.123.0/24. If no entries are present, 0.0.0.0/0 i s implied. | false |
+session_duration 		| 整数 			| session duration in minutes. Session duration of 0 means 'stay logged in forever' | true|
+holiday 				| 配列[文字列] | List of dates that during which holidays are observed. Format for dates is YYYYMMDD | true | 
+work_days 				| 文字列 		| String of length 7. Each position in the string corresponds to a day of the week. Monday is position 0, Tuesday is position 1, etc... Each character in the string can have a value of 1 or 0. 1 means that this day is a work day.| true | 
+work_hours 				| 配列[文字列] | Two entries. Each entry contains a time expressed in local time. The first entry in the list is the work day start time . The second entry in the list is the stop time. Times are represented using a 24 hour clock and are formatted as HHMM. For example, 8AM would be 0800 and 5PM would be 1700.| true | 
+alert_mode 				| 配列[文字列] | List of possible alert modes as defined for this account.| true | 
+active_alert_mode 		| 文字列 		| Must be blank or one of the values defined in alert_mode list.| true | 
+default_colo  			| 文字列 		| Name of the colo in which this account data for this account will be stored by default.| falae | 
+default_camera_passwords| 文字列 		| Comma-delimited string of default camera passwords | true | 
+camera_shares 			| 配列[配列[文字列]]) | Array of arrays, with each sub array representing a camera to be shared to 1 or more email addresses. First element of sub array is action, with 'm' for add/update, and 'd' for delete. Second element of sub array is camera ID. Third element of sub array is an array of email addresses, but only applies to the 'm' action. Example: [['m', '12345678', ['test@testing.com','test2@testing.com]]] | true | 
+is_master 				| 整数 			| ['0' or '1']: Indicates whether the account is a Master account (1) or not (0) | false | 
+is_active 				| 整数 			| ['0' or '1']: Indicates whether the account is Active (1) or not (0)   | false |
+is_inactive 			| 整数 			| ['0' or '1']: Indicates whether the account is inactive (1) or not (0) | true |
+is_suspended 			| 整数 			| ['0' or '1']: Indicates whether the account is Suspended (1) or not (0) | true |
+product_edition 		| 文字列 		| The product edition the account is using | false |
+camera_quantity 		| 整数 			| The total number of cameras the account is allowed to use, | false |
+is_custom_brand_allowed | 整数 			| ['0' or '1']: Indicates whether the account is allowed to have branding (1) or not (0) | true |
+is_custom_brand 		| 整数 			| ['0' or '1']: Indicates whether the account has branding enabled (1) or not (0)  | true |
+brand_logo_small 		| 文字列 		| Base64 encoded image for the branded small logo | true |
+brand_logo_large 		| 文字列 		| Base64 encoded image for the branded large logo | true |
+brand_subdomain 		| 文字列 		| Sub domain for the branded url | true |
+brand_corp_url 			| 文字列 		| Corporate web site url | true |
+brand_name 				| 文字列 		| Branded company name | true |
+brand_saml_publickey_cert | 文字列      | Public Certificate that Eagle Eye Networks will use to decrypt the SAML for SSO | true |
+brand_saml_nameid_path | 文字列      | The path within the SAML xml to find the users email address | true |
+is_without_initial_user | 文字列 | desiginates an account at creation to not have a contact user created automatically | true |
+customer_id | 文字列 | an arbitrary id assigned to a sub account by a master | true |
+is_master_video_disabled_allowed | 整数 | 1 or 0 designating whether or not a sub account can block video access to reseller | true |
+is_master_video_disabled | 整数 | 1 or 0 designating whether or not video access is blocked to reseller | true |
+is_contract_recording | 整数 | 1 or 0 designating if the account is of type contract_recording | true |
+is_advanced_disabled | 整数 | 1 or 0 set by reseller disabling advanced functionality | true |
+is_billing_disabled | 整数 | 1 or 0 set by reseller disables setting settings in a sub that affect billing | true |
+is_add_delete_disabled | 整数 | 1 or 0 set by reseller disables adding or deleting devices | true|
+is_disable_all_settings | 整数 | 1 or 0 set by reseller disables all device and most account settings | true |
+first_responders | 配列[配列[文字列]] | 配列[[responder_email,responder_first_name,responder_last_name,responder_organization]] | true |
+responder_cameras | 配列[esn] | array of camera esns that are shared to first responders | true |
+inactive_session_timeout | 整数 | time without activity until the web session expires | true |
 
 
 <!--===================================================================-->
@@ -293,7 +249,7 @@ owner_account_id  		| 文字列      	| ID of parent account. If omitted, parent
 **contact_first_name**	| 文字列      	| First name of primary contact for account | true
 **contact_last_name**	| 文字列      	| Last name of primary contact for account | true
 **contact_email**		| 文字列      	| Email of primary contact for account | true
-contact_street			| 配列[文字列] | Array of strings representing 1 or more parts of a street address of primary contact for account
+contact_street			| 配列[文字列] | Array of 文字列s representing 1 or more parts of a street address of primary contact for account
 contact_city			| 文字列      	| City of primary contact for account.
 contact_state			| 文字列      	| State/province of primary contact for account.
 contact_postal_code		| 文字列      	| Zip/postal code of primary contact for account.
