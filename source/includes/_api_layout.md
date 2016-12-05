@@ -3,11 +3,11 @@
 <!--===================================================================-->
 ## 概要
 
-Layouts contain panes, which is a group of cameras arranged for viewing on screen. Layouts are associated with an account and account users are granted view/write/share permissions for the layout. Users who would otherwise have no access to a cameras, gain access to all cameras included in layouts shared with them.
+Layouts contain panes, which is a group of cameras arranged for viewing on screen. Layouts are associated with an account and account users are granted view/write/share permissions for the layout. Users who would otherwise have no access to a camera gain access to all cameras included in layouts shared with them.
 
 The ordering of the panes is determined by the order of the array of LayoutJsonPane returned by the API. Each pane will have a size of 1, 2, or 3. A size of 1 is the smallest, and fills up 1x1 on the layout grid. A size of 3 is the largest and fills up 3x3 on the layout grid. If the grid does not have enough columns to fit the pane, then the size of the pane is decreased until it is able to fit on the grid.
 
-Visual Examples:
+Rendered Layouts on Web and Mobile:
 <img src="images/api_layout/example_1.png" alt="Example 1" width="1000">
 <img src="images/api_layout/example_2.png" alt="Example 2" width="400">
 
@@ -87,6 +87,7 @@ Visual Examples:
 
 ### Layout Attributes
 
+<<<<<<< HEAD
 パラメータ               | データ型式             | 詳細       
 ---------               | -----------           | -----------
 id                      | 文字列                | Unique identifier for the Layout
@@ -100,9 +101,23 @@ configuration           | LayoutConfiguration   | JSON object that defines the l
 ### LayoutConfiguration Attributes
 
 パラメータ               | データ型式                     | 詳細       
+=======
+Property               | Data Type             | Description         | Editable       | Required
+----------     | ---------      | ----------        | ---------------     |---------------
+id                      | string                | Unique identifier for the Layout     | false | GET, POST, PUT, DELETE
+name                    | string                | Name of the layout  | true | PUT
+types                   | array[string]         | Specifies target(s) for layout. Multiple values are allowed. | true | PUT
+permissions             | string                | String of zero or more characters. Each character defines a permission. Permissions include: 'R' - user can view this layout. 'W' - user can modify this layout. 'D' - user can delete this layout. 'S' - user can share this layout | false |
+current_recording_key   | string          | String key representing a recording currently being made with the cameras in the layout, which was initiated using the action/recordnow service. | false | 
+shares                  | array[array[string]]) | Array of arrays, one per account user for whom sharing is enabled for this layout. Each string contains two field separated by comma. The first field is a user aid and the second field are permissions for the user. Two special user ID exist: ‘account’ specifies that the layout is shared with all users of the account. Second field contains permissions for users in the account. Example: [‘cafedead’,’RWDS’] = user can view, change, delete or share this layout. [‘cafe0001’,’RW’] = user can view this layout and change this layout. [‘account’, ‘R’] = All users of the account can view this layout. Permissions for the user issuing the /layout GET are not included in this array. | false |
+configuration           | [LayoutConfiguration](#layoutconfiguration-attributes)   | JSON object that defines the layout configuration | true |
+### LayoutConfiguration Attributes
+
+Parameter               | Data Type                     | Description 
+>>>>>>> root_branch/master
 ---------               | -----------                   | -----------
-panes                   | array[LayoutConfigurationPane]| Array of Panes
-settings                | LayoutConfigurationSettings   | Settings object
+panes                   | array[[LayoutConfigurationPane](#layoutconfigurationpane-attributes)]| Array of Panes
+settings                | [LayoutConfigurationSettings](#layoutconfigurationsettings-attributes)   | Settings object
 
 ### LayoutConfigurationPane Attributes
 
@@ -138,9 +153,15 @@ Returns layout object by Id
 
 `GET https://login.eagleeyenetworks.com/g/layout`
 
+<<<<<<< HEAD
 パラメータ     | データ型式   | 詳細
 ---------     | ----------- | -----------
 **id**        | 文字列      | Layout Id
+=======
+Parameter     | Data Type   | Description | Is Required
+---------     | ----------- | ----------- | -----------
+**id**        | string      | Layout Id   | true
+>>>>>>> root_branch/master
 
 ### エラー状態コード
 
@@ -179,7 +200,7 @@ Creates a new layout
 **name**      | 文字列        | Layout Name | true
 **types**     | 配列[文字列] | Specifies target(s) for layout. Multiple values are allowed. | true
 configuration | json          | JSON object that defines the layout configuration
-shares        | ???           | Array of arrays, one per account user for whom sharing is enabled for this layout. Each string contains two fields separated by a comma. The first field is a user id and the second field is the list of permissions for the user. Two special user IDs exist: 'account' specifies that the layout is shared with all users of the account. The second field contains permissions for users in the account. Example: ['cafedead', 'RWDS'] = user can view, change, delete or share this layout. ['cafe0001', 'RW'] = user can view and change this layout. ['account', 'R'] = All users in the account can view the layout. Permissions for the user issuing the /layout GET are not included in this array.
+shares        | array[array]          | Array of arrays, one per account user for whom sharing is enabled for this layout. Each string contains two fields separated by a comma. The first field is a user id and the second field is the list of permissions for the user. Two special user IDs exist: 'account' specifies that the layout is shared with all users of the account. The second field contains permissions for users in the account. Example: ['cafedead', 'RWDS'] = user can view, change, delete or share this layout. ['cafe0001', 'RW'] = user can view and change this layout. ['account', 'R'] = All users in the account can view the layout. Permissions for the user issuing the /layout GET are not included in this array.
 
 ### エラー状態コード
 

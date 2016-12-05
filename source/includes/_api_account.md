@@ -12,58 +12,50 @@
 
 ```json
 {
-	"id": "00004206",
-	"name": "Greater Good",
-	"owner_account_id": "00000001",
-	"contact_first_name": null,
-	"contact_last_name": null,
-	"contact_email": "john.doe@eagleeyenetworks.com",
-	"contact_street": [],
-    "contact_city": null,
-	"contact_state": null,
-	"contact_postal_code": null,
-	"contact_country": "US",
-	"timezone": "US/Pacific",
-	"utc_offset": -25200,
-	"access_restriction": [
-        "enable_mobile"
-    ],
-    "allowable_ip_address_range": [],
-    "session_duration": 720,
-    "holiday": [
-        "20130101",
-        "20130527",
-        "20130704",
-        "20130902",
-        "20131128",
-        "20131225"
-    ],
-    "work_days": "1111111",
-    "work_hours": [
-        "0800",
-        "1730"
-    ],
-    "alert_mode": [
-        "default"
-    ],
-    "active_alert_mode": "default",
-    "camera_shares": [],
-    "default_colo": null,
-    "default_camera_passwords": null,
-    "is_master": 0,
-    "is_active": 1,
+    "is_master_video_disabled_allowed": 1,
     "is_inactive": 0,
     "is_suspended": 0,
-    "product_edition": null,
-    "camera_quantity": null,
-    "is_custom_brand_allowed": 0,
-    "is_custom_brand": 0,
-    "brand_logo_small": null,
-    "brand_logo_large": null,
-	"brand_subdomain": null,
-    "brand_corp_url": null,
     "brand_name": null,
-	"contact_phone": null,
+    "alert_mode": [
+        "default",
+        "Weekend"
+    ],
+    "is_master_video_disabled": 0,
+    "contact_state": null,
+    "first_responders": [
+        [
+            "mark@responders.com",
+            "Mark",
+            "O'Malley",
+            "Responders",
+            "No Account"
+        ],
+        [
+            "jeff@noaccount.com",
+            "Jeff",
+            "O'unverfied",
+            "Unverfied Organization",
+            "Fake Sponder"
+        ],
+        ...
+    ],
+    "contact_first_name": "Willem",
+    "is_disable_all_settings": 0,
+    "timezone": "US/Pacific",
+    "id": "11111111",
+    "contact_country": "US",
+    "is_system_notifications_disabled": 0,
+    "camera_shares": [
+        [
+            "10101010",
+            "share@email.com",
+            "hasno@account.com,No Account"
+            ...
+        ],
+        ...
+    ],
+    "owner_account_id": "1010101b",
+    "product_edition": null,
     "cc_info": [
         {
             "city": "",
@@ -80,18 +72,71 @@
             "type": ""
         }
     ],
+    "brand_saml_publickey_cert": null,
     "brand_support_email": null,
+    "is_billing_disabled": 0,
+    "is_advanced_disabled": 0,
+    "inactive_session_timeout": 720,
+    "brand_logo_large": null,
+    "brand_corp_url": null,
+    "responder_active": true,
+    "contact_street": [],
+    "is_system_notification_images_enabled": 1,
+    "is_custom_brand_allowed": 0,
+    "holiday": [
+        "20130101",
+        "20130527",
+        "20130704",
+        "20130902",
+        "20131128",
+        "20131225"
+    ],
+    "is_rtsp_cameras_enabled": 0,
+    "brand_saml_nameid_path": null,
+    "is_contract_recording": 0,
+    "utc_offset": -28800,
+    "session_duration": 480,
+    "is_custom_brand": 0,
+    "contact_postal_code": null,
+    "brand_logo_small": null,
+    "is_active": 1,
+    "work_days": "1111111",
+    "is_add_delete_disabled": 0,
+    "is_master": 0,
+    "contact_email": "support@eagleeyenetworks.com",
+    "responder_cameras": [
+        "1010fake",
+        "not1c4mr"
+    ],
     "brand_support_phone": null,
     "map_lines": null,
     "contact_mobile_phone": null,
-    "is_rtsp_cameras_enabled": 0,
-    "contact_utc_offset": null
-    ...
+    "work_hours": [
+        "0800",
+        "1730"
+    ],
+    "login_attempt_limit": null,
+    "default_cluster": "c9000",
+    "customer_id": "1234",
+    "name": "Account Name",
+    "contact_city": null,
+    "default_camera_passwords": "pwordpword",
+    "contact_phone": null,
+    "access_restriction": [
+        "enable_mobile"
+    ],
+    "active_alert_mode": "default",
+    "allowable_ip_address_range": [],
+    "contact_last_name": "Dafoe",
+    "contact_utc_offset": null,
+    "camera_quantity": null,
+    "brand_subdomain": "c9000"
 }
 ```
-
+<!--Need to update the recording and search sections-->
 ### Account Attributes
 
+<<<<<<< HEAD
 パラメータ               | データ型式     | 詳細       
 ----------------------- | -------------	| -----------
 id 						| 文字列 		| Unique identifier for the Account
@@ -133,6 +178,61 @@ brand_corp_url 			| 文字列 		| Corporate web site url
 brand_name 				| 文字列 		| Branded company name
 brand_saml_publickey_cert | 文字列      | Public Certificate that Eagle Eye Networks will use to decrypt the SAML for SSO
 brand_saml_nameid_path | 文字列      | The path within the SAML xml to find the users email address
+=======
+Parameter  | Data Type     | Description | Editable | Required
+------------ | ----------- | -------- | --------  | ---------
+id 						| string 		| Unique identifier for the Account |false | GET, POST, DELETE
+name 					| string 		| Name of the account | true | PUT
+owner_account_id 		| string 		| Id of parent account | false | 
+contact_first_name 		| string 		| First name of primary contact for account | true | PUT
+contact_last_name  		| string 		| Last name of primary contact for account | true | PUT
+contact_email 			| string 		| Email of primary contact for account | true | 
+contact_street 			| array[string] | Array of strings representing 1 or more parts of a street address of primary contact for account | true | 
+contact_city 			| string 		| City of primary contact for account | true | 
+contact_state 			| string 		| State/province of primary contact for account | true | 
+contact_postal_code 	| string 		| Zip/postal code of primary contact for account | true | 
+contact_country 		| string 		| Country of primary contact for account | true | 
+timezone 				| string 		| ['US/Alaska' or 'US/Arizona' or 'US/Central' or 'US/Pacific' or 'US/Eastern' or 'US/Mountain' or 'US/Hawaii' or 'UTC']: Timezone of the account. Defaults to US/Pacific. | true | 
+utc_offset 				| int 			| Signed integer offset in seconds of the timezone from UTC | false | 
+access_restriction 		| array[string] | ['enable_mobile' or 'enable_ip_restrictions']: Each entry in the list contains a restriction. Possible values: 'enable_mobile' = If present this account can has access to mobile clients. 'enable_ip_restrictions' = if present, and if allowable_ip_address_ranges has been specified, limits logins to the address ranges specified. | false |
+allowable_ip_address_range | array[string] | Each entry in the list specifies one address range. Entries use the ‘/’ format. For example, to limit access to 192.168.123.0-192.168.123.255, the entry would be 192.168.123.0/24. If no entries are present, 0.0.0.0/0 i s implied. | false |
+session_duration 		| int 			| session duration in minutes. Session duration of 0 means 'stay logged in forever' | true|
+holiday 				| array[string] | List of dates that during which holidays are observed. Format for dates is YYYYMMDD | true | 
+work_days 				| string 		| String of length 7. Each position in the string corresponds to a day of the week. Monday is position 0, Tuesday is position 1, etc... Each character in the string can have a value of 1 or 0. 1 means that this day is a work day.| true | 
+work_hours 				| array[string] | Two entries. Each entry contains a time expressed in local time. The first entry in the list is the work day start time . The second entry in the list is the stop time. Times are represented using a 24 hour clock and are formatted as HHMM. For example, 8AM would be 0800 and 5PM would be 1700.| true | 
+alert_mode 				| array[string] | List of possible alert modes as defined for this account.| true | 
+active_alert_mode 		| string 		| Must be blank or one of the values defined in alert_mode list.| true | 
+default_colo  			| string 		| Name of the colo in which this account data for this account will be stored by default.| falae | 
+default_camera_passwords| string 		| Comma-delimited string of default camera passwords | true | 
+camera_shares 			| array[array[string]]) | Array of arrays, with each sub array representing a camera to be shared to 1 or more email addresses. First element of sub array is action, with 'm' for add/update, and 'd' for delete. Second element of sub array is camera ID. Third element of sub array is an array of email addresses, but only applies to the 'm' action. Example: [['m', '12345678', ['test@testing.com','test2@testing.com]]] | true | 
+is_master 				| int 			| ['0' or '1']: Indicates whether the account is a Master account (1) or not (0) | false | 
+is_active 				| int 			| ['0' or '1']: Indicates whether the account is Active (1) or not (0)   | false |
+is_inactive 			| int 			| ['0' or '1']: Indicates whether the account is inactive (1) or not (0) | true |
+is_suspended 			| int 			| ['0' or '1']: Indicates whether the account is Suspended (1) or not (0) | true |
+product_edition 		| string 		| The product edition the account is using | false |
+camera_quantity 		| int 			| The total number of cameras the account is allowed to use, | false |
+is_custom_brand_allowed | int 			| ['0' or '1']: Indicates whether the account is allowed to have branding (1) or not (0) | true |
+is_custom_brand 		| int 			| ['0' or '1']: Indicates whether the account has branding enabled (1) or not (0)  | true |
+brand_logo_small 		| string 		| Base64 encoded image for the branded small logo | true |
+brand_logo_large 		| string 		| Base64 encoded image for the branded large logo | true |
+brand_subdomain 		| string 		| Sub domain for the branded url | true |
+brand_corp_url 			| string 		| Corporate web site url | true |
+brand_name 				| string 		| Branded company name | true |
+brand_saml_publickey_cert | string      | Public Certificate that Eagle Eye Networks will use to decrypt the SAML for SSO | true |
+brand_saml_nameid_path | string      | The path within the SAML xml to find the users email address | true |
+is_without_initial_user | string | desiginates an account at creation to not have a contact user created automatically | true |
+customer_id | string | an arbitrary id assigned to a sub account by a master | true |
+is_master_video_disabled_allowed | int | 1 or 0 designating whether or not a sub account can block video access to reseller | true |
+is_master_video_disabled | int | 1 or 0 designating whether or not video access is blocked to reseller | true |
+is_contract_recording | int | 1 or 0 designating if the account is of type contract_recording | true |
+is_advanced_disabled | int | 1 or 0 set by reseller disabling advanced functionality | true |
+is_billing_disabled | int | 1 or 0 set by reseller disables setting settings in a sub that affect billing | true |
+is_add_delete_disabled | int | 1 or 0 set by reseller disables adding or deleting devices | true|
+is_disable_all_settings | int | 1 or 0 set by reseller disables all device and most account settings | true |
+first_responders | array[array[string]] | array[[responder_email,responder_first_name,responder_last_name,responder_organization]] | true |
+responder_cameras | array[esn] | array of camera esns that are shared to first responders | true |
+inactive_session_timeout | int | time without activity until the web session expires | true |
+>>>>>>> root_branch/master
 
 
 <!--===================================================================-->
