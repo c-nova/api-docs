@@ -1,14 +1,10 @@
-# Authentication, Authorization, Accounts
+# 認証, 認可, アカウント
 
 <!--===================================================================-->
-<<<<<<< HEAD
 ## アカウントの作成 
-=======
-## Overview
-This section is for creating new accounts and the steps to recover account. If you are creating sub-accounts tied to your current account refer to [Account](#account)
 
-## Create Account 
->>>>>>> root_branch/master
+## 概要
+このセクションは新規カウントの作成と、アカウントの回復のステップを説明します。もし現在のアカウントに紐付いたサブアカウントの作成を行う場合には、 [Account](#account) を参照してください。
 
 > 要求
 
@@ -16,31 +12,22 @@ This section is for creating new accounts and the steps to recover account. If y
 curl --request POST https://login.eagleeyenetworks.com/g/aaa/create_account --data "email=[EMAIL]&password=[PASSWORD]"
 ```
 
-This is used to create a new account and the super user for the account. As a part of the creation process, the service sends a confirmation email containing a link the user must click to activate the account. Account cannot be used until it is activated.
+これはアカウントに新規のユーザー及びスーパーユーザーを作成する際に使用します。作成プロセスの一部として、サービスはリンクを含んだ確認用のEメールを送信し、ユーザーはそれをクリックしてユーザーアカウントのアクティベーションを行う必要があります。ユーザーアカウントはアクティブ化するまで使用することはできません。
 
 ### HTTP要求
 
 `POST https://login.eagleeyenetworks.com/g/aaa/create_account`
 
-<<<<<<< HEAD
-パラメータ  		| データ型式   | 詳細          	| 必須？
+パラメータ  		| データ型式   | 詳細          	| 以下で必須
 ---------  		| ----------- | -----------   	| -----------
-**email**   	| 文字列      | Email Address 	| true
-**password**   	| 文字列      | Password 		| true
-name   			| 文字列      | Account name
-timezone   		| 文字列      | Timezone name
-=======
-Parameter  		| Data Type   | Description   	| Required For
----------  		| ----------- | -----------   	| -----------
-email       	| string      | Email Address 	| POST
-password    	| string      | Password 		| POST
-name   			| string      | Account name
-realm  			| string      | realm (defaults to current user's realm)
-first_name 		| string      | User first name
-last_name  		| string      | User last name
-timezone   		| string      | Timezone name
-is_api_acces_needed | boolean | Grant api access to this new account
->>>>>>> root_branch/master
+**email**   	| 文字列      | Eメールアドレス 	| POST
+**password**   	| 文字列      | パスワード 		| POST
+name   			| 文字列      | アカウント名
+realm  			| 文字列      | レルム (デフォルトは現在のユーザーレルム)
+first_name 		| 文字列      | ユーザーの名前
+last_name  		| 文字列      | ユーザーの姓
+timezone   		| 文字列      | タイムゾーン名
+is_api_acces_needed | ブール | この新規アカウントにAPIアクセス権を与える
 
 ### エラー状態コード
 
@@ -52,7 +39,7 @@ HTTP 状態コード    | データ型式
 202	| Account has been created and a confirmation email has been sent to the provided email address
 
 <!--===================================================================-->
-## Validate Account 
+## アカウントの確認
 
 > 要求
 
@@ -74,17 +61,10 @@ This is used to verify the email address supplied when the account is created. W
 
 `POST https://login.eagleeyenetworks.com/g/aaa/validate_account`
 
-<<<<<<< HEAD
-パラメータ  		| データ型式   | 詳細          	| 必須？
+パラメータ  		| データ型式   | 詳細          	| 以下で必須
 ---------  		| ----------- | -----------   	| -----------
-**id**   		| 文字列      | Account Id 		| true
-**token**   	| 文字列      | Account validation token | true
-=======
-Parameter  		| Data Type   | Description   	| Required For
----------  		| ----------- | -----------   	| -----------
-id   		| string      | Account Id 		| POST
-token   	| string      | Account validation token | POST
->>>>>>> root_branch/master
+id   		| 文字列      | Account Id 		| POST
+token   	| 文字列      | Account validation token | POST
 
 ### HTTP Json Attributes
 
@@ -105,7 +85,7 @@ HTTP 状態コード    | データ型式
 200	| User has been authorized for access to the realm
 
 <!--===================================================================-->
-## Forgot Password
+## パスワードの紛失
 
 > 要求
 
@@ -120,15 +100,9 @@ Password recovery is a multi-step process. Step one requests a reset email be se
 
 `POST https://login.eagleeyenetworks.com/g/aaa/forgot_password`
 
-<<<<<<< HEAD
-パラメータ  		| データ型式   | 詳細          	| 必須？
+パラメータ  		| データ型式   | 詳細          	| 以下で必須
 ---------  		| ----------- | -----------   	| -----------
-**email**   	| 文字列      | Email Address 	| true
-=======
-Parameter  		| Data Type   | Description   	| Required For
----------  		| ----------- | -----------   	| -----------
-email   	| string      | Email Address 	| POST
->>>>>>> root_branch/master
+email   	| 文字列      | Email Address 	| POST
 
 ### エラー状態コード
 
@@ -144,7 +118,7 @@ HTTP 状態コード    | データ型式
 202	| An reset email has been sent to the supplied email address. This status will be provided even if the email address was not found. This prevents attacks to discover user accounts.
 
 <!--===================================================================-->
-## Check Password Reset Token
+## パスワードのリセット トークンの確認
 
 > 要求
 
@@ -159,15 +133,9 @@ This is step two of the password recover/reset process. It verifies that the sup
 
 `POST https://login.eagleeyenetworks.com/g/aaa/check_pw_reset_token`
 
-<<<<<<< HEAD
-パラメータ  		| データ型式   | 詳細          	| 必須？
+パラメータ  		| データ型式   | 詳細          	| 以下で必須
 ---------  		| ----------- | -----------   	| -----------
-**token**   	| 文字列      | Password reset token provided in email | true
-=======
-Parameter  		| Data Type   | Description   	| Required For
----------  		| ----------- | -----------   	| -----------
-token   	| string      | Password reset token provided in email | POST
->>>>>>> root_branch/master
+token   	| 文字列      | Password reset token provided in email | POST
 
 ### エラー状態コード
 
@@ -182,7 +150,7 @@ HTTP 状態コード    | データ型式
 202	| Token is valid
 
 <!--===================================================================-->
-## Reset Password
+## パスワードのリセット
 
 > 要求
 
@@ -204,18 +172,11 @@ This is step three of the password recover/reset process. It both verifies that 
 
 `POST https://login.eagleeyenetworks.com/g/aaa/reset_password`
 
-<<<<<<< HEAD
-パラメータ  		| データ型式   | 詳細          	| 必須？
+パラメータ  		| データ型式   | 詳細          	| 以下で必須
 ---------  		| ----------- | -----------   	| -----------
-**token**   	| 文字列      | Password reset token provided in email | true
-password   		| 文字列      | New password | true
-=======
-Parameter  		| Data Type   | Description   	| Required For
----------  		| ----------- | -----------   	| -----------
-token   	| string      | Password reset token provided in email | POST
-password   		| string      | New password | POST
-accepted_terms_of_service_urls   		| string      | New terms of service acceptance url
->>>>>>> root_branch/master
+token   	| 文字列      | Password reset token provided in email | POST
+password   		| 文字列      | New password | POST
+accepted_terms_of_service_urls   		| 文字列      | New terms of service acceptance url
 
 ### HTTP Json Attributes
 
@@ -236,7 +197,7 @@ HTTP 状態コード    | データ型式
 200	| User has been authorized for access to the realm
 
 <!--===================================================================-->
-## Resend Registration Email
+## 登録用Eメールの再送
 
 > 要求
 
@@ -250,16 +211,11 @@ This is used by users who have registered for an account, but never confirmed th
 
 `POST https://login.eagleeyenetworks.com/g/aaa/resend_registration_email`
 
-<<<<<<< HEAD
-パラメータ  		| データ型式   | 詳細          	| 必須？
+パラメータ  		| データ型式   | 詳細          	| 以下で必須
 ---------  		| ----------- | -----------   	| -----------
-**email**   	| 文字列      | Email address of the account contact for a pending account | true
-=======
-Parameter  		| Data Type   | Description   	| Required For
----------  		| ----------- | -----------   	| -----------
-email   	| string      | Email address of the account contact for a pending account | POST
+email   	| 文字列      | Email address of the account contact for a pending account | POST
 realm  			| string      | realm (defaults to current user's realm)
->>>>>>> root_branch/master
+
 
 ### エラー状態コード
 
@@ -274,7 +230,7 @@ HTTP 状態コード    | データ型式
 202	| Account was located and verified to be in the pending state. A registration email has been recreated and sent to the provided email address.
 
 <!--===================================================================-->
-## Resend User Verification Email
+## ユーザー確認用Eメールの再送
 
 > 要求
 
@@ -288,16 +244,10 @@ This is used by users who have had a user account created for them, but they nev
 
 `POST https://login.eagleeyenetworks.com/g/aaa/resend_user_verification_email`
 
-<<<<<<< HEAD
-パラメータ  		| データ型式   | 詳細          	| 必須？
+パラメータ  		| データ型式   | 詳細          	| 以下で必須
 ---------  		| ----------- | -----------   	| -----------
-**email**   	| 文字列      | Email address of the new user | true
-=======
-Parameter  		| Data Type   | Description   	| Required For
----------  		| ----------- | -----------   	| -----------
-email   	| string      | Email address of the new user | POST
-realm  			| string      | realm (defaults to current user's realm)
->>>>>>> root_branch/master
+email   	| 文字列      | Email address of the new user | POST
+realm  			| 文字列      | realm (defaults to current user's realm)
 
 ### エラー状態コード
 
@@ -313,7 +263,7 @@ HTTP 状態コード    | データ型式
 202	| User was located and verified to be in the pending state. A verification email has been recreated and sent to the provided email address.
 
 <!--===================================================================-->
-## Change Password
+## パスワードの変更
 
 > 要求
 
@@ -336,19 +286,11 @@ This allows a user to change their password directly while authenticated, and al
 
 `POST https://login.eagleeyenetworks.com/g/aaa/change_password`
 
-<<<<<<< HEAD
-パラメータ  		| データ型式   | 詳細          	| 必須？
+パラメータ  		| データ型式   | 詳細          	| 以下で必須
 ---------  		| ----------- | -----------   	| -----------
 id   			| 文字列      | ID of the user having their password changed. Optional. Defaults to the ID of the authenticated user. If empty or equal to authenticated user, then "current_password" becomes required. | 
-**password**   	| 文字列      | New password | true
+password   	| 文字列      | New password | POST
 current_password| 文字列      | Current password of the user. Optional. If "id" argument is empty, or is equal to the authenticated user's id, then this is required. | 
-=======
-Parameter  		| Data Type   | Description   	| Required For
----------  		| ----------- | -----------   	| -----------
-id   			| string      | ID of the user having their password changed. Optional. Defaults to the ID of the authenticated user. If empty or equal to authenticated user, then "current_password" becomes required. | 
-password   	| string      | New password | POST
-current_password| string      | Current password of the user. Optional. If "id" argument is empty, or is equal to the authenticated user's id, then this is required. | 
->>>>>>> root_branch/master
 
 ### エラー状態コード
 
@@ -361,7 +303,7 @@ HTTP 状態コード    | データ型式
 200	| User password was changed successfully
 
 <!--===================================================================-->
-## Switch Account
+## アカウントの切り替え
 
 > 要求
 
@@ -375,15 +317,9 @@ This allows a user to "log in" to another account that the user has access to (s
 
 `POST https://login.eagleeyenetworks.com/g/aaa/switch_account`
 
-<<<<<<< HEAD
-パラメータ  		| データ型式   | 詳細          	| 必須？
+パラメータ  		| データ型式   | 詳細          	| 以下で必須
 ---------  		| ----------- | -----------   	| -----------
-account_id   	| 文字列      | ID of the account to login to. Optional. Defaults to the account ID that the user belongs to. | false
-=======
-Parameter  		| Data Type   | Description   	| Required For
----------  		| ----------- | -----------   	| -----------
-account_id   	| string      | ID of the account to login to. Optional. Defaults to the account ID that the user belongs to. | POST
->>>>>>> root_branch/master
+account_id   	| 文字列      | ID of the account to login to. Optional. Defaults to the account ID that the user belongs to. | POST
 
 ### エラー状態コード
 
@@ -395,7 +331,7 @@ HTTP 状態コード    | データ型式
 200	| Account context switch successful
 
 <!--===================================================================-->
-## Single Sign On
+## シングル・サインオン
 
 > 要求
 
@@ -430,7 +366,7 @@ HTTP 状態コード    | データ型式
 200	| Account context switch successful
 
 <!--===================================================================-->
-## Logout
+## ログアウト
 
 > 要求
 

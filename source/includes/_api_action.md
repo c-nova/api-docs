@@ -3,12 +3,12 @@
 <!--===================================================================-->
 ## 概要
 
-This service defines several macro actions that can be attached to devices. These are convenience functions. The same functionality provided herein can also be accomplished via individual setting calls. Most actions can be scheduled to occur now or at some point in the future.
+このサービスは割り当てられたデバイスで実行可能ないくつかのマクロ アクションを定義します。これらは便利な機能です。ここで提供されている同様の機能は、個々の設定呼び出しでも実現可能です。多くのアクションは現在または未来の時点をスケジュールすることが可能です。
 
-Given the macro nature and the number of devices and operations that may occur, so long as the arguments are correct, the services will return success status code. The application should monitor the vent stream to determine success of failure of the action on a device by device basis.
+与えられたマクロの特性とデバイスの数、実現可能な操作によって、引数が正しければ、サービスは成功のステータスコードを返します。アプリケーションはデバイスの基礎によるデバイスのアクションが成功または失敗するかをモニターして、対応をする必要があります。
 
 <!--===================================================================-->
-## Recording On
+## 録画の開始
 
 > 要求 記述予定
 
@@ -37,7 +37,7 @@ HTTP 状態コード    | データ型式
 403	| Forbidden due to the user missing the necessary privileges
 
 <!--===================================================================-->
-## Recording Off
+## 録画の停止
 
 > 要求 記述予定
 
@@ -65,7 +65,7 @@ HTTP 状態コード    | データ型式
 403	| Forbidden due to the user missing the necessary privileges
 
 <!--===================================================================-->
-## Turn All Cameras On
+## 全てのカメラの開始
 
 > 要求
 
@@ -89,7 +89,7 @@ HTTP 状態コード    | データ型式
 403	| Forbidden due to the user missing the necessary privileges
 
 <!--===================================================================-->
-## Turn All Cameras Off
+## 全てのカメラの停止
 
 > 要求
 

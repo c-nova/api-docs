@@ -1,21 +1,22 @@
 # ポーリング
 
 <!--===================================================================-->
+
 ## 概要
 
-The poll service provides a mechanism for an application to receive notifications of events or spans from the Eagle Eye service. These entities are grouped by resource. There are five main resources:
+ポーリング サービスはEagle Eyeサービスからアプリケーションへのイベントまたはスパンの通知の受信機構として提供されます。これらのエンティティはリソースによってグループ化されます。以下は5個のメインのリソースです:
 
-  * thumb - Thumbnail resource. Provides a timestamp for a thumbnail image. One can use the timestamp to grab the actual thumbnail image.
-  * pre - Preview resource. Provides a timestamp for a preview image. One can use the timestamp to grab the actual preview image.
-  * video - Video resource. Provides a start and end timestamp of a video event.
-  * event - Event resource. Provides full event information.
+  * thumb - サムネイル リソース。 Provides a timestamp for a thumbnail image. One can use the timestamp to grab the actual thumbnail image.
+  * pre - プレビュー リソース。 Provides a timestamp for a preview image. One can use the timestamp to grab the actual preview image.
+  * video - 動画リソース。 Provides a start and end timestamp of a video event.
+  * event - イベント リソース。 Provides full event information.
   * [status](#status-bitmask) - A bitmask flag defining the state of a bridge or a camera.
 
-Events can come from lots of sources:
+イベントは以下の多くのリソースから発生します:
 
-  * Devices or Cameras (camera alerts, start and stop recording, etc.)
-  * System Events (maintenance, server changes)
-  * Account Events (other user changes, account alerts, layout changes).
+  * デバイスまたはカメラ (カメラ アラート、録画の開始・終了など)
+  * システム イベント (メンテナンス、サーバーの変更)
+  * アカウント イベント (その他ユーザーの変更、アカウントのアラート、レイアウトの変更)
 
 Device and Camera events include, on, off, online, offline, currently recording, currently sensing motion, start/stop schedule event, being controlled with PTZ)
 
@@ -35,7 +36,7 @@ pre         | prets             | Timestamp of latest preview image
 [status](#status-bitmask) | bitmask           | A numerical bitmask defining the status. Bit position defines status. The meaning of each bit is defined in the table below.
 event       | オブジェクト            | Events are a key value pair, where the key is the four CC of the event, and event structure are the actual meta data for that specific event. Available events are shown in the table below.
 
-## Status Bitmask
+## 状態のビットマスク
 
 HEX Value | Status
 --------- | ----------
@@ -75,7 +76,7 @@ IF "Recording" (bit 19) THEN Recording (green circle icon)
 
 IF "Invalid" (bit 16)==1 THEN no status change (use whatever status bits were set previously)
 
-## Event Objects
+## イベント オブジェクト
 
 Four CC   | 詳細       
 --------- | -----------      
@@ -136,7 +137,8 @@ ALRS      | Alert Region Of Interest Start
 ALRE      | Alert Region Of Interest End
 
 <!--===================================================================-->
-## Initialize Poll
+
+## ポーリングの初期化
 
 > JSON要求
 
@@ -251,7 +253,7 @@ timestamp 		| 文字列 		| Timestamp in EEN format: YYYYMMDDHHMMSS.NNN
 cameraid 		| 文字列 		| internal unique identifier
 
 <!--===================================================================-->
-## Polling
+## ポーリング
 
 Used to receive updates on real-time changes. This API call requires a valid 'ee-poll-ses' cookie from POST /poll.
 

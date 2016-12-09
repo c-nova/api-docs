@@ -1,12 +1,14 @@
 # アカウント
 
 <!--===================================================================-->
+
 ## 概要
 
 アカウントサービスはスーパーユーザー及びアカウントスーパーユーザーによって管理します。
 
 <!--===================================================================-->
-## Account Model
+
+## アカウント モデル
 
 > Account Model
 
@@ -134,6 +136,7 @@
 }
 ```
 <!--Need to update the recording and search sections-->
+
 ### Account Attributes
 
 パラメータ  | データ形式     | 詳細 | 編集可 | 必須
@@ -192,7 +195,8 @@ inactive_session_timeout | 整数 | time without activity until the web session 
 
 
 <!--===================================================================-->
-## Get Account
+
+## アカウントの取得
 
 > 要求
 
@@ -220,7 +224,8 @@ HTTP 状態コード    | データ型式
 403	| Forbidden due to the user missing the necessary privileges
 
 <!--===================================================================-->
-## Create Account
+
+## アカウントの作成
 
 > 要求
 
@@ -270,7 +275,8 @@ is_without_initial_user	| 整数      		| Indicates whether you want to NOT crea
 is_initial_user_not_admin| 整数      	| Indicates whether you want do NOT want the initial user to be an admin.
 
 <!--===================================================================-->
-## Update Account
+
+## アカウントの更新
 
 > 要求
 
@@ -329,7 +335,8 @@ brand_saml_nameid_path | 文字列      | The path within the SAML xml to find t
 
 
 <!--===================================================================-->
-## Delete Account
+
+## アカウントの削除
 
 > 要求
 
@@ -358,7 +365,8 @@ HTTP 状態コード    | データ型式
 404	| Account not found with the supplied ID
 
 <!--===================================================================-->
-## Get List of Accounts
+
+## アカウント リストの取得
 
 > 要求
 

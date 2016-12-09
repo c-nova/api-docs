@@ -1,9 +1,10 @@
-# PGスパン
+# PNGスパン
 
 <!--===================================================================-->
 ## 概要
 
-This service offers native PNG span rendering to support metric visualization. For spans, the image is filled with the foreground color where the specified span is active, and with the background where it is inactive. At least one pixel will be filled for a span, independent of scale, though the span may overlap others. For etags, one pixel is filled for each active event, but as with spans the pixel may overlap others.
+このサービスはサポート メトリック可視化機能をネイティブPNGスパンとして描画します。スパンでは、指定したスパンがアクティブな場合は前景色で、非アクティブな場合には背景色で画像を作成します。スパンは最低でも1つ以上のピクセスで描画され、尺度とは独立し、スパンは他のものと重なることもあります。eタグでは、アクティブなイベントごとに1つのピクセルで描画されますが、スパンと共に描画される場合には重なることがあります。
+
 
 ### Response Headers
 
@@ -35,7 +36,7 @@ Hit detection (for rollover) can be done in a browser by rendering opaque colors
 	* table=register - camera is registered with the cloud, the inverse of which represents "internet offline"
 
 <!--===================================================================-->
-## Get Png Span
+## PNGスパンの取得
 
 > 要求
 

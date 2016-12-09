@@ -1,16 +1,16 @@
 # よくある質問
 
-**Who can use the Eagle Eye APIs?**
-<br>The Eagle Eye Video API are publicly open for anyone to use. Users will need a valid API key to successfully make API calls.
+**誰がEagle Eye API を使うことができますか？**
+<br>Eagle Eye ビデオAPIは誰でも利用できるように広く公開しております。ユーザーはAPI呼び出しを成功させるために、正しいAPIキーが必要になります。
 
-**How do I get my API key?**
-<br>You can get an API key by filling out the form [here](https://login.eagleeyenetworks.com/api_signup.html).
+**どうやって自分のAPIキーを手に入れますか？**
+<br>[この](https://login.eagleeyenetworks.com/api_signup.html) フォームに記入して登録することで、APIキーを入手することが可能です。
 
-**I found an error with Eagle Eye Video API, where should I report it?**
-<br>For API specific questions, issues, or feature requests, please submit a request [here](http://www.eagleeyenetworks.com/support/)
+**Eagle Eye ビデオAPIでエラーが発生しましたが、どこに報告すればいいですか？**
+<br>APIについての質問や問題、機能要求につきましては、[ここ](http://www.eagleeyenetworks.com/support/) から要求を行ってください。
 
-**How do you charge for the Eagle Eye Video API use?**
-<br>The Eagle Eye Video API does not require any additional fees for use. The only fees are the per camera fees for the use of the Eagle Eye system.
+**Eagle Eye ビデオAPIを使用した場合、どのように課金されますか？**
+<br>Eagle Eye ビデオAPIを使用する場合、追加の費用は必要ありません。EagleEyeシステムを使用する場合、ブリッジとカメラごとの費用だけが必要になります。
 
-**What can I do with the Eagle Eye API?**
-<br>The Eagle Eye Video API provides a robust set of storage, analytics, indexing, and interfaces for quickly building or integrating applications with both live and recorded video; the applications can range from very simple or highly complex. See our HowTos and Examples page here.
+**Eagle Eye ビデオAPIを使用してどのようなことができますか？**
+<br>Eagle Eye ビデオAPIはライブや録画された動画と共に作成・統合されるアプリケーションのために、強力なストレージ、アナリティクス、インデックス及びインターフェイスのセットを提供します。アプリケーションは非常に簡単なものから高度に複雑なものまで対応できます。ここの HowTo 及び サンプルページを御覧ください。

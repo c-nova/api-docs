@@ -7,79 +7,77 @@
 
 アセットはタイムスタンプ、カメラID、品質、そしてフォーマットのタプルによって識別されます。
 
-  * タイムスタンプ: Eagle EyeタイムスタンプはGMT時間でYYYYMMDDhhmmss.xxx書式で表されます。殆どの状況では、特殊なトークンは相対的な時間を指定して使用することができます。"now"は現在の時間を指し、+または-で始まる値は現在時間からのオフセットを示します。
-  * CameraID: Cameras are identified by a 8 character hexadecimal string, representing a unique 32 bit id associated with a specific camera. Note CameraID are not necessarily linked to specific hardware devices to allow device upgrade and replacement without disruption of history storage.
-  * カメラID: カメラは8文字の16進数文字列で識別され、
-  * Quality: (low,med,high) **Future Feature:** Images and video may have multiple quality levels, each representing the same base asset. Video can be transcoded between quality levels on demand (at some point) to support reduced bandwidth for mobile devices. Normally cameras will capture at medium or high quality. For video, low quality is targeted at around 100kbps, medium quality is under 500kbps, and high quality is around 1mbps. Additional quality levels will be supported in time.
-  * Format: Images are always returned as JPEG images. Video can currently returned as either FLV format (playback in browsers via Flash), MP4 (download and export format), and m3u/mpegts (HttpStreaming for iOS and newer android devices).
+  * タイムスタンプ: Eagle EyeタイムスタンプはGMT時間でYYYYMMDDhhmmss.xxx書式で表されます。殆どの状況では、特殊なトークンは相対的な時間として使用することができます。"now"は現在の時間を指し、+または-で始まる値は現在時間からのオフセットを示します。
+  * カメラID: カメラは8文字の16進数文字列で識別され、一意な32ビットIDで特定のカメラとの関連を表します。保管された履歴を破棄すること無くデバイスのアップグレードや交換を許可しているため、カメラIDは特定のハードウェア機器とリンクする必要は無いことに注意してください。
+  * 品質: (低,中,高) **将来実装機能:** 画像と動画は複数の品質レベルを持ち、それぞれ同じ基底のアセットを表します。動画は各品質においてオンデマンド（同時に）で変換が行われ、モバイル機器の帯域幅まで削減することが可能になります。通常のカメラは中から高品質でキャプチャを行います。動画では、低品質は 100kbps 近辺を目標にしており、中品質で 500kbps 以下、そして高品質で 1mbps 近辺を目標にしています。追加の品質レベルもサポートされる予定です。
+  * フォーマット: 画像は常にJPEG画像形式で返されます。動画は現在FLV形式 (ブラウザ内でFlashで再生される) と、MP4形式 (ダウンロードとエクスポート用フォーマット)、そして m3u/mpegts形式 (iOS用のHttpStreamingと新しいAndroidデバイス)で返されます。
 
-### Request Image
+### 画像の要求
 
-The image request model provides an efficient mechanism for accessing image sequences for several usage models. Image requests can be done directly using the next/after/prev virtual model. This returns images before or after specified timestamps. Alternatively, the timestamp and event information can be fetched through the “list” interface (to get events for history) and “poll” interface to track new images as they become available in real-time. The following cookbooks provides typical usage models for various events.
+画像の要求モデルは、いくつかの利用モデルに対して効果的なイメージシーケンスへのアクセス機構があります。画像の要求は next/after/prev 仮想モデルを使用して直接行うことが可能です。これは特定のタイムスタンプの前や後の画像を返すことが可能です。それとは別に、タイムスタンプとイベント情報は "list" インターフェイス(イベントの履歴を取得するため)と、リアルタイムに新しい画像を追跡可能な "poll" インターフェイスを通じて取得することができます。以下のクックブックでは様々なイベントに対して適切な利用モデルを提供します。
 
-  * low bandwidth video playback: The preview stream is a sequential set of jpeg images. If played back in order, low resolution video is accomplished.
-    * The simplest implementatation is to fetch “next” with a timestamp of “now” (e. g. /asset/next/image.jpeg?t=now;c=12345678;a=pre) - waiting for the subsequent image after the current time. Each time an image is returned, a new request should be made. If the downstream bandwidth is very low, the image fetch will automatically slow down (because delivery of image A happens after image B has been received, so the next call will fetch image C, skipping display of image B entirely). This approach works well for tracking a single image stream. As a tip, the first request should be done as a “prev” request to make sure an image is displayed, before the sequential next requests. The downside of this model is it requires a dedicated socket for each image stream being played. Many browsers have a limited pool of open sockets.
-    * A more efficient mechanism for tracking multiple image streams is to use the “poll” interface. The Poll interface will provide the timestamp of the next image available for a set of camera, which can then be fetched via the /asset/asset call. Since the poll request supports multiple cameras in a single request, it requires only a single socket for any number of cameras. The client application should implement a “fair” algorithm across the returned timestamps to address low bandwidth situations (that is, make sure every image stream gets updated before you fetch a new image for the same stream). This algorithm will provide smooth frame rate degradation across any number of cameras, whether the performance bottleneck is client CPU or bandwidth. The best model for this is
-      * receive update notifications for all cameras being tracked via a single sequential poll session
-      * for each camera, keep track of the “lastest” image notification, replacing the last one even if it has not been fetched yet.
-      * with a limited pool of “requests”, do a fair rotation between all cameras, fetching only the most recent image for each, and skipping the fetch if the image is already loading.
-  * Random access image discovery. The preview and thumb image streams can provide a visual navigation tool for accessing recorded video. The typical implementation requires a map from a timestamp to the “best” image for that timestamp. To implement this approach, the client should use the “after” and “prev” requests with the timestamp of the user playhead. Both calls provide header data for x-ee-timestamp, x-ee-next, and x-ee-prev which identify the current and subsequent images in both directions when it can be easily determined. The usage paradigm for this should be
-    * On navigation event (large jump), determine the timestamp of the user playhead and do an “/asset/prev” call to get the appropriate image (hmm, this should really be a best, figure out how ugly that would be). Store the x-ee-timestamp, x-ee-next and x-ee-prev values for the image.
-    * As the user moves the playhead, if the time change is within the next/prev halfway bounds, no new request is required. when the use moves outside of the time range, do an image fetch with the new timestamp.
-  * Thumbnail navigation. The system provides a “thumbnail” image for each event which is intended to provide a small representation of the event. The easiest mechanism to get a thumbnail for an event is to do an /asset/after/image.jpeg?a=thumb... image request with the starting timestamp of the event.
+  * 低い帯域幅での動画再生: プレビュー ストリームはjpeg画像セットの順序を保持しています。もしこれを適切に再生できれば、低解像度動画は完成です。
+    * 最も簡単な実装方法は、"now" を使ったタイムスタンプと、"next" を使った取得です (例 /asset/next/image.jpeg?t=now;c=12345678;a=pre) - これで現在の時刻の直後の画像を待ち受けます。それぞれの時間の画像が返されると、新しいリクエストが作成されます。もしダウンストリームの帯域幅が非常に低い場合、画像の取得は自動的に低速になります (画像Bを取得後に画像Aの送信が開始されるため、次の呼び出しは画像Cの取得となり、画像Bの表示は完全にスキップされます)。このアプローチは単一画像ストリームのトラッキング時に良く動作します。便利な方法として、次の画像を順次取得する前に、最初の画像表示の要求は "prev" で要求を行うことです。この方法のデメリットは、再生する画像ストリーム毎にソケットが必要になることです。多くのブラウザは開かれたソケットのプールに制限があります。
+    * 複数の画像ストリームをトラッキングする最も効果的な機構は "poll" インターフェイスを使用することです。pollインターフェイスはカメラのセットで有効な次の画像のタイムスタンプを提供し、これは /asset/asset へのコール経由で取得されます。poll要求は複数のカメラを一つの要求で行うため、何台のカメラを対象としても一つのソケットしか必要とされません。低帯域幅の状況に対処するため、クライアント アプリケーションは「公正な」アルゴリズムを実装する必要があります (つまり、同じストリームを使って新しい画像を取得する前に、画像ストリーム毎に更新を行う必要があります)。このアルゴリズムは性能のボトルネックがクライアントのCPUか帯域幅である場合、複数のカメラに全体でなめらかなフレームレートを劣化させながら提供します。最良のモデルは以下の例となります:
+      * 単一の順次pollセッション経由で全てのカメラを追跡し、更新通知を受け取る。
+      * それぞれのカメラで「最新の」画像通知を追跡し続け、取得しているかに関わらず最後の一つを置き換える。
+      * 「要求」プールが制限されていて、全てのカメラで公正にローテーションし、それぞれから最新の画像のみを取得し、そして読み込み済みの画像はスキップする。
+  * ランダムな画像探索アクセス。プレビュー及びサムネイル画像ストリームは録画された動画へのアクセスを行うためのビジュアル ナビゲーション ツールとして提供されます。典型的な実装はタイムスタンプから「最適な」タイムスタンプへの地図として必要とされることです。このアプローチで実装する場合、クライアントはユーザーが「頭出し」のために “after” 及び “prev” 要求が使用されます。どちらの呼び出し方法も簡単に決定を行うために、現在及びいずれかの方向の次の画像を識別するための x-ee-timestamp、x-ee-next 及び x-ee-prev のヘッダデータを提供します。典型的な利用例は以下のとおりです:
+    * ナビゲーション イベント (大幅な移動) では、ユーザーの頭出しのタイムスタンプを決定し、そして適切な画像を取得するために “/asset/prev” 呼び出しを行います (うーん、これが最高の方法だけど、キレイなやりかたじゃないと思う)。画像のために x-ee-timestamp、x-ee-next そして x-ee-prev の値を保管します。
+    * ユーザーは頭出しまで移動した時、それが next/prev の境界の間であれば、新規リクエストは必要ありません。時間範囲外に移動した時には、画像は新しいタイムスタンプと共に取得されます。
+  * サムネイル ナビゲーション。システムはイベントの小さな概要として各イベント用に「サムネイル」画像を提供します。もっとも簡単にイベントのサムネイル画像を取得するには /asset/after/image.jpeg?a=thumb を実行することです... 画像はイベントの開始タイムスタンプと共に要求します。
 
-### Retrieve List of Images
+### 画像リストの取得
 
-There are a couple different ways to get a list of images. There first is to get all preview images between April 1st and April 2nd:
+画像リストの取得には2つの異なる方法があります。1番目の方法として、以下の方法で4月1日から4月2日までの全てのプレビュー画像の情報を取得します:
 `https://login.eagleeyenetworks.com/asset/list/image.jpeg?c=100676b2;t=20140401000000.000;e=20140402000000.000;a=all;`
 
-The second way is to get 500 images before April 1st: 
+2番目の方法は、4月1日から遡って500個の画像を取得する方法です:
 `https://login.eagleeyenetworks.com/asset/list/image.jpeg?c=100676b2;t=20140401000000.000;count=-500;a=all;`
 
-The third way is to get the next 500 images after April 1st: 
+3番目の方法は、4月1日から順に500個の画像を取得する方法です:
 `https://login.eagleeyenetworks.com/asset/list/image.jpeg?c=100676b2;t=20140401000000.000;count=500;a=all;`
 
-### Retrieve Video
+### 動画の取得
 
-Video is accessed via the “play” command. Video is captured in segments, and is limited to 5 minutes per segment in storage. The video command will seamlessly rewrite headers within the video format to join segments as necessary to deliver the requested data span. However, we highly encourage developers to fetch only 5 minutes at a time to ensure that users aren't filling storage on their bridge needlessly.
+動画は "play" コマンド経由でアクセスします。動画はセグメントに分けられながら取得され、1セグメント5分を上限に保存されます。動画コマンドは要求されたデータ範囲を提供するために、セグメント化された動画を動画形式の中で結合するためにシームレスにヘッダを書き換えます。しかしながら、我々の開発者はブリッジのストレージが無駄に容量を消費しないよう、1度に5分までの動画の取得を強く推奨します。
 
-If the end time of the segment is in the future, the video will follow the data stream as it arrives, delivering live video streaming with minimal latency. MP4 format cannot be live streamed. Note: if the camera is not streaming video, the video will stop (and start again) as video is captured, which is typically not what is desired.
+もしセグメントの終了時間に到達した場合には、到着とともにその動画はデータ ストリームを開始し、最小限の遅延でライブ動画のストリーミングを提供することができます。MP4形式はライブストリームできません。注: もしカメラが動画のストリーミングを行っていない場合、一般的には要求を行われませんが、動画はキャプチャされるまで動画は停止されます（そして再開します）。
+キーワード “stream_<streamid>” はタイムスタンプの先頭に置いて使用できます。これはカメラからクラウドに対してキャプチャとライブストリームを強制します。ストリームIDはグローバルで一意(のよう)な文字列であり、タイムスタンプとユーザーIDの組み合わせが良い案です。これは M3U形式の要求で、m3u ポールトランザクション間で連続性を保証するためにのみ重要となります。
 
-The key word “stream_<streamid>” can be used for the starting timestamp. This forces the camera to capture video and stream it to the cloud live. The stream id should be globally unique(ish) string - combination of a timestamp and userid works well. It is only critical for M3U requests, where it assure continuity between the m3u poll transactions.
+開始タイムスタンプは、動画が存在する場合には動画の開始タイムスタンプと一致する必要があります。動画のサブセグメント範囲では、"to" (オフセット時間) 引数を使用して指定することができます。例として、12:30から12:35で5分間記録された動画があると仮定します。"?t=20121120123000.000;e=20121120123400.000;to=180000;..." とクエリすることで1分の動画 (開始タイムスタンプは12:33) を再生することができ、動画の開始を12:30から3分指定していますが、録画されたセグメントの最後の1分は切り取られます。
 
-The start timestamp must match the starting timestamp of a video if the video already exists. Subsegments of a video span can be specified by using the “to” (time offset) argument. For example, assume a 5 minute video has been recorded from 12:30 to 12:35. The query "?t=20121120123000.000;e=20121120123400.000;to=180000;..." will play one minute of video (timestamped at 12:33), 3 minutes into the video starting at 12:30, clipping off the last minute of the recorded segment.
+時間のオフセットとタイムスタンプはどの時間でも指定できますが、システムは実際に動画が開始する最も近いキーフレームを検出します。
 
-Time offsets and end timestamps can be at any time, but the system will seek to the nearest key frame to actually start the video.
+### 動画フォーマット
 
-### Video Formats
+動画システムは h264動画と AAC音声をベースにしています。これらのストリームは様々な再生モードと互換性を持たせるために様々なフォーマットでカプセル化されます。
 
-The video system is based on h264 video and AAC audio. These streams are encapsulated in different formats for compatibility with different playback modes
+  * FLV: システムのネイティブ フォーマットです。VLCのような様々なFlashプレイヤーで再生可能です。
+  * ライブ HTTP ストリーミング m3u: M3U ファイルは MPEGTS データストリームの中にインデックスファイルを持ちます。システムは通常およそ2秒の TS URL を生成します (ビデオ内のキーフレーム率に依存します) 。ポーリングをしている間、「ライブ」ストリーム用のm3uの特性により、ストリーミングに関するリクエストのみ要求することができることに注意してください (トランザクション状態のメンテナンス用にstreamidが使用されます)。その為、"/asset/play/video.m3u?t=stream_34567890332244567;e=+300000;c=12345678" の場合は5分間のストリームを作成しますが、"/asset/play/video.m3u?t=-50000;e=+300000" の場合は作成できません。
+  * ts: 動画と音声のためのMPEG伝送ストリーム フォーマットです。iOS及びAndroidのHTTPライブ ストリーミング機能で使用され、m3uトランザクションと協調するHTTPストリーミング経由で再生されるようにされています。一つの動画のために複数のストリームをリスト化することができます (一般的には異なる解像度/帯域幅になります) 。
+  * mp4: MPEG4ファイルは非常に広範な再生互換性を持ちます - 全てのメジャーな動画プレイヤーで互換です。しかし、mp4はストリーム「できない」フォーマットのため、ダウンロード機能またはライブ動画でエラーが返ってきたときのみ使用されます。
+  * m3u8: M3U8 はプレイリストのフォーマットとして使用されます。これはモバイルデバイスで利用され、M3U8プレイリスト ファイル内にHTTP層でMPEG TSファイルをストリームする指示を行うために使用されます。プレイリストが完了するまでプレイリストをポーリングし続けます。
 
-  * FLV: the native format for the system. Playable in any Flash player and by VLC etc.
-  * Live HTTP Streaming m3u: M3U files are index files into a mpegts data stream. The system will generate ts urls on approximately a 2 second basis (depending on key frame rate of the underlying video). Note, due to the polling nature of m3u for “live” streams, you can only use now relative requests for streaming (where the streamid is used to maintain transaction state). So "/asset/play/video.m3u?t=stream_34567890332244567;e=+300000;c=12345678" will create a five minute stream, but "/asset/play/video.m3u?t=-50000;e=+300000" will not.
-  * ts: MPEG Transport Stream format video and audio. Intended for playback via http streaming in concert with m3u transactions, per the HTTP Live Streaming functionality of iOS and android. You can list multiple streams for a single video (typically for different resolutions/bandwidth).
-  * mp4: MPEG4 files have very broad playback compatibility - all major video player are compatible. However, mp4 is NOT a streamable format, so it is only used for download functionality and will return an error if the video is live.
-  * m3u8: Use the M3U8 play list format. Use this for mobile devices as it uses the HTTP layer to stream MPEG TS files with instructions in the M3U8 playlist file. Continue polling for this playlist until the playlist indicates it is complete.
+注: もしWeb上でFLV (上記のとおりネイティブなフォーマットです) 以外の動画フォーマットでストリームを行う場合には、初期化時に 502 応答を受け取ります。これは動画がシステム内でトランスコードを行っていて、完成ファイルが見つからないことを意味します。もしデータが実際に存在する (動画リストの呼び出しで確認できます) 場合には、動画は期待するフォーマットで取得できる状態になっておりますが、当分は要求した動画が準備可能になるまで待機して再取得する必要があります。
 
-Note: If you choose to stream any video format on the web other than FLV (Our native format as mentioned above), you may initially get a 502 response. This means that the video is currently being transcoded within our system and therefore couldn't be found. Assuming the data actually exists (check against the video list call), the video will eventually be ready for you to fetch in the desired format, but, for the time being, you will have to wait and refetch until the requested video is ready. 
+### 動画品質
 
-### Video Quality
+H.264コーデックは特定の動画ストリームを再生する再生デバイスの互換性のために、プロファイルとレベルという概念を持ちます。
 
-The H264 codec has the concept of profiles and levels to convey whether a playback devices is compatible with a specific video stream.
-
-  * Low: Low quality video has a maximum profile of baseline (640x480 max)
-  * Med: medium quality video has a maximum profile of main
-  * High: high quality video has a maximum profile of high
-
-<!--===================================================================-->
-## EEN Timestamp
-
-All Assets have an EEN timestamp attached. Timestamps are always in UTC and maintained to the nearest millisecond. Timestamps are rendered in text as YYYYMMDDhhmmss.mmm.
-
-+/- offsets from “now” are valid in ms.
+  * Low: 低品質動画はベースラインの最大プロファイル (最大640x480)
+  * Med: 中品質動画はメインの最大プロファイル
+  * High: 高品質動画は高の最大プロファイル
 
 <!--===================================================================-->
-## Get Image
+## EENタイムスタンプ
+
+全てのアセットはEENタイムスタンプが付与されています。タイムスタンプは常にUTCであり、最も近いミリ秒に合わされます。タイムスタンプはテキストで YYYYMMDDhhmmss.mm の形式で表されます。
+
+msにおける “now” からの +/- オフセットは有効です。
+
+<!--===================================================================-->
+## 画像の取得
 
 > 要求
 
@@ -87,47 +85,48 @@ All Assets have an EEN timestamp attached. Timestamps are always in UTC and main
 curl -v -G "https://login.eagleeyenetworks.com/asset/prev/image.jpeg?id=[CAMERA_ID];timestamp=[TIMESTAMP];asset_class=[ASSET_CLASS];A=[AUTH_KEY]"
 ```
 
-Get an image jpeg based on the specified timestamp. This will return binary image data in JPEG format. 
+指定されたタイムスタンプを基底としたjpeg画像を取得します。これはJPEGフォーマットでのバイナリ画像データを返します。
 
-Headers: cache control headers to allow asset caching if no now relative:
+ヘッダ: キャッシュ制御ヘッダは現在関連しない場合においてアセットのキャシュを許可します:
 
-  * x-ee-timestamp: type-timestamp specifies asset type and timestamp of the provided image. Type is one of 'video', 'preview', 'thumb', 'event'. 
-  * x-ee-prev: [type-timestamp | unknown ] of previous image matching the class filter OR 'unknown' if the previous image was complex to figure out. 
-  * x-ee-next: [type-timestamp | unknown ] as with x-ee-prev, but specifying the following image. 
-content-type: image/jpeg 
-  * location: /asset/asset/image.jpeg?t=20120917213405.700;q=low;c=thumb (identifies actual asset time of image in response).Returns user object by ID. Not passing an ID will return the current authorized user.
+  * x-ee-timestamp: 形式-タイムスタンプ は提供する画像のアセット形式とタイムスタンプを指定します。形式は 'video', 'preview', 'thumb', 'event' の中の一つである必要があります。
+  * x-ee-prev: [形式-タイムスタンプ | 不明 ] の以前の画像がクラスフィルタで合致するか、もし以前の画像形式がわからない場合には '不明' を指定します。
+  * x-ee-next: [形式-タイムスタンプ | 不明 ] は x-ee-prev と同様ですが, 後続の画像を指定する必要があります。
+  * content-type: image/jpeg
+  * location: /asset/asset/image.jpeg?t=20120917213405.700;q=low;c=thumb (応答する実際のアセットの時間を識別する必要があります)。ユーザーオブジェクトはIDで返されます。IDが返されない場合、現在認証中のユーザーを返します。
 
 ### HTTP要求
 
 `GET https://login.eagleeyenetworks.com/asset/asset/image.jpeg`
-<br> Get the image at the specified timestamp
+<br> 指定したタイムスタンプの画像を取得します
 
 `GET https://login.eagleeyenetworks.com/asset/prev/image.jpeg`
-<br> Get the first image before the specified timestamp
+<br> 指定したタイムスタンプ前の最初の画像を取得します
 
 `GET https://login.eagleeyenetworks.com/asset/after/image.jpeg`
-<br> Get the first image after the specified timestamp
+<br> 指定したタイムスタンプ後の最初の画像を取得します
 
 パラメータ         | データ型式     | 詳細          | 必須？
 ---------         | -----------   | -----------   | -----------
-**id**            | 文字列        | Camera Id     | true
-**timestamp**     | 文字列        | Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**asset_class**   | 文字列, enum  | Asset class of the image <br><br>enum: all, pre, thumb | true
-quality           | 文字列, enum  | **Future Feature:** Quality of image <br><br>enum: low, med, high
+**id**            | 文字列        | カメラID     | true
+**timestamp**     | 文字列        | EENフォーマットでのタイムスタンプ: YYYYMMDDHHMMSS.NNN | true
+**asset_class**   | 文字列, 数値付きリスト  | 画像のアセットクラス <br><br>数値付きリスト: all, pre, thumb | true
+quality           | 文字列, 数値付きリスト  | **将来実装機能:** 画像の品質 <br><br>数値付きリスト: low, med, high
 
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-301 | Asset has been moved to a different archiver
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
-404 | Image was not found
+200 | 要求は成功しました
+301 | アセットは異なるアーカイバに移動されました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました
+404 | 画像が存在しません
+
 
 <!--===================================================================-->
-## Get Video
+## 動画の取得
 
 > 要求
 
@@ -135,9 +134,9 @@ HTTP 状態コード    | データ型式
 curl -v -G "https://login.eagleeyenetworks.com/asset/play/video.flv?id=[CAMERA_ID];start_timestamp=[START_TIMESTAMP];end_timestamp=[END_TIMESTAMP];A=[AUTH_KEY]"
 ``` 
 
-Returns a video stream in the requested format. Formats include
+要求したフォーマットで動画ストリームを返します。フォーマットは以下を含みます
 
-  * flv (The recommended format for web streaming)
+  * flv (Webストリーム用の推奨フォーマット)
   * mp4
   * m3u8
   * webm
@@ -148,27 +147,27 @@ Returns a video stream in the requested format. Formats include
 
 パラメータ                 | データ型式     | 詳細          | 必須？
 ---------                 | -----------   | -----------   | -----------
-**id**                    | 文字列        | Camera Id     | true
-**start_timestamp**       | 文字列        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**end_timestamp**         | 文字列        | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-quality                   | 文字列, enum  | **Future Feature:** Indicates requested resolution if multiple are available. <br><br>enum: low, mid, high
+**id**                    | 文字列        | カメラID     | true
+**start_timestamp**       | 文字列        | EENフォーマットでの開始タイムスタンプ: YYYYMMDDHHMMSS.NNN | true
+**end_timestamp**         | 文字列        | EENフォーマットでの終了タイムスタンプ: YYYYMMDDHHMMSS.NNN | true
+quality                   | 文字列, 数値付きリスト  | **将来実装機能:** もし複数存在する場合、要求した解像度を表示します。 <br><br>数値付きリスト: low, mid, high
 
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-301 | Asset has been moved to a different archiver
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
-404 | Camera not provisioned
-404 | Camera get error
-410 | Video is out of retention
-503 | Camera tag maps not loaded
+200 | 要求は成功しました
+301 | アセットは異なるアーカイバに移動されました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました
+404 | カメラが提供されていません
+404 | カメラでエラーが発生しました
+410 | 動画の保存期限外です
+503 | カメラのタグ マップが読み込まれていません
 
 <!--===================================================================-->
-## Prefetch Image
+## 画像のプリフェッチ
 
 > 要求
 
@@ -176,39 +175,39 @@ HTTP 状態コード    | データ型式
 curl -v -G "https://login.eagleeyenetworks.com/asset/cloud/image.jpg?start_timestamp=[START_TIMESTAMP];id=[CAMERA_ID];webhook_url=[WEBHOOK_URL]A=[AUTH_KEY]"
 ```
 
-> Webhook JSON POST Response
+> Webhook JSON POST 応答
 
 ```json
-{ "event:": "[EVENT]" }
+{ "event:": "[イベント]" }
 ```
 
-This API call will ensure the image is in the cloud. If the image is not in the cloud it will do a background upload request to the bridge to aquire the image into the cloud. A webhook provided with the call will be triggered when the upload is successful or an error has occurred. The webhook will be triggered as a POST with JSON formatted data.
+このAPI呼び出しは画像がクラウド内に存在することを確実化させます。もし画像がクラウド内に存在しない場合、クラウドに画像を追加するようにブリッジからバックグラウンドアップロード要求を行います。webhookはアップロードが成功するかエラーが発生した時に呼び出しを発生させます。webhookが発生すると、JSONフォーマット データをPOSTします。
 
 ### HTTP要求
 `GET https://login.eagleeyenetworks.com/asset/cloud/image.jpg`
 
 パラメータ           | データ型式     | 詳細          | 必須？
 ---------           | -----------   | -----------   | -----------
-**id**              | 文字列        | Camera Id     | true
-**start_timestamp** | 文字列        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**webhook_url**     | 文字列        | The webhook url (must be urlencoded) to trigger | true
+**id**              | 文字列        | カメラID     | true
+**start_timestamp** | 文字列        | EENフォーマットでの開始タイムスタンプ: YYYYMMDDHHMMSS.NNN | true
+**webhook_url**     | 文字列        | トリガー発生時の webhook url (urlencode されている必要があります) | true
 
-### JSON **EVENT** Values
-Value                              | 詳細       
+### JSON **イベント** の値
+値                              | 詳細       
 ---------                          | ---------
-ASSET_CLOUD_EVENT_UPLOADED         | The image has been successfully uploaded into the cloud.
-ASSET_CLOUD_EVENT_DEMAND_FAILED    | The image failed aquiring a connection to the bridge.
-ASSET_CLOUD_EVENT_NOTHING_UPLOAD   | Nothing was uploaded since the image was already in the cloud.
-ASSET_CLOUD_EVENT_INVALID_RANGE    | An invalid range (timestamp) was requested.
-ASSET_CLOUD_EVENT_ABORT            | General error occurred.
+ASSET_CLOUD_EVENT_UPLOADED         | 画像をクラウド内にアップロードすることに成功しました。
+ASSET_CLOUD_EVENT_DEMAND_FAILED    | 画像はブリッジとの接続の取得に失敗しました。
+ASSET_CLOUD_EVENT_NOTHING_UPLOAD   | 画像はクラウド内に既に存在するため何もアップロードされませんでした。
+ASSET_CLOUD_EVENT_INVALID_RANGE    | 誤った範囲 (タイムスタンプ) が要求されました。
+ASSET_CLOUD_EVENT_ABORT            | 一般エラーが発生しました。
 
-### HTTP 状態コードs
+### HTTP 状態コード
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-201 | Request has been created and webhook will be triggered upon completion or error.
+201 | 要求は作成され、webhookは成功またはエラー時にトリガーされます
 
 <!--===================================================================-->
-## Prefetch Video
+## 動画のプリフェッチ
 
 > 要求
 
@@ -216,40 +215,40 @@ HTTP 状態コード    | データ型式
 curl -v -G "https://login.eagleeyenetworks.com/asset/cloud/video.flv?start_timestamp=[START_TIMESTAMP];end_timestamp=[END_TIMESTAMP];id=[CAMERA_ID];webhook_url=[WEBHOOK_URL]A=[AUTH_KEY]"
 ```
 
-> Webhook JSON POST Response
+> Webhook JSON POST 応答
 
 ```json
-{ "event:": "[EVENT]" }
+{ "event:": "[イベント]" }
 ```
 
-This API call will ensure the video is in the cloud. If the video is not in the cloud it will do a background upload request to the bridge to aquire the video into the cloud. A webhook provided with the call will be triggered when the upload is successful or an error has occurred. The webhook will be triggered as a POST with JSON formatted data.
+このAPI呼び出しは動画がクラウド内に存在することを確実化させます。もし動画がクラウド内に存在しない場合、クラウドに動画を追加するようにブリッジからバックグラウンドアップロード要求を行います。webhookはアップロードが成功するかエラーが発生した時に呼び出しを発生させます。webhookが発生すると、JSONフォーマット データをPOSTします。
 
 ### HTTP要求
 `GET https://login.eagleeyenetworks.com/asset/cloud/video.flv`
 
 パラメータ           | データ型式     | 詳細          | 必須？
 ---------           | -----------   | -----------   | -----------
-**id**              | 文字列        | Camera Id     | true
-**start_timestamp** | 文字列        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**end_timestamp**   | 文字列        | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**webhook_url**         | 文字列        | The webhook url (must be urlencoded) to trigger | true
+**id**              | 文字列        | カメラID     | true
+**start_timestamp** | 文字列        | EENフォーマットでの開始タイムスタンプ: YYYYMMDDHHMMSS.NNN | true
+**end_timestamp**   | 文字列        | EENフォーマットでの終了タイムスタンプ: YYYYMMDDHHMMSS.NNN | true
+**webhook_url**         | 文字列        | トリガー発生時の webhook url (urlencode されている必要があります) | true
 
-### JSON **EVENT** Values
+### JSON **EVENT** の値
 Value                              | 詳細       
 ---------                          | ---------
-ASSET_CLOUD_EVENT_UPLOADED         | The video has been successfully uploaded into the cloud.
-ASSET_CLOUD_EVENT_DEMAND_FAILED    | The video failed aquiring a connection to the bridge.
-ASSET_CLOUD_EVENT_NOTHING_UPLOAD   | Nothing was uploaded since the video was already in the cloud.
-ASSET_CLOUD_EVENT_INVALID_RANGE    | An invalid range (timestamp) was requested.
-ASSET_CLOUD_EVENT_ABORT            | General error occurred.
+ASSET_CLOUD_EVENT_UPLOADED         | 動画をクラウド内にアップロードすることに成功しました。
+ASSET_CLOUD_EVENT_DEMAND_FAILED    | 動画はブリッジとの接続の取得に失敗しました。
+ASSET_CLOUD_EVENT_NOTHING_UPLOAD   | 動画はクラウド内に既に存在するため何もアップロードされませんでした。
+ASSET_CLOUD_EVENT_INVALID_RANGE    | 誤った範囲 (タイムスタンプ) が要求されました。
+ASSET_CLOUD_EVENT_ABORT            | 一般エラーが発生しました。
 
-### HTTP 状態コードs
+### HTTP 状態コード
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-201 | Request has been created and webhook will be triggered upon completion or error.
+201 | 要求は作成され、webhookは成功またはエラー時にトリガーされます
 
 <!--===================================================================-->
-## Get List of Images
+## 画像リストの取得
 
 > 要求
 
@@ -263,7 +262,7 @@ curl -v -G "https://login.eagleeyenetworks.com/asset/list/image?start_timestamp=
 [{"t":"PRFR","s":"20141001000000.045"},{"t":"PRFR","s":"20141001000001.045"},{"t":"PRFR","s":"20141001000002.064"},{"t":"PRFR","s":"20141001000003.064"},{"t":"PRFR","s":"20141001000004.064"},{"t":"PRFR","s":"20141001000005.063"},{"t":"PRFR","s":"20141001000006.063"},{"t":"PRFR","s":"20141001000007.096"}]
 ```
 
-This returns a list of objects, where each object contains the timestamp and type of an image jpeg. When formatting the request, either the 'end_timestamp' or 'count' parameter is required.
+これはオブジェクトのリストを返し、それぞれのオブジェクトはタイムスタンプとjpeg画像の形式を含みます。要求のフォーマットには、'end_timestamp' または 'count' パラメータのいずれかが必須になります。
 
 ### HTTP要求
 
@@ -271,24 +270,24 @@ This returns a list of objects, where each object contains the timestamp and typ
 
 パラメータ           | データ型式     | 詳細          | 必須？
 ---------           | -----------   | -----------   | -----------
-**id**              | 文字列        | Camera Id     | true
-**start_timestamp** | 文字列        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**asset_class**     | 文字列, enum  | Asset class of the image <br><br>enum: all, pre, thumb | true
-end_timestamp       | 文字列        | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN
-count               | 整数           | Used instead or with an 'end_timestamp' argument. If used with an 'end_timestamp' argument, the count is a limit on the number of entries to return, starting at the starting timestamp. If used without the e argument, returns N entries. Support negative value, which returns N entries before, sorted in reverse order - example -5 return 5 events previous to the specified time.
+**id**              | 文字列        | カメラID     | true
+**start_timestamp** | 文字列        | EENフォーマットでの開始タイムスタンプ: YYYYMMDDHHMMSS.NNN | true
+**asset_class**     | 文字列, 数値付きリスト  | 画像のアセットクラス <br><br>数値付きリスト: all, pre, thumb | true
+end_timestamp       | 文字列        | EENフォーマットでの終了タイムスタンプ: YYYYMMDDHHMMSS.NNN
+count               | 整数           | 'end_timestamp' 引数の代わりに使用されます。もし 'end_timestamp' 引数と共に使用される場合には、'start_timestamp'との間のリストが取得され、カウントはエントリの数を制限して返します。もし 'end_timestamp' 引数が指定されない場合には、N個だけ返されます。負の値もサポートしており、逆順で並び替えられて、N個前のエントリが返されます - 例えば -5 を指定すると、指定した時間から5個前までのイベントが返されます。
 
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-301 | Asset has been moved to a different archiver
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
+200 | 要求は成功しました
+301 | アセットは異なるアーカイバに移動されました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました
 
 <!--===================================================================-->
-## Get List of Videos
+## 動画リストの取得
 
 > 要求
 
@@ -302,7 +301,7 @@ curl -v -G "https://login.eagleeyenetworks.com/asset/list/video?start_timestamp=
 [{"s":"20141001000016.768","e":"20141001000100.758"},{"s":"20141001000220.825","e":"20141001000242.774"},{"s":"20141001000256.811","e":"20141001000320.869"},{"s":"20141001000354.761","e":"20141001000422.812"},{"s":"20141001000526.821","e":"20141001000632.829"},{"s":"20141001000746.836","e":"20141001000834.757"},{"s":"20141001000904.749","e":"20141001000932.767"},{"s":"20141001000934.766","e":"20141001001002.777"}]
 ```
 
-This returns a list of objects, where each object contains the start and end timestamp of a single video clip. When formatting the request, either the 'end_timestamp' or 'count' parameter is required.
+これはオブジェクトのリストを返し、それぞれのオブジェクトは単一動画クリップの開始及び終了タイムスタンプ含みます。要求のフォーマットには、'end_timestamp' または 'count' パラメータのいずれかが必須になります。
 
 ### HTTP要求
 
@@ -310,19 +309,19 @@ This returns a list of objects, where each object contains the start and end tim
 
 パラメータ           | データ型式     | 詳細          | 必須？
 ---------           | -----------   | -----------   | -----------
-**id**              | 文字列        | Camera Id     | true
-**start_timestamp** | 文字列        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-end_timestamp       | 文字列        | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN
-count               | 整数           | Used instead or with an 'end_timestamp' argument. If used with an 'end_timestamp' argument, the count is a limit on the number of entries to return, starting at the starting timestamp. If used without the e argument, returns N entries. Support negative value, which returns N entries before, sorted in reverse order - example -5 return 5 events previous to the specified time.
-options             | 文字列, enum  | Additional modifier options. 'coalesce' = coalesces spans together. <br><br>enum: coalesce
+**id**              | 文字列        | カメラID     | true
+**start_timestamp** | 文字列        | EENフォーマットでの開始タイムスタンプ: YYYYMMDDHHMMSS.NNN | true
+end_timestamp       | 文字列        | EENフォーマットでの終了タイムスタンプ: YYYYMMDDHHMMSS.NNN
+count               | 整数           | 'end_timestamp' 引数の代わりに使用されます。もし 'end_timestamp' 引数と共に使用される場合には、'start_timestamp'との間のリストが取得され、カウントはエントリの数を制限して返します。もし 'end_timestamp' 引数が指定されない場合には、N個だけ返されます。負の値もサポートしており、逆順で並び替えられて、N個前のエントリが返されます - 例えば -5 を指定すると、指定した時間から5個前までのイベントが返されます。
+options             | 文字列, 数値付きリスト  | 追加の修飾オプションです。 'coalesce' = 間隔をお互いに合体します。<br><br>数値付きリスト: coalesce
 
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-301 | Asset has been moved to a different archiver
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
+200 | 要求は成功しました
+301 | アセットは異なるアーカイバに移動されました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました
 

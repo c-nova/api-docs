@@ -3,10 +3,10 @@
 <!--===================================================================-->
 ## 概要
 
-This service allows for search across various types of data. Currenlty only supports recordings and annotations, but support for other types of data is coming soon.
+このサービスは様々なデータ形式に渡る検索を許可します。現在は録画とアノテーションのみサポートしていますが、近日その他のデータ形式もサポートする予定です。
 
 <!--===================================================================-->
-## Search Recordings
+## 録画の検索
 
 > 要求 記述予定
 
@@ -58,7 +58,7 @@ HTTP 状態コード    | データ型式
 403 | Forbidden due to the user missing the necessary privileges
 
 <!--===================================================================-->
-## Search Annotations
+## アノテーションの検索
 
 > 要求 記述予定
 

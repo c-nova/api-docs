@@ -128,35 +128,35 @@ ROIは単純な多角形 - 連続したx,y座標で閉じられたオブジェ�
 
 ROIは次のことが可能です
 
-* adjust DCT sensitivity and detection properties (ignore stuff in an area, track stuff aggressively in an area)
-* cause specific events
-* characterize an object for later alert/event processing (dwell, transitions counting)
-* turn on certain detectors within a region.
+* DCT感度の調整とプロパティの検出 (エリア内のスタッフのの無視や、エリア内で動作しているスタッフの追跡)
+* 特定のイベントの発生
+* アラート発生/イベント処理後のオブジェクトの特徴付け (滞留、遷移、カウント)
+* 領域内の現在の検出をオンにする。
 
-ROIs within settings will be “rois”: { “roiname”: roi,... }. ROIs are enabled and disabled by “active_rois”: { “roiname”: true,...} to allow ROIs to easily turned on and off to support schedules and ROI based alerts. To remove an active ROI delete it with the same arguments.
+ROIは “rois”: { “roiname”: roi,... } の中で設定されます。ROIは “active_rois”: { “roiname”: true,...} によって有効化または無効化でき、サポートスケジュール及びROIベースアラートによって簡単にオンまたはオフにすることができます。除去する場合には同じ属性を削除することでアクティブなROIを削除できます。
 
-Like the alert logic, “rois” and “active_rois” are accumulation settings - adding an object adds it to the holding object instead of replacing the entire object like most settings. Similarly, deleting an object removes it from the parent object, but leave the parent in place. Both also automatically trigger updates to the active esn data streams.
+アラートのロジックのように、“rois” と “active_rois” は累積型設定です。殆どの設定のような全てのオブジェクトを置換する代わりに、現状のオブジェクトにオブジェクトが追加されます。同様にオブジェクトを削除すると親オブジェクトからは削除されますが、親オブジェクトはそのまま維持されます。両方共アクティブなESNデータストリームの更新により、自動的に起動されます。
 
-ROIs can produce events and force video recording on activity within them. These events are distinct from motion events (whole screen events). Each ROI event has a simple snapshot algorithm the grabs a snapshot immediately, as opposed to the optimized object tracking for motion events. Since ROIs are presumed to be smaller, this should result in good summary images.
+ROIはそれぞれの範囲内の動作によって、イベントの生成と動画の録画を実行できます。これらのイベントはモーションイベント（全画面イベント）とは別の扱いです。それぞれのROIイベントはシンプルなスナップショット・イベントを持ち、スナップショットを即時補足するため、モーションイベントの物体追跡とは対極の最適化を行っています。ROIは小さく設定するほど、サマリイメージにとっては良い結果となります。
 
-ROI events are reported by the ROMS and ROME etags
+ROIイベントは ROMS 及び ROME eタグによって報告されます。
 
 ROMS
 
 * cameraid (guint32)
-* eventid(guint32) - unique to this event
-* roiid(guint32) - roi id from the ROI definition
-* videoid(guint32) - id of the associated video
+* eventid(guint32) - このイベントに対してユニーク
+* roiid(guint32) - ROI定義によるROI ID
+* videoid(guint32) - 関連する動画ID
 
 ROME
 
 * cameraid (guint32)
-* eventid(guint32) - unique to this event
+* eventid(guint32) - このイベントに対してユニーク
 
 <!--===================================================================-->
 ## カメラのモデル
 
-> Camera Model
+> カメラ モデル
 
 ```json
 {
@@ -972,105 +972,105 @@ ROME
 
 パラメータ                     | データ型式         | 詳細       
 ---------                     | ---------------   | -----------
-id                            | 文字列            | Unique identifier for the Device
-name                          | 文字列            | Name of the device
-utcOffset                     | 整数               | Signed UTC offset in seconds of the timezone from UTC, where this device is installed.
-timezone                      | 文字列            | Supported timezones: If this is a bridge, defaults to the Account timezone. If this is a camera, defaults to the camers’s Bridge timezone. Otherwise defaults to US/Pacific. <br><br>enum: US/Alaska, US/Arizona, US/Central, US/Pacific, US/Eastern, US/Mountain, US/Hawaii, UTC
-guid                          | 文字列            | guid or other physical identifier of device
-permissions                   | 文字列            | String of one or more characters. Each character defines a permission. Permissions include: 'R' - user has access to view images and video for this camera. 'A' - user is an admin for this camera. 'S' - user can share this camera in a group share. Note: All cameras in a group must have the ‘S’ permission or the group cannot be shared
-tags                          | 配列[文字列]     | Array of strings, which each string representing a "tag"
-bridges                       | [DeviceBridges](#devicebridges-attributes)     | Bridges this device is seen by
-settings                      | [DeviceSettings](#devicesettings-attributes)    | Misc settings
-camera_parameters             | オブジェクト            | JSON object of camera parameters/settings (see Overview for details). If camera parameters cannot be retrieved for whatever reason (such as when communication with camera has been lost), then this will be empty, and camera_parameters_status_code will be 404.
-camera_parameters_status_code | 整数               | 200 if camera_parameters were retrieved. 404 if camera_parameters were unable to be retrieved.
-camera_info                   | [DeviceCameraInfo](#devicecamerainfo-attributes)  | Camera related info, which only applies to devices that are cameras
-camera_info_status_code       | 整数               | 200 if camera_info was retrieved. 404 if camera_info was unable to be retrieved.
+id                            | 文字列            | デバイスの一意な識別子
+name                          | 文字列            | デバイスの名前
+utcOffset                     | 整数               | デバイスが導入されている場所のタイムゾーンとUTCとの符号付きUTCオフセット秒
+timezone                      | 文字列            | サポートされるタイムゾーン: これがブリッジの場合、デフォルトはアカウントのタイムゾーンになります。これがカメラの場合、デフォルトはブリッジのタイムゾーンになります。それ以外では、デフォルトは US/Pacific になります。 <br><br>数値付きリスト: US/Alaska, US/Arizona, US/Central, US/Pacific, US/Eastern, US/Mountain, US/Hawaii, UTC
+guid                          | 文字列            | デバイスのGUIDまたはその他の物理識別子
+permissions                   | 文字列            | 一文字またはそれ以上の文字列。それぞれの文字は権限を表します。権限は次のものを含みます: 'R' - ユーザーはこのカメラに対して画像及び動画の表示アクセスを行えます。 'A' - ユーザーはこのカメラに対して管理権限を持ちます。 'S' - ユーザーはこのカメラに対してグループ共有内で共有できます。 注: グループ内の全てのカメラが 's' 権限を持っていない場合は共有できません
+tags                          | 配列[文字列]     | 文字列の配列で、それぞれ "tag" を表します。
+bridges                       | [DeviceBridges](#devicebridges-attributes)     | このデバイスが接続されているブリッジ
+settings                      | [DeviceSettings](#devicesettings-attributes)    | その他の設定
+camera_parameters             | オブジェクト            | カメラのパラメータ/設定(詳細は概要を参照)を含むJSONオブジェクト。もしカメラのパラメータが様々な理由(カメラとの通信が途絶するなど)により取得できない場合にはこの項目は空白となり、camera_parameters_status_code は404となります。
+camera_parameters_status_code | 整数               | 200 はcamera_parametersが取得できたことを表します。404 はcamera_parametersが取得できなかったことを表します。
+camera_info                   | [DeviceCameraInfo](#devicecamerainfo-attributes)  | カメラ関連情報で、カメラの場合のみ付加されます。
+camera_info_status_code       | 整数               | 200 はcamera_parametersが取得できたことを表します。404 はcamera_parametersが取得できなかったことを表します。
 
 ### DeviceSettingsの属性
 
 パラメータ           | データ型式                         | 詳細       
 ---------           | ---------------                   | -----------
-username            | 文字列                            | Username to login to camera. Only applies to Cameras.
-password            | 文字列                            | Password to login to camera. Only applies to Cameras.
-bridge              | 文字列                            | Device ID of bridge to attach camera to. Only applies to Cameras. Required for PUT for Cameras.
-guid                | 文字列                            | GUID of physical device. Only applies to Cameras. Required for PUT for Cameras.
-roi_names           | [DeviceSettingsRoiNames](#devicesettingsroinames-attributes) | ROI names keyed by ROI ID. Only applies to Cameras.
-alert_notifications | [DeviceSettingsAlertNotifications](#devicesettingsalertnotifications-attributes) | Arrays of User IDs keyed by ROI ID. Only applies to Cameras.
-alert_modes         | [DeviceSettingsAlertModes](#devicesettingsalertmodes-attributes) | Arrays of Alert modes keyed by ROI ID. Only applies to Cameras.
-alert_levels        | [DeviceSettingsAlertLevels](#devicesettingsalertlevels-attributes) | Arrays of Alert levels keyed by ROI ID. Only applies to Cameras.
-notes               | 文字列                            | Notes
-latitude            | 浮動小数点                             | Latitude of the cameras location.
-longitude           | 浮動小数点                             | Longitude of the cameras location.
-street_address      | 文字列                            | Street Address of the cameras location.
-azimuth             | 浮動小数点                             | Direction that the center of the camera faces. Values from 0.0-360.0 North=0.0.
-range               | 整数                               | Effective distance the camera can 'see' in feet.
-floor               | 整数                               | The floor of the building given that it is multiple stories.
-share_email         | 文字列                            | Comma delimited list of emails to share this device with
-local_retention_days| json                              | JSON object of total retention days         e.g. ``{"max": 10000,"min": 1,"d": 14,"v": 14}``
-cloud_retention_days| json                              | JSON object of retention days in the cloud  e.g. ``{"max": 10000,"min": 1,"d": 14,"v": 14}``
-bridge_retention_days| json                             | JSON object of retention days on the bridge e.g. ``{"max": 10000,"min": 1,"d": 14,"v": 14}``
-* Note local_retention_days and cloud_retention_days are meaningless in **CMVR** mode
+username            | 文字列                            | カメラにログインするためのユーザー名。カメラのみに付与されます。
+password            | 文字列                            | カメラにログインするためのパスワード。カメラのみに付与されます。
+bridge              | 文字列                            | カメラが接続されているブリッジのデバイスID。カメラのみに付与されます。カメラにPUTする際に必須です。
+guid                | 文字列                            | 物理デバイスのGUID。カメラのみに付与されます。カメラにPUTする際に必須です。
+roi_names           | [DeviceSettingsRoiNames](#devicesettingsroinames-attributes) | ROI IDをキーとしたROI名。カメラのみに付与されます。
+alert_notifications | [DeviceSettingsAlertNotifications](#devicesettingsalertnotifications-attributes) | ROI IDをキーとしたユーザーIDの配列。カメラのみに付与されます。
+alert_modes         | [DeviceSettingsAlertModes](#devicesettingsalertmodes-attributes) | ROI IDをキーとしたアラート モードの配列。カメラのみに付与されます。
+alert_levels        | [DeviceSettingsAlertLevels](#devicesettingsalertlevels-attributes) | ROI IDをキーとしたアラート レベルの配列。カメラのみに付与されます。
+notes               | 文字列                            | メモ
+latitude            | 浮動小数点                             | カメラ設置位置の緯度。
+longitude           | 浮動小数点                             | カメラ設置位置の経度。
+street_address      | 文字列                            | カメラ設置位置の住所。
+azimuth             | 浮動小数点                             | カメラ中心の方向。値は 0.0-360.0 を取り、北は 0.0 となります。
+range               | 整数                               | カメラの有効な「表示」距離をフィートで表します。
+floor               | 整数                               | 建物が複数階の場合、回数を表します。
+share_email         | 文字列                            | このデバイスが共有されているeメールのカンマ区切りリスト
+local_retention_days| json                              | 総保存期間のJSONオブジェクト         例 ``{"max": 10000,"min": 1,"d": 14,"v": 14}``
+cloud_retention_days| json                              | クラウド保存期間のJSONオブジェクト  例 ``{"max": 10000,"min": 1,"d": 14,"v": 14}``
+bridge_retention_days| json                             | オンプレミス保存期間のJSONオブジェクト 例 ``{"max": 10000,"min": 1,"d": 14,"v": 14}``
+* 注 local_retention_days と cloud_retention_days は **CMVR** モードでは無効です
 
 ### DeviceCameraInfoの属性
 
 パラメータ           | データ型式         | 詳細       
 ---------           | ---------------   | -----------
-bridge              | 文字列            | GUID of bridge the camera is attached to
-camera_retention    | 整数               | Retention period in milliseconds
-camera_newest       | 文字列            | Timestamp of newest event available, in EEN Timestamp format (YYYYMMDDHHMMSS.NNN)
-camera_oldest       | 文字列            | Timestamp of oldest event available, in EEN Timestamp format (YYYYMMDDHHMMSS.NNN)
-camera_info_version | 整数               | Camera info version
-connect             | 文字列            | Camera connect status
-camera_min_time     | 文字列            | Minimum timestamp available, in EEN Timestamp format (YYYYMMDDHHMMSS.NNN)
-uuid                | 文字列            | UUID string
-service             | 文字列            | Service status
-make                | 文字列            | Make of the device
-ipaddr              | 文字列            | IP Addresses assigned to the device, comma delimited, with the one in use prefixed by an asterisk *
-ts                  | 文字列            | Timestamp in EEN Timestamp format (YYYYMMDDHHMMSS.NNN)
-version             | 文字列            | Firmware version
-[status](#status-bitmask) | 文字列            | Status bitmask
-mac                 | 文字列            | MAC address
-proxy               | 文字列            | Proxy
-bridgeid            | 文字列            | Device of bridge this device is attached to
-now                 | 文字列            | Current timestamp, in EEN Timestamp format (YYYYMMDDHHMMSS.NNN)
-class               | 文字列            | Camera, or Bridge, etc.
-camera_now          | 文字列            | Camera's current timestamp, in EEN Timestamp format (YYYYMMDDHHMMSS.NNN)
-camera_abs_newest   | 文字列            | Timestamp of newest event available, in EEN Timestamp format (YYYYMMDDHHMMSS.NNN)
-camera_abs_oldest   | 文字列            | Timestamp of oldest event available, in EEN Timestamp format (YYYYMMDDHHMMSS.NNN)
-model               | 文字列            | Device model
-esn                 | 文字列            | ESN id
-admin_user          | 文字列            | Web Username
-admin_password      | 文字列            | Web Password
+bridge              | 文字列            | カメラが接続されているブリッジのデバイスID
+camera_retention    | 整数               | 保存期間のミリ秒表記
+camera_newest       | 文字列            | EENタイムスタンプフォーマット(YYYYMMDDHHMMSS.NNN)による、有効な最新イベントのタイムスタンプ。
+camera_oldest       | 文字列            | EENタイムスタンプフォーマット(YYYYMMDDHHMMSS.NNN)による、有効な最も古いイベントのタイムスタンプ。
+camera_info_version | 整数               | カメラ情報のバージョン
+connect             | 文字列            | カメラ接続状態
+camera_min_time     | 文字列            | EENタイムスタンプフォーマット(YYYYMMDDHHMMSS.NNN)による、有効な最小のタイムスタンプ。
+uuid                | 文字列            | UUID 文字列
+service             | 文字列            | サービス状態
+make                | 文字列            | デバイスの製造元
+ipaddr              | 文字列            | デバイスに割り当てられたIPアドレスで、カンマ区切りで保存されます。使用中の一つの先頭にアスタリスク * が付与されます。
+ts                  | 文字列            | EENタイムスタンプフォーマット(YYYYMMDDHHMMSS.NNN)によるタイムスタンプ。
+version             | 文字列            | ファームウェアバージョン
+[status](#status-bitmask) | 文字列            | 状態のビットマスク
+mac                 | 文字列            | MACアドレス
+proxy               | 文字列            | プロキシ
+bridgeid            | 文字列            | このデバイスが接続されているブリッジのデバイス
+now                 | 文字列            | EENタイムスタンプフォーマット(YYYYMMDDHHMMSS.NNN)による現在のタイムスタンプ。
+class               | 文字列            | カメラ、ブリッジまたはその他。
+camera_now          | 文字列            | EENタイムスタンプフォーマット(YYYYMMDDHHMMSS.NNN)による現在のカメラのタイムスタンプ。
+camera_abs_newest   | 文字列            | EENタイムスタンプフォーマット(YYYYMMDDHHMMSS.NNN)による、有効な最新イベントのタイムスタンプ。
+camera_abs_oldest   | 文字列            | EENタイムスタンプフォーマット(YYYYMMDDHHMMSS.NNN)による、有効な最も古いイベントのタイムスタンプ。
+model               | 文字列            | デバイスのモデル
+esn                 | 文字列            | ESN ID
+admin_user          | 文字列            | Web ユーザー名
+admin_password      | 文字列            | Web パスワード
 
 ### DeviceSettingsRoiNamesの属性
 
 パラメータ   | データ型式         | 詳細       
 ---------   | ---------------   | -----------
-roi_id      | 文字列            | Object with keys being ROI IDs, and values being the name.
+roi_id      | 文字列            | ROI IDをキーとしたオブジェクトと名前の値
 
 ### DeviceSettingsAlertNotificationsの属性
 
 パラメータ   | データ型式         | 詳細       
 ---------   | ---------------   | -----------
-roi_id      | 配列[文字列]     | Object with keys being ROI IDs, and values being the array of User IDs
+roi_id      | 配列[文字列]     | ROI IDをキーとしたオブジェクトとユーザーIDの配列値
 
 ### DeviceSettingsAlertModesの属性
 
 パラメータ   | データ型式         | 詳細       
 ---------   | ---------------   | -----------
-roi_id      | 配列[文字列]     | Object with keys being ROI IDs, and values being the array of alert modes
+roi_id      | 配列[文字列]     | ROI IDをキーとしたオブジェクトとアラート モードの配列値
 
 ### DeviceSettingsAlertLevelsの属性
 
 パラメータ   | データ型式         | 詳細       
 ---------   | ---------------   | -----------
-roi_id      | 配列[文字列]     | Object with keys being ROI IDs, and values being the array of alert levels
+roi_id      | 配列[文字列]     | ROI IDをキーとしたオブジェクトとアラート レベルの配列値
 
 ### DeviceBridgesの属性
 
 パラメータ   | データ型式         | 詳細       
 ---------   | ---------------   | -----------
-device_id   | 文字列            | Object with keys being Bridge Device IDs, and values being the service status of the camera on that bridge
+device_id   | 文字列            | ROI IDをキーとしたオブジェクトと、ブリッジ上のカメラのサービス状態の値
 
 <!--===================================================================-->
 ## カメラの取得
@@ -1081,7 +1081,7 @@ device_id   | 文字列            | Object with keys being Bridge Device IDs, a
 curl -G https://login.eagleeyenetworks.com/g/device -d "A=[AUTH_KEY]&id=[CAMERA_ID]"
 ```
 
-Returns camera object by id
+カメラ オブジェクトをIDで返します
 
 ### HTTP要求
 
@@ -1089,16 +1089,16 @@ Returns camera object by id
 
 パラメータ     | データ型式   | 詳細
 ---------     | ----------- | ----------- 
-**id**        | 文字列      | Camera Id
+**id**        | 文字列      | カメラID
 
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
+200 | 要求は成功しました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました
 
 <!--===================================================================-->
 ## ブリッジにカメラを追加する
@@ -1117,7 +1117,7 @@ curl --cookie "auth_key=[AUTH_KEY]" -X PUT -v -H "Authentication: [API_KEY]:" -H
 }
 ```
 
-Adds an Unattached Camera to the Bridge
+非割当カメラをブリッジに追加します
 
 ### HTTP要求
 
@@ -1125,27 +1125,27 @@ Adds an Unattached Camera to the Bridge
 
 パラメータ     | データ型式     | 詳細        | 必須？
 ---------     | -----------   | ----------- | -----------
-**name**      | 文字列        | Camera Name | true
-**settings**  | [DeviceSettings](#devicesettings-attributes)          | Misc Settings | true
-timezone      | 文字列        | If unspecified, this will default to the camera’s Bridge timezone
-tags          | 配列[文字列] | Array of strings, which each string representing a "tag"
+**name**      | 文字列        | カメラの名前 | true
+**settings**  | [DeviceSettings](#devicesettings-attributes)          | その他の設定 | true
+timezone      | 文字列        | 指定しない場合、カメラが接続するブリッジのタイムゾーンに設定されます
+tags          | 配列[文字列] | 文字列の配列で、それぞれの文字列は "tag" を表します
 
 ### 応答JSON属性
 
 パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
-id              | 文字列      | Unique identifier for the device
+id              | 文字列      | デバイスの一意な識別子
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
-404 | No device matching the ConnectID or GUID was found
-409 | ConnectID or GUID is currently already in use by an account
-410 | Communication cannot be made to attach the camera to the bridge
-415 | Device associated with the given GUID is unsupported
+200 | 要求は成功しました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました
+404 | 接続IDに合致するデバイスが見つからないか、GUIDが見つかりません
+409 | 接続IDまたはGUIDは既にアカウントで使用されています
+410 | ブリッジからカメラに通信できません
+415 | 指定されたGUIDに割り当てられたデバイスはサポートされていません
 
 <!--===================================================================-->
 ## カメラの更新
@@ -1170,30 +1170,29 @@ curl --cookie "auth_key=[AUTH_KEY]" -X POST -v -H "Authentication: [API_KEY]:" -
 
 パラメータ                 | データ型式     | 詳細          | 必須？
 ---------                 | -----------   | -----------   | -----------
-**id**                    | 文字列        | Camera Id     | true
-name                      | 文字列        | Camera Name
-timezone                  | 文字列s       | If unspecified, this will default to the camera’s Bridge timezone
-tags                      | 配列[文字列] | Array of strings, which each string representing a "tag"
-settings                  | json          | Misc Settings
-camera_parameters_add     | json          | JSON object of camera parameters/settings to add/update
-camera_parameters_delete  | json          | JSON object of camera parameters/settings to delete
+**id**                    | 文字列        | カメラID     | true
+name                      | 文字列        | カメラの名前
+timezone                  | 文字列       | 指定しない場合、カメラが接続するブリッジのタイムゾーンに設定されます
+tags                      | 配列[文字列] | 文字列の配列で、それぞれの文字列は "tag" を表します
+settings                  | json          | その他の設定
+camera_parameters_add     | json          | 追加または更新するカメラのパラメータ/設定のJSONオブジェクト
+camera_parameters_delete  | json          | 削除するカメラのパラメータ/設定のJSONオブジェクト
 
-### 応答JSON属性
 
 パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
-id              | 文字列      | Unique identifier for the device
+id              | 文字列      | デバイスの一意な識別子
 
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
-404 | Device matching the ID was not found
-463 | Unable to communicate with the camera to add/delete camera settings, contact support
+200 | 要求は成功しました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました
+404 | IDに合致するデバイスが見つかりません
+463 | 追加/削除するカメラ設定の対象となるカメラと通信できません。サポートに連絡してください
 
 <!--===================================================================-->
 ## カメラの削除
@@ -1210,18 +1209,18 @@ curl --cookie "auth_key=[AUTH_KEY]" -X DELETE -v -H "Authentication: [API_KEY]:"
 
 パラメータ     | データ型式   | 詳細
 ---------     | ----------- | -----------
-**id**        | 文字列      | Camera Id
+**id**        | 文字列      | カメラID
 
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
-404 | Device matching the ID was not found
-463 | Unable to communicate with the camera or bridge, contact support
+200 | 要求は成功しました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました
+404 | IDに合致するデバイスが見つかりません
+463 | カメラまたはブリッジと通信できません。サポートに連絡してください
 
 <!--===================================================================-->
 ## カメラリストの取得
@@ -1316,7 +1315,7 @@ curl --cookie "auth_key=[AUTH_KEY]" --request GET https://login.eagleeyenetworks
 ]
 ```
 
-Returns array of arrays, with each sub-array representing a device available to the user. The 'service_status' attribute either be set to 'ATTD' or 'IGND'. If the service_status is 'ATTD', the camera is attached to a bridge. If the service_status is 'IGND', the camera is unattached from any bridge and is available to be attached. Please note that the ListDevice model definition below has property keys, but that's only for reference purposes since it's actually just a standard array.
+配列中の配列が返された場合、それぞれの子配列はユーザーで有効なデバイスを表します。'service_status' 属性は 'ATTD' または 'IGND' が設定されます。もしservice_statusが 'ATTD' と表示された場合には、カメラはブリッジに割り当て済みとなります。もしservice_statusが 'IGND' と表示された場合には、カメラはどのブリッジからも未割り当てとなり、割当可能となります。上記のListDevice モデル定義はプロパティ キーを持ちますが、これは参照のみを目的とした標準的な配列であることに注意してください。
 
 ### HTTP要求
 
@@ -1324,41 +1323,41 @@ Returns array of arrays, with each sub-array representing a device available to 
 
 パラメータ | データ型式   | 詳細        
 --------- | ----------- | -----------           
-e         | 文字列      | Camera Id             
-n         | 文字列      | Camera Name           
-t         | 文字列      | Device Type           
-s         | 文字列      | Device Service Status
+e         | 文字列      | カメラID
+n         | 文字列      | カメラの名前
+t         | 文字列      | デバイス形式
+s         | 文字列      | デバイスのサービス状態
 
-### Response: Camera Model
+### 応答: カメラモデル
 
 Array Index | Attribute           | データ型式             | 詳細        
 ---------   | -----------         | -----------           | -----------           
-0           | account_id          | 文字列                | Unique identifier for the Device's Account
-1           | id                  | 文字列                | Unique identifier for the Device
-2           | name                | 文字列                | Name of the device
-3           | type                | 文字列, enum          | Type of device <br><br>enum: camera, bridge
-4           | bridges             | array[array[string]]  | This is an array of string arrays, each string array represents a bridge that can see the camera. The first element of the string array is the bridge ESN. The second element is the status.
-5           | service_status      | 文字列, enum          | Device service status. ATTD = camera is attached to a bridge. IGND = camera is unattached from all bridges and is available to be attached to a bridge. <br><br>enum: ATTD, IGND
-6           | permissions         | 文字列                | String of zero or more characters. Each character defines a permission that the current user has for the device. Permissions include: 'R' - user can view this device. 'W' - user can modify and delete this device. 'S' - user can share this device.
-7           | tags                | 配列[文字列]         | Tags
+0           | account_id          | 文字列                | デバイスのアカウントの一意な識別子
+1           | id                  | 文字列                | デバイスの一意な識別子
+2           | name                | 文字列                | デバイスの名前
+3           | type                | 文字列, 数値付きリスト          | デバイスの形式 <br><br>数値付きリスト: camera, bridge
+4           | bridges             | 配列[配列[文字列]]  | これは文字列配列の配列で、それぞれの配列はカメラから認識できるブリッジを表します。文字列配列の最初の要素はブリッジのESNを表します。2個目の要素は状態を表します。
+5           | service_status      | 文字列, 数値付きリスト          | デバイスのサービス状態。ATTD = カメラはブリッジに割り当て済み。 IGND = カメラは全てのブリッジから未割り当てでブリッジに割当が可能。 <br><br>数値付きリスト: ATTD, IGND
+6           | permissions         | 文字列                | 0以上の文字を持つ文字列。それぞれの文字は現在のユーザーのデバイスへの権限の定義を表します。権限は次の内容を含みます: 'R' - ユーザーはこのデバイスの表示が可能。 'W' - ユーザーはこのデバイスの変更、削除が可能。 'S' - ユーザーはこのデバイスの共有が可能。
+7           | tags                | 配列[文字列]         | タグ
 8           | guid                | 文字列                | GUID
-9           | serial_number       | 文字列                | Serial number
-10          | [device_status](#status-bitmask) | 整数                   | Device status bit mask
-11          | timezone            | 文字列                | Timezone
-12          | timezone_utc_offset | 整数                   | Timezone UTC offset as signed integer in seconds, such as “-25200”, which translates to -7 hours from UTC.
-13          | is_unsupported      | 整数                   | Indicates the camera is NOT supported (1) or IS supported (0)
-14          | ip_address          | 文字列                | IP Address of device
-15          | is_shared           | 整数                   | Indicates the camera is shared (1) or not (0)
-16          | owner_account_name  | 文字列                | Name of the account that owns the device. This only applies to shared cameras, since they will be owned by a different account.
-17          | is_upnp             | boolean               | Indicates whether the camera is a UPNP device. Note that this property is different then all the other 'is_*' properties in the API, which normally are integers (0 or 1). Currently this property only applies to cameras that haven’t yet been attached to the account, in which they could have been detected via ONVIF or UPNP.
-18          | video_input         | 文字列                | For analog cameras only, this indicates the video input channel of the camera.
-19          | video_status        | 文字列                | For analog cameras only, this indicates the video status of the camera.
+9           | serial_number       | 文字列                | シリアル番号
+10          | [device_status](#status-bitmask) | 整数                   | ビットマスクによるデバイス状態
+11          | timezone            | 文字列                | タイムゾーン
+12          | timezone_utc_offset | 整数                   | UTCとタイムゾーンの符号付き整数によるオフセット。“-25200”であれば、UTCから-7時間と解釈される。
+13          | is_unsupported      | 整数                   | カメラがサポートされてない(1)か、されている(0)かを示します。
+14          | ip_address          | 文字列                | デバイスのIPアドレス
+15          | is_shared           | 整数                   | カメラが共有済み(1)か、されていない(0)かを示します。
+16          | owner_account_name  | 文字列                | デバイスを所有するアカウントの名前を表します。これは共有済みカメラのみに付与され、このカメラが他のアカウントに所有されるまで表示されます。
+17          | is_upnp             | ブール               | カメラがUPNPデバイスかを示します。このプロパティはその他全APIの 'is_*'と異なり、通常は整数(0または1)で表されます。現在このプロパティはアカウントに割り当てられていない場合にのみ付与され、ONVIFまたはUPNP経由でのみ検出されます。
+18          | video_input         | 文字列                | アナログカメラのみで使用され、カメラの入力チャンネルを示します。
+19          | video_status        | 文字列                | アナログカメラのみで使用され、カメラの動画入力状態を示します。
 
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
+200 | 要求は成功しました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました

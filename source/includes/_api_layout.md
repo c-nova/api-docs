@@ -3,16 +3,16 @@
 <!--===================================================================-->
 ## 概要
 
-Layouts contain panes, which is a group of cameras arranged for viewing on screen. Layouts are associated with an account and account users are granted view/write/share permissions for the layout. Users who would otherwise have no access to a camera gain access to all cameras included in layouts shared with them.
+レイアウトはペインを含み、それらは画面の表示を行うためのカメラのグループを整理します。レイアウトはアカウントとアカウント ユーザーがレイアウトに対して与えられた 表示/書き込み/共有 権限に関連付けられます。ユーザーはカメラに対して全くアクセスできない場合を除き、共有されたレイアウトに含まれる全てのカメラに対してアクセスすることができます。
 
-The ordering of the panes is determined by the order of the array of LayoutJsonPane returned by the API. Each pane will have a size of 1, 2, or 3. A size of 1 is the smallest, and fills up 1x1 on the layout grid. A size of 3 is the largest and fills up 3x3 on the layout grid. If the grid does not have enough columns to fit the pane, then the size of the pane is decreased until it is able to fit on the grid.
+ペインの並び順は、APIによって返される LayoutJsonPane 配列内の順序によって決定されます。それぞれのペインは1, 2または3のサイズを持ちます。サイズ1は最小で、レイアウト グリッド内で 1x1 の大きさを専有します。サイズ3は最大で、レイアウト グリッド内で 3x3 の大きさを専有します。もしグリッドがペインにフィットする十分な列を持っていない場合、ペインのサイズはグリッドがフィットするまで縮小されます。
 
-Rendered Layouts on Web and Mobile:
+Web及びモバイルでのレイアウト描画は以下のようになります:
 <img src="images/api_layout/example_1.png" alt="Example 1" width="1000">
 <img src="images/api_layout/example_2.png" alt="Example 2" width="400">
 
 <!--===================================================================-->
-## Layout Model
+## レイアウト モデル
 
 > Layout Model
 
@@ -124,7 +124,7 @@ camera_aspect_ratio     | 浮動小数点             | ['0.5625' or '0.75']: As
 camera_row_limit        | 整数               | ['3' or '4' or '5']: Max number of cameras to show per row
 
 <!--===================================================================-->
-## Get Layout
+## レイアウトの取得
 
 > 要求
 
@@ -152,7 +152,7 @@ HTTP 状態コード    | データ型式
 403 | Forbidden due to the user missing the necessary privileges
 
 <!--===================================================================-->
-## Create Layout
+## レイアウトの作成
 
 > 要求
 
@@ -191,7 +191,7 @@ HTTP 状態コード    | データ型式
 403 | Forbidden due to the user missing the necessary privileges
 
 <!--===================================================================-->
-## Update Layout
+## レイアウトの更新
 
 ### HTTP要求
 `POST https://login/eagleeyenetworks.com/g/layout`
@@ -214,7 +214,7 @@ HTTP 状態コード    | データ型式
 403 | Forbidden due to the user missing the necessary privileges
 
 <!--===================================================================-->
-## Delete Layout
+## レイアウトの削除
 
 > 要求
 
@@ -241,7 +241,7 @@ HTTP 状態コード    | データ型式
 404 | Layout matching the ID was not found
 
 <!--===================================================================-->
-## Get List of Layouts
+## レイアウト リストの取得
 
 > 要求
 

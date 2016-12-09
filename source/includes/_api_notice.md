@@ -1,20 +1,18 @@
 # 利用規約
 
-The following API endpoints are to facilitate presenting and accepting the **Terms of Service**.
-Eagle Eye Networks has their own terms of services which will be presented through the [Get Terms of Service for User](#get-terms-of-service-for-user).
-Additionally resellers can add their own **Terms of Service** through the [Get Terms of Service for Account](#create-terms-of-service-for-account), which
-will then also be presented with Eagle Eye Network's terms.
+<!--===================================================================-->
+## 概要
 
-Resellers can assign their own terms at the master account level or give each sub account custom terms at the sub account level.
+以下のAPIエンドポイントは、**利用規約**の表示と受諾処理を簡易化します。Eagle Eye Networksは自身の利用規約の確認を [ユーザー用の利用規約の取得](#get-terms-of-service-for-user) を通じて行っております。加えて、リセラーは独自の**利用規約**を [アカウント用の利用規約の取得](#create-terms-of-service-for-account) を通じて行うことによって、Eagle Eye Networkの規約と同様に表示することが可能です。リセラーは自身の規約をマスターアカウントレベルに割り当てることも、サブアカウントレベルでそれぞれのサブアカウントの独自の規約として割り当てることも可能です。
 
-The basic work process is as follows:
+基本的な動作プロセスは以下のようになります:
 
 1. Resellers create their own terms with the [Get Terms of Service for Account](#create-terms-of-service-for-account)
 2. Client UI will display terms if not accepted from a [Get Terms of Service for User](#get-terms-of-service-for-user)
 3. Client UI will accept the terms from a [Accept Terms of Service for User](#accept-terms-of-service-for-user)
 
 <!--===================================================================-->
-## Get Terms of Service for User
+## ユーザー用の利用規約の取得
 
 > 要求
 
@@ -68,7 +66,7 @@ HTTP 状態コード    | データ型式
 
 
 <!--===================================================================-->
-## Accept Terms of Service for User
+## ユーザー用利用規約の受諾
   This is called to record acceptance of the notice.
   Account Super Users will not be able to accept for other people.
 
@@ -110,7 +108,7 @@ curl -X PUT https://28888.eagleeyenetworks.com/g/user/terms -d '{"id": "cafe81f5
 200	| User has been authorized for access to the realm
 
 <!--===================================================================-->
-## Create Terms of Service for Account
+## アカウント用利用規約の作成
 
 Master Accounts (Resellers) may require their own terms of service.
 For that case, this api endpoint is to submit the text of the terms of service.
@@ -173,7 +171,7 @@ status                 | 文字列        | Status of the term of service (activ
 200	| User has been authorized for access to the realm
 
 <!--===================================================================-->
-## Update Terms of Service for Account
+## アカウント用利用規約の更新
 
 Updates an account terms of service as specified by Put Terms of Service for Account.
 Users are not required to accept terms of the same version again, so if users should be forced to accept again then PUT should be done
@@ -232,7 +230,7 @@ status                 | 文字列        | Status of the term of service (activ
 
 
 <!--===================================================================-->
-## Delete Terms of Service for Account
+## アカウント用利用規約の削除
 
 This will **retire** a term of service.
 * Only master accounts can **DELETE** an account's terms of service
@@ -283,9 +281,7 @@ status             | 文字列        | This will be **retired**
 200	| User has been authorized for access to the realm
 
 <!--===================================================================-->
-
-
-## Get Terms of Service for Account
+## アカウント用の利用規約の取得
 
 > 要求
 

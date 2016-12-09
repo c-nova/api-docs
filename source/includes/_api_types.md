@@ -1,5 +1,5 @@
-# Types
+# 形式
 
-Type | Meaning
+形式 | 内容
 ---------- | -------
-EENTimestamp | Format YYYYMMDDhhmmss.xxx<br>Coordinated Universal Time<br>Example Jan 2, 2017 08:30:20.00 == 20170102083020.000
+EENTimestamp | YYYYMMDDhhmmss.xxx 形式<br>ユニバーサル時間を構成<br>例 2017年1月2日 08:30:20.00 == 20170102083020.000

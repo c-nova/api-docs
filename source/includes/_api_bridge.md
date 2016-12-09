@@ -2,10 +2,11 @@
 
 <!--===================================================================-->
 ## 概要
-The Bridge is a product of Eagle Eye that sits at the customer location and talks to industry standard cameras. It converts the Cameras to be compatible with the EEVB and record the Assets. The Bridge is setup and controlled via a cloud based user inteface. There is no user interface on the Bridge. The Bridge may serve local Assets directly to local Clients. The Bridge will also store Assets until they are transferred to the EEVB. The Bridge may be configured via DHCP or with a static IP address.
+ブリッジはお客様先に設置され、業界標準カメラと通信を行うEagle Eyeの製品です。これによりカメラはEEVBとアセットの保存と互換するように変換されます。ブリッジはクラウドベースのユーザーインターフェイス経由でセットアップや制御が行われます。ブリッジにはユーザーインターフェイスはありません。ブリッジはローカルのクライアントのために、ローカルストレージに直接保存することが可能です。ブリッジはまた資産をEEVBに転送し、保存することが可能です。ブリッジはDHCPまたは固定IPアドレスによって構成されます。
+
 
 <!--===================================================================-->
-## Get Bridge
+## ブリッジの取得
 
 > 要求
 
@@ -170,7 +171,7 @@ curl -G https://login.eagleeyenetworks.com/g/device -d "A=[AUTH_KEY]&id=[BRIDGE_
   }
 ```
 
-Returns user object by id. Not passing an id will return the current authorized user.
+ユーザー オブジェクトはIDによって返されます。IDが返されない場合には現在認可されているユーザーが返されます。
 
 ### HTTP要求
 
@@ -178,19 +179,19 @@ Returns user object by id. Not passing an id will return the current authorized 
 
 パラメータ     | データ型式   | 詳細
 ---------     | ----------- | -----------
-**id**        | 文字列      | Bridge Id
+**id**        | 文字列      | ブリッジID
 
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
+200 | 要求は成功しました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました
 
 <!--===================================================================-->
-## Add Bridge to EEVB
+## EEVBへのブリッジの追加
 
 > 要求
 
@@ -206,7 +207,7 @@ curl --cookie "auth_key=[AUTH_KEY]" -X PUT -v -H "Authentication: [API_KEY]:" -H
 }
 ```
 
-Adds a bridge to the Eagle Eye Video Bank
+Eagle Eyeビデオバンクにブリッジを追加します
 
 ### HTTP要求
 
@@ -214,30 +215,30 @@ Adds a bridge to the Eagle Eye Video Bank
 
 パラメータ | データ型式     | 詳細        
 --------- | -----------   | ----------- 
-name      | 文字列        | Bridge Name
-connectID | 文字列        | Connect ID is needed to add and activate bridge to account. All non-alphanumeric characters will be stripped.
+name      | 文字列        | ブリッジの名前
+connectID | 文字列        | アカウントへアクティブなブリッジを追加するにはConnect ID(訳注:Attach ID)が必要になります。全ての非数字、アルファベット文字は無視されます。
 
 ### 応答JSON属性
 
 パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
-id              | 文字列      | Unique identifier for the device
+id              | 文字列      | デバイスの一意な識別子
 
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
-404 | No device matching the ConnectID or GUID was found
-409 | ConnectID or GUID is currently already in use by an account
-410 | Communication cannot be made to attach the camera to the bridge
-415 | Device associated with the given GUID is unsupported
+200 | 要求は成功しました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました
+404 | ConnectIDまたはGUIDと一致するデバイスが見つかりませんでした
+409 | ConnectIDあたはGUIDは既にアカウントによって使用中です
+410 | ブリッジと通信できないため、カメラを割り当てできませんでした
+415 | 指定されたGUIDに割り当てられたデバイスはサポートされていません
 
 <!--===================================================================-->
-## Update Bridge
+## ブリッジの更新
 
 > 要求
 
@@ -259,33 +260,33 @@ curl --cookie "auth_key=[AUTH_KEY]" -X POST -v -H "Authentication: [API_KEY]:" -
 
 パラメータ                 | データ型式     | 詳細          | 必須？
 ---------                 | -----------   | -----------   | -----------
-**id**                    | 文字列        | Bridge Id     | true
-name                      | 文字列        | Bridge Name
-timezone                  | 文字列s       | If unspecified, this will default to the camera’s Bridge timezone
-tags                      | 配列[文字列] | Array of strings, which each string representing a "tag"
-settings                  | json          | Misc Settings
-camera_parameters_add     | json          | JSON object of camera parameters/settings to add/update
-camera_parameters_delete  | json          | JSON object of camera parameters/settings to delete
+**id**                    | 文字列        | ブリッジID     | true
+name                      | 文字列        | ブリッジの名前
+timezone                  | 文字列       | 未指定の場合、タイムゾーンは接続するブリッジのタイムゾーンになります(訳注:原文誤り。正しくはアカウントのタイムゾーンになる)
+tags                      | 配列[文字列] | 文字列の配列で、それぞれの文字列は "tag" を表します。
+settings                  | json          | その他設定
+camera_parameters_add     | json          | カメラの追加、更新を行うパラメータ/設定のJSONオブジェクト
+camera_parameters_delete  | json          | カメラの削除するパラメータ/設定のJSONオブジェクト
 
 ### 応答JSON属性
 
 パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
-id              | 文字列      | Unique identifier for the device
+id              | 文字列      | デバイスの一意な識別子
 
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
-404 | Device matching the ID was not found
-463 | Unable to communicate with the camera to add/delete camera settings, contact support
+200 | 要求は成功しました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました
+404 | IDと一致するデバイスが見つかりませんでした
+463 | 設定の追加/削除を行うカメラと通信できません。サポートに連絡してください。
 
 <!--===================================================================-->
-## Delete Bridge
+## ブリッジの削除
 
 > 要求
 
@@ -299,21 +300,21 @@ curl --cookie "auth_key=[AUTH_KEY]" -X DELETE -v -H "Authentication: [API_KEY]:"
 
 パラメータ     | データ型式   | 詳細
 ---------     | ----------- | -----------
-**id**        | 文字列      | Bridge Id
+**id**        | 文字列      | ブリッジID
 
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
-404 | Device matching the ID was not found
-463 | Unable to communicate with the camera or bridge, contact support
+200 | 要求は成功しました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました
+404 | IDと一致するデバイスが見つかりませんでした
+463 | カメラまたはブリッジと通信できません。サポートに連絡してください。
 
 <!--===================================================================-->
-## Get List of Bridges
+## ブリッジのリストを取得する
 
 > 要求
 
@@ -437,7 +438,7 @@ curl --cookie "auth_key=[AUTH_KEY]" --request GET https://login.eagleeyenetworks
 ]
 ```
 
-Returns array of arrays, with each sub-array representing a device available to the user. The 'service_status' attribute either be set to 'ATTD' or 'IGND'. If the service_status is 'ATTD', the camera is attached to a bridge. If the service_status is 'IGND', the camera is unattached from any bridge and is available to be attached. Please note that the ListDevice model definition below has property keys, but that's only for reference purposes since it's actually just a standard array.
+配列中の配列が返された場合、それぞれの子配列はユーザーで有効なデバイスを表します。'service_status' 属性は 'ATTD' または 'IGND' が設定されます。もしservice_statusが 'ATTD' と表示された場合には、カメラはブリッジに割り当て済みとなります。もしservice_statusが 'IGND' と表示された場合には、カメラはどのブリッジからも未割り当てとなり、割当可能となります。上記のListDevice モデル定義はプロパティ キーを持ちますが、これは参照のみを目的とした標準的な配列であることに注意してください。
 
 ### HTTP要求
 
@@ -445,14 +446,14 @@ Returns array of arrays, with each sub-array representing a device available to 
 
 パラメータ | データ型式   | 詳細                  
 --------- | ----------- | -----------           
-e         | 文字列      | Bridge Id             
-n         | 文字列      | Bridge Name           
-t         | 文字列      | Device Type           
-s         | 文字列      | Device Service Status
+e         | 文字列      | ブリッジID
+n         | 文字列      | ブリッジの名前
+t         | 文字列      | デバイスの形式
+s         | 文字列      | デバイスのサービス状態
 
-### Response: Bridge Model
+### 応答: ブリッジ モデル
 
-Array Index | Attribute       | データ型式  
+配列インデックス | 属性       | データ型式  
 ---------   | -----------     | -----------
 0           | account_id      | 文字列
 1           | id              | 文字列
@@ -479,7 +480,7 @@ Array Index | Attribute       | データ型式
 
 HTTP 状態コード    | データ型式   
 ------------------- | ----------- 
-200 | Request succeeded
-400 | Unexpected or non-identifiable arguments are supplied
-401 | Unauthorized due to invalid session cookie
-403 | Forbidden due to the user missing the necessary privileges
+200 | 要求は成功しました
+400 | 予期せぬまたは識別不能な引数が指定されました
+401 | 無効なセッションCookieにより認可されませんでした
+403 | ユーザーに必要な権限がないため拒否されました

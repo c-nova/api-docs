@@ -3,10 +3,11 @@
 <!--===================================================================-->
 ## 概要
 
-This service is used to retrieve and update recording info for recordings that were started/stopped using the "action/recordnow" and "action/recordoff" services.
+このサービスは、"action/recordnow" と "action/recordoff" サービスを使用して開始/終了された録画に対して、録画情報の取得と更新を行います。
+
 
 <!--===================================================================-->
-## Get Recording Object
+## 録画オブジェクトの取得
 
 > 要求 記述予定
 
@@ -38,7 +39,7 @@ HTTP 状態コード    | データ型式
 403	| Forbidden due to the user missing the necessary privileges
 
 <!--===================================================================-->
-## Update Recording Object
+## 録画オブジェクトの更新
 
 > 要求 記述予定
 
