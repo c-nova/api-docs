@@ -1,7 +1,7 @@
 FROM ruby:2
 
 WORKDIR /usr/src/app
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile ./
 RUN bundle install
 
 ADD . .

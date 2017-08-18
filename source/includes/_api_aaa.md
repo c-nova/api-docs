@@ -1,10 +1,16 @@
 # 認証, 認可, アカウント
 
 <!--===================================================================-->
-## アカウントの作成 
-
 ## 概要
-このセクションは新規カウントの作成と、アカウントの回復のステップを説明します。もし現在のアカウントに紐付いたサブアカウントの作成を行う場合には、 [Account](#account) を参照してください。
+<!--===================================================================-->
+
+このサービスは独立した新しいカウントの作成と、アカウントの回復を提供します。もし現在のアカウントに紐付いたサブアカウントの作成を行う場合には、 [アカウント](#アカウント) を参照してください。
+
+<!--===================================================================-->
+## アカウントの作成
+<!--===================================================================-->
+
+これはアカウントに新規のユーザー及びスーパーユーザーを作成する際に使用します。作成プロセスの一部として、サービスはリンクを含んだ確認用のEメールを送信し、ユーザーはそれをクリックしてアカウントのアクティベーションを行う必要があります（アカウントはアクティブ化するまで使用することはできません）
 
 > 要求
 
@@ -12,8 +18,7 @@
 curl --request POST https://login.eagleeyenetworks.com/g/aaa/create_account --data "email=[EMAIL]&password=[PASSWORD]"
 ```
 
-これはアカウントに新規のユーザー及びスーパーユーザーを作成する際に使用します。作成プロセスの一部として、サービスはリンクを含んだ確認用のEメールを送信し、ユーザーはそれをクリックしてユーザーアカウントのアクティベーションを行う必要があります。ユーザーアカウントはアクティブ化するまで使用することはできません。
-
+=======
 ### HTTP要求
 
 `POST https://login.eagleeyenetworks.com/g/aaa/create_account`
@@ -32,14 +37,17 @@ is_api_acces_needed | ブール | この新規アカウントにAPIアクセス�
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
-------------------- | ----------- 
-400	| Unexpected or non-identifiable arguments are supplied
-406	| Realm is invalid due to not being a root realm
-409	| Email address has already been registered for the specified realm
-202	| Account has been created and a confirmation email has been sent to the provided email address
+------------------- | -----------
+400	| 無効なセッションクッキーにより認証されませんでした
+406	| レルムがルート・レルムではないため不正です
+409	| Eメールアドレスが指定されたレルムに既に登録済みです
+202	| アカウントは作成され、提供されたEメールアドレスに対して確認Eメールが送信されました
 
 <!--===================================================================-->
 ## アカウントの確認
+<!--===================================================================-->
+
+これはアカウントの作成時に提供された電子メールアドレスを確認するために使用されます。成功するとアカウントはアクティブに設定され、ユーザーセッションが作成されます。ユーザーは再度ログインする必要はありません。
 
 > 要求
 
@@ -47,15 +55,22 @@ HTTP 状態コード    | データ型式
 curl --request POST https://login.eagleeyenetworks.com/g/aaa/validate_account --data "id=[ID]&token=[TOKEN]"
 ```
 
-> Response Json
+### HTTP 要求
+
+`POST https://login.eagleeyenetworks.com/g/aaa/validate_account`
+
+パラメータ  | データ型式     | 詳細         | 必須？
+--------- | ---------   | ----------- | -----------
+**id**    | 文字列      | アカウントID  | true
+**token** | 文字列      | アカウント検証トークン | true
+
+> JSON 応答
 
 ```json
 {
-	"user_id": "ca103fea"
+    "user_id": "ca103fea"
 }
 ```
-
-This is used to verify the email address supplied when the account is created. When successful, the account is set to active and a user session is created. User will not be required to login again.
 
 ### HTTP要求
 
@@ -63,29 +78,36 @@ This is used to verify the email address supplied when the account is created. W
 
 パラメータ  		| データ型式   | 詳細          	| 以下で必須
 ---------  		| ----------- | -----------   	| -----------
-id   		| 文字列      | Account Id 		| POST
-token   	| 文字列      | Account validation token | POST
+id   		| 文字列      | アカウントID 		| POST
+token   	| 文字列      | アカウント検証トークン | POST
 
 ### HTTP Json Attributes
 
 パラメータ 	| データ型式     | 詳細       
 ---------  	| -----------   | -----------
-user_id 	| 文字列 		| Unique identifier for validated user
+user_id 	| 文字列 		| 検証されたユーザーの一意の識別子
 
 ### エラー状態コード
 
 HTTP 状態コード    | データ型式   
-------------------- | ----------- 
-400 | Unexpected or non-identifiable arguments are supplied
-406	| Information supplied could not be verified
-402	| Account is suspended
-460	| Account is inactive
-409	| Account has already been activated
-412	| User is disabled
-200	| User has been authorized for access to the realm
+------------------- | -----------
+400 | 予期せぬまたは識別不能な引数が与えられました
+402	| アカウントは停止中です
+406	| 検証できな情報が与えられました
+409	| アカウントは既にアクティブ化済みです
+412	| ユーザーが無効です
+460	| アカウントは非アクティブです
+200	| ユーザーにレルムに対してのアクセス許可を与えられました
 
 <!--===================================================================-->
 ## パスワードの紛失
+<!--===================================================================-->
+
+パスワードリカバリは、複数のステップからなるプロセスです：
+
+  - ステップ1は、登録されたユーザーの電子メールアドレスにリセット電子メールを送信するよう要求します。
+  - ステップ2では、リセットトークンが有効であることを検証します（この手順はオプションですが、より快適なユーザーエクスペリエンスを提供するために提供されています）。
+  - ステップ3を使用して、ユーザーはパスワードを変更できます。 ステップ3の結果は、ユーザーセッションがユーザー用に作成されていることです。
 
 > 要求
 
@@ -93,32 +115,32 @@ HTTP 状態コード    | データ型式
 curl --request POST https://login.eagleeyenetworks.com/g/aaa/forgot_password --data "email=[EMAIL]"
 ```
 
-Password recovery is a multi-step process. Step one requests a reset email be sent to the email address of a registered user. Step two validates that the reset token is valid (This step is optional but is provided to allow for a friendlier user experience). Step three uses allows the user to change the password. The results of step three is that a user session is created for the user.
-
 ### HTTP要求
-
 
 `POST https://login.eagleeyenetworks.com/g/aaa/forgot_password`
 
-パラメータ  		| データ型式   | 詳細          	| 以下で必須
+パラメータ  		| データ型式   | 詳細          	| 必須
 ---------  		| ----------- | -----------   	| -----------
-email   	| 文字列      | Email Address 	| POST
+**email**   	| 文字列      | Eメール アドレス 	| True
 
 ### エラー状態コード
 
-HTTP 状態コード    | データ型式   
-------------------- | ----------- 
-400 | Unexpected or non-identifiable arguments are supplied
-406	| Information supplied could not be verified
-402	| Account is suspended
-460	| Account is inactive
-461	| Account is pending
-412	| User is disabled
-462	| User is pending
-202	| An reset email has been sent to the supplied email address. This status will be provided even if the email address was not found. This prevents attacks to discover user accounts.
+HTTP 状態コード        | データ型式   
+------------------- | -----------
+400 | 予期せぬまたは識別不能な引数が与えられました
+402	| アカウントは停止中です
+406	| 検証できな情報が与えられました
+412	| ユーザーが無効です
+460	| アカウントは非アクティブです
+461	| アカウントは保留中です
+462	| ユーザーは保留中です
+202	| 指定されたEメールアドレスにリセット用のEメールが送信されました。これはEメールアドレスが見つからなかった場合でも実行されます。これにより、攻撃者がユーザーアカウントを探す事を防くことができます。
 
 <!--===================================================================-->
 ## パスワードのリセット トークンの確認
+<!--===================================================================-->
+
+これはパスワード回復/リセットプロセスのステップ2です。提供されたトークンが有効なリセット トークンであることを確認します。
 
 > 要求
 
@@ -126,31 +148,31 @@ HTTP 状態コード    | データ型式
 curl --request POST https://login.eagleeyenetworks.com/g/aaa/check_pw_reset_token --data "token=[TOKEN]"
 ```
 
-This is step two of the password recover/reset process. It verifies that the supplied token is a valid reset token.
-
 ### HTTP要求
-
 
 `POST https://login.eagleeyenetworks.com/g/aaa/check_pw_reset_token`
 
-パラメータ  		| データ型式   | 詳細          	| 以下で必須
+パラメータ  		 | データ型式     | 詳細           	| 必須？
 ---------  		| ----------- | -----------   	| -----------
-token   	| 文字列      | Password reset token provided in email | POST
+**token**   	| 文字列       | Password reset token provided in email | True
 
 ### エラー状態コード
 
-HTTP 状態コード    | データ型式   
-------------------- | ----------- 
-400 | Unexpected or non-identifiable arguments are supplied
-406	| Token not valid or not found
-402	| Account is suspended
-460	| Account is inactive
-461	| Account is pending
-412	| User is disabled
-202	| Token is valid
+HTTP 状態コード       | 詳細   
+------------------- | -----------
+400 | 予期せぬまたは識別不能な引数が与えられました
+402	| アカウントは停止中です
+406	| 検証できな情報が与えられました
+412	| ユーザーが無効です
+460	| アカウントは非アクティブです
+461	| アカウントは保留中です
+202	| トークンは有効です
 
 <!--===================================================================-->
 ## パスワードのリセット
+<!--===================================================================-->
+
+これはパスワード回復/リセットプロセスのステップ3です。どちらも、提供されたトークンが有効なリセットトークンであることを検証し、有効であればトークンに関連付けられたパスワードを新しく提供されたパスワードにリセットします。完了すると、ユーザーログインセッションが作成されます
 
 > 要求
 
@@ -158,46 +180,47 @@ HTTP 状態コード    | データ型式
 curl --request POST https://login.eagleeyenetworks.com/g/aaa/reset_password --data "token=[TOKEN]&password=[PASSWORD]"
 ```
 
-> Response Json
-
-```json
-{
-	"user_id": "ca0e1cf2"
-}
-```
-
-This is step three of the password recover/reset process. It both verifies that the supplied token is a valid reset token and then, if valid resets the password associated with the token to the newly supplied password. Upon completion, a user login session is created.
-
-### HTTP要求
+### HTTP 要求
 
 `POST https://login.eagleeyenetworks.com/g/aaa/reset_password`
 
-パラメータ  		| データ型式   | 詳細          	| 以下で必須
----------  		| ----------- | -----------   	| -----------
-token   	| 文字列      | Password reset token provided in email | POST
-password   		| 文字列      | New password | POST
-accepted_terms_of_service_urls   		| 文字列      | New terms of service acceptance url
+パラメータ                       | データ型式   | 詳細         | 必須？
+---------                      | --------- | ----------- | -----------
+**token**                      | 文字列     | Eメールで提供されたパスワード リセット トークン | true
+**password**                   | 文字列     | 新しいパスワード | true
+accepted_terms_of_service_urls | 文字列     | 新しい利用規約の確認URL
 
-### HTTP Json Attributes
+> JSON 応答
 
-パラメータ 	| データ型式     | 詳細       
----------  	| -----------   | -----------
-user_id 	| 文字列 		| Unique identifier for validated user
+```json
+{
+    "user_id": "ca0e1cf2"
+}
+```
+
+### HTTP 応答 (JSON 属性)
+
+パラメータ   | データ型式  | 詳細
+--------- | --------- | -----------
+user_id   | 文字列     | 検証されたユーザーの一意の識別子
 
 ### エラー状態コード
 
-HTTP 状態コード    | データ型式   
-------------------- | ----------- 
-400 | Unexpected or non-identifiable arguments are supplied
-406	| Token not valid or not found
-402	| Account is suspended
-460	| Account is inactive
-461	| Account is pending
-412	| User is disabled
-200	| User has been authorized for access to the realm
+HTTP 状態コード    | 詳細
+---------------- | -----------
+400 | 予期せぬまたは識別不能な引数が与えられました
+402	| アカウントは停止中です
+406	| 検証できな情報が与えられました
+412	| ユーザーが無効です
+460	| アカウントは非アクティブです
+461	| アカウントは保留中です
+200	| ユーザーにレルムに対してのアクセス許可を与えられました
 
 <!--===================================================================-->
 ## 登録用Eメールの再送
+<!--===================================================================-->
+
+アカウントに登録ずみであるにもかかわらず、登録の確認していないユーザーに使用します。これにより、登録確認メールを再送信することができます
 
 > 要求
 
@@ -205,32 +228,32 @@ HTTP 状態コード    | データ型式
 curl --request POST https://login.eagleeyenetworks.com/g/aaa/resend_registration_email --data "email=[EMAIL]"
 ```
 
-This is used by users who have registered for an account, but never confirmed the registration. This will allow the registration confirmation email to be re-sent to the user.
-
-### HTTP要求
+### HTTP 要求
 
 `POST https://login.eagleeyenetworks.com/g/aaa/resend_registration_email`
 
-パラメータ  		| データ型式   | 詳細          	| 以下で必須
----------  		| ----------- | -----------   	| -----------
-email   	| 文字列      | Email address of the account contact for a pending account | POST
-realm  			| string      | realm (defaults to current user's realm)
-
+パラメータ   | データ型式  | 詳細        	| 必須？
+--------- | --------- | ----------- | -----------
+**email** | 文字列     | 保留中のアカウントのアカウント担当者のEメールアドレス | true
+realm     | 文字列     | レルム (デフォルトは現在のユーザーレルム)
 
 ### エラー状態コード
 
-HTTP 状態コード    | データ型式   
-------------------- | ----------- 
-400 | Unexpected or non-identifiable arguments are supplied
-404	| Account with this email address and realm could not be found
-402	| Account is suspended
-460	| Account is inactive
-409	| Account is already active (not pending)
-412	| User is disabled
-202	| Account was located and verified to be in the pending state. A registration email has been recreated and sent to the provided email address.
+HTTP 状態コード     | 詳細
+---------------- | -----------
+400 | 予期せぬまたは識別不能な引数が与えられました
+402	| アカウントは停止中です
+404	| 指定されたEメール アドレスとレルムのユーザーが見つかりません
+409	| アカウントは既にアクティブ化済みです（非保留）
+412	| ユーザーが無効です
+460	| アカウントは非アクティブです
+202	| ユーザーは存在し、検証ため保留状態になりました。確認Eメールが再作成され、Eメールアドレスに送信されました
 
 <!--===================================================================-->
 ## ユーザー確認用Eメールの再送
+<!--===================================================================-->
+
+ユーザーアカウントが作成済みであるにもかか、ユーザーアカウントを確認していないユーザーに使用します。これにより、ユーザーに確認メールを再送信することができます
 
 > 要求
 
@@ -238,72 +261,81 @@ HTTP 状態コード    | データ型式
 curl --request POST https://login.eagleeyenetworks.com/g/aaa/resend_user_verification_email --data "email=[EMAIL]"
 ```
 
-This is used by users who have had a user account created for them, but they never confirmed their user account. This will re-send the user confirmation email so that they can then confirm their user account.
-
-### HTTP要求
+### HTTP 要求
 
 `POST https://login.eagleeyenetworks.com/g/aaa/resend_user_verification_email`
 
-パラメータ  		| データ型式   | 詳細          	| 以下で必須
----------  		| ----------- | -----------   	| -----------
-email   	| 文字列      | Email address of the new user | POST
-realm  			| 文字列      | realm (defaults to current user's realm)
+パラメータ   | データ型式  | 詳細        	| 必須？
+--------- | --------- | ----------- | -----------
+**email** | 文字列     | 新規ユーザーのEメール アドレス | true
+realm     | 文字列     | レルム (デフォルトは現在のユーザーレルム)
 
 ### エラー状態コード
 
-HTTP 状態コード    | データ型式   
-------------------- | ----------- 
-400 | Unexpected or non-identifiable arguments are supplied
-404	| User with this email address and realm could not be found
-402	| Account is suspended
-460	| Account is inactive
-461	| Account is pending
-412	| User is disabled
-409	| User is already active (not pending)
-202	| User was located and verified to be in the pending state. A verification email has been recreated and sent to the provided email address.
+HTTP 状態コード     | 詳細
+---------------- | -----------
+400 | 予期せぬまたは識別不能な引数が与えられました
+402	| アカウントは停止中です
+404	| 指定されたEメール アドレスとレルムのユーザーが見つかりません
+409	| アカウントは既にアクティブ化済みです（非保留）
+412	| ユーザーが無効です
+460	| アカウントは非アクティブです
+461	| アカウントは保留中です
+202	| ユーザーは存在し、検証ため保留状態になりました。確認Eメールが再作成され、Eメールアドレスに送信されました
 
 <!--===================================================================-->
 ## パスワードの変更
+<!--===================================================================-->
+
+これを使用することで、認証済みのユーザーはパスワードを直接変更することができます。また、スーパーユーザーは管理対象のユーザーのパスワードを変更することもできます。
+
+  - 自分のパスワードを変更する際には、現在のパスワードも入力する必要があります（ユーザーIDは省略）
+  - 管理対象のユーザーのパスワードを変更する際には、（管理対象ユーザーのIDとは別に）新しいパスワードのみが必要です
 
 > 要求
 
 ```shell
-curl --cookie "auth_key=[AUTH_KEY]&api_key=[API_KEY]" --request POST https://login.eagleeyenetworks.com/g/aaa/resend_user_verification_email --data "password=[EMAIL]&current_password=[CURRENT_PASSWORD]"
+curl --cookie "auth_key=[AUTH_KEY]&api_key=[API_KEY]" --request POST https://login.eagleeyenetworks.com/g/aaa/change_password --data "password=[PASSWORD]&current_password=[CURRENT_PASSWORD]"
 ```
 
-> Response Json
-
-```json
-{
-	"id": "ca02c000"
-}
-```
-
-
-This allows a user to change their password directly while authenticated, and also allows super users to change the password of the users they manage. If someone is changing their own password, they must send their current password as well. If someone is changing one of the users they manage, they only need to send the new password.
-
-### HTTP要求
+### HTTP 要求
 
 `POST https://login.eagleeyenetworks.com/g/aaa/change_password`
 
-パラメータ  		| データ型式   | 詳細          	| 以下で必須
----------  		| ----------- | -----------   	| -----------
-id   			| 文字列      | ID of the user having their password changed. Optional. Defaults to the ID of the authenticated user. If empty or equal to authenticated user, then "current_password" becomes required. | 
-password   	| 文字列      | New password | POST
-current_password| 文字列      | Current password of the user. Optional. If "id" argument is empty, or is equal to the authenticated user's id, then this is required. | 
+パラメータ         | データ型式   | 詳細         | 必須？
+---------        | --------- | ----------- | -----------
+**password**     | 文字列    | 新しいパスワード | true
+id               | 文字列    | パスワードを変更したユーザのID。これはオプションです。デフォルトでは認証されたユーザーのIDです。空の場合、または認証されたユーザと等しい場合は、「current_password」が必要になります
+current_password | 文字列    | ユーザーの現在のパスワード。これはオプションです。"id"引数が空であるか、認証されたユーザのIDと等しい場合、この項目は必須です
+
+> JSON 応答
+
+```json
+{
+    "id": "ca02c000"
+}
+```
+
+### HTTP 応答 (JSON 属性)
+
+パラメータ   | データ型式  | 詳細
+--------- | --------- | -----------
+id        | 文字列    | パスワードを変更したユーザーの一意の識別子
 
 ### エラー状態コード
 
-HTTP 状態コード    | データ型式   
-------------------- | ----------- 
-401 | Unauthorized due to invalid session cookie
-400	| Unexpected or non-identifiable arguments are supplied
-404	| User with the "id" provided cannot be found
-406	| The "current_password" provided does not match the password of the authenticated user
-200	| User password was changed successfully
+HTTP 状態コード | 詳細
+---------------- | -----------
+400	| 予期せぬまたは識別不能な引数が与えられました
+401	| 無効なセッションクッキーにより認証されませんでした
+404	| 提供された `'id'` のユーザーは見つかりませんでした
+406	| 提供された `'current_password'` は認証されたユーザーのパスワードと一致しませんでした
 
 <!--===================================================================-->
 ## アカウントの切り替え
+<!--===================================================================-->
+
+ユーザーは、アクセス権を持つ別のアカウントに「ログイン」することができます（[アカウント一覧の取得]（＃get-list-of-accounts）を参照）。一般的には、これは、サブアカウントにアクセスするマスターアカウントユーザーに必要な機能です。 [アカウント]（＃アカウント）モデルのアカウントにのみ適用されます
 
 > 要求
 
@@ -311,27 +343,40 @@ HTTP 状態コード    | データ型式
 curl --cookie "auth_key=[AUTH_KEY]" --request POST https://login.eagleeyenetworks.com/g/aaa/switch_account
 ```
 
-This allows a user to "log in" to another account that the user has access to (see "list/accounts"). Most commonly this be would be needed for a master account user accessing their sub accounts.
-
-### HTTP要求
+### HTTP 要求
 
 `POST https://login.eagleeyenetworks.com/g/aaa/switch_account`
 
-パラメータ  		| データ型式   | 詳細          	| 以下で必須
----------  		| ----------- | -----------   	| -----------
-account_id   	| 文字列      | ID of the account to login to. Optional. Defaults to the account ID that the user belongs to. | POST
+パラメータ    | データ型式  | 詳細
+---------  | --------- | -----------
+account_id | 文字列    | ログインするアカウントのID。これはオプションです。デフォルトはユーザーが所属するアカウントのIDです
 
 ### エラー状態コード
 
-HTTP 状態コード    | データ型式   
-------------------- | ----------- 
-401 | Unauthorized due to invalid session cookie
-400	| Unexpected or non-identifiable arguments are supplied
-404	| Account with the "account_id" provided cannot be found
-200	| Account context switch successful
+HTTP 状態コード     | 詳細
+---------------- | -----------
+400	| 予期せぬまたは識別不能な引数が与えられました
+401	| 無効なセッションクッキーにより認証されませんでした
+404	| `'account_id'` が提供されているアカウントが見つかりませんでした
+200	| アカウントのコンテキスト切り替えに成功しました
 
 <!--===================================================================-->
 ## シングル・サインオン
+<!--===================================================================-->
+
+<aside class="success">このサービスは現在開発中であり、まだ機能していません</aside>
+
+SSOを使用すると、リセラーはアカウント管理を維持しながら、ユーザーがIDプロバイダシステムにログインした後にシステムプロキシにEagle Eye Networkサーバーへの認証要求を行うためのIDプロバイダとして機能することができます
+
+これは標準のSAML（Security Assertion Markup Language）によって行われます。そのため、IDプロバイダは **brand_saml_publickey_ret** および **brand_saml_namedid_path** でアカウントを設定します
+
+  - **brand_saml_publickey_cert** は、Eagle Eye NetworksがSSOメッセージが有効であることを検証し、改ざんされていないことを検証するための公開鍵を含むx509証明書です。この証明書の形式はPEMです（アスキーコード化されたベース64は、**'----- BEGIN CERTIFICATE--’** および **'--END CERTIFICATE--’** を含む行で囲まれています）
+
+  - **brand_saml_namedid_path** は、ログインしているユーザーの電子メールアドレスを含むノードへのxml xpathです
+
+アイデンティティプロバイダのアカウントがSSO用に登録されると、アイデンティティプロバイダはユーザを検証し、ユーザの電子メールアドレスとリターンリンクを使用してシングルサインオン要求を行うことができます
+この64ビットの暗号化されたメッセージはヘッダーから展開され、saml公開鍵で使用するためにデコードと検証が行われます
+次に、samlという名前のIDパスを使用して、ユーザーの電子メールが抽出され、そのユーザーに対してauth_keyが提供されます
 
 > 要求
 
@@ -339,34 +384,24 @@ HTTP 状態コード    | データ型式
 curl --request POST https://login.eagleeyenetworks.com/g/sso
 ```
 
-SSO allows a reseller to maintain account management and act as an identity provider to have their system proxy the authorization requests to Eagle Eye Network servers after users have logged into the identity providers system.
-
-This is done through the standard SAML (Security Assertion Markup Language) and as such the identity provider will setup their account with a **brand_saml_publickey_ret** and **brand_saml_namedid_path**.
-
-  - The **brand_saml_publickey_cert** is a x509 certificate that contains a public key with which Eagle Eye Networks can validate that an SSO message is valid and verify that it has not been altered.  The format of this certificate is PEM (ascii encoded base 64 surrounded by lines containing **'-----BEGIN CERTIFICATE——‘** and **'——END CERTIFICATE——'**
-
-  - The **brand_saml_namedid_path** is the xml xpath to the node that contains the email address of the user being logged in.
-
-Once the identity provider's account has been registered for SSO, then the identity provider can validate their users and then make a single sign on request with the users email address and the return link.
-This 64 bit encrypted message will be extracted from teh header to be decoded and verified using the saml public key.
-Then using the saml named id path, the user's email will be extracted and an auth_key will be provide for that user.
-
 ### HTTP要求
 
 `POST https://login.eagleeyenetworks.com/g/sso`
 
-
 ### エラー状態コード
 
-HTTP 状態コード    | データ型式
-------------------- | -----------
-401 | Unauthorized due to invalid session cookie
-400	| Unexpected or non-identifiable arguments are supplied
-404	| Account with the "account_id" provided cannot be found
-200	| Account context switch successful
+HTTP Status Code | Description
+---------------- | -----------
+400	| 予期せぬまたは識別不能な引数が与えられました
+401	| 無効なセッションクッキーにより認証されませんでした
+404	| `'account_id'` が提供されているアカウントが見つかりませんでした
+200	| アカウントコンテキストの切り替えに成功しました
 
 <!--===================================================================-->
 ## ログアウト
+<!--===================================================================-->
+
+ユーザーをログアウトして、HTTPセッションCookieを無効にします
 
 > 要求
 
@@ -374,14 +409,13 @@ HTTP 状態コード    | データ型式
 curl --cookie "auth_key=[AUTH_KEY]" --request POST https://login.eagleeyenetworks.com/g/aaa/logout
 ```
 
-Log out user and invalidate HTTP session cookie
-
-### HTTP要求
+### HTTP 要求
 
 `POST https://login.eagleeyenetworks.com/g/aaa/logout`
 
 ### エラー状態コード
 
-HTTP 状態コード    | データ型式   
-------------------- | ----------- 
-204 | User has been logged out
+HTTP 状態コード     | 詳細
+---------------- | -----------
+400	| 予期せぬまたは識別不能な引数が与えられました
+204	| ユーザーはログアウトされました

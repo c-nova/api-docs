@@ -25,13 +25,13 @@
  *       this.field('title', 10)
  *       this.field('tags', 100)
  *       this.field('body')
- *       
+ *
  *       this.ref('cid')
- *       
+ *
  *       this.pipeline.add(function () {
  *         // some custom pipeline function
  *       })
- *       
+ *
  *     })
  *
  * @param {Function} config A function that will be called with the new instance
@@ -1050,7 +1050,7 @@ lunr.Index.prototype.idf = function (term) {
  * 'hello' and 'help' if those terms were already included in the index.
  *
  * Matching documents are returned as an array of objects, each object contains
- * the matching document ref, as set for this index, and the similarity score
+ * the matching document ref, as set for this index and the similarity score
  * for this document against the query.
  *
  * @param {String} query The query to search the index with.
