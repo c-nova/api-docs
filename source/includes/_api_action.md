@@ -70,7 +70,7 @@ HTTP 状態コード    | 詳細
 curl --cookie "auth_key=[AUTH_KEY]" --request POST https://login.eagleeyenetworks.com/g/action/recordnow
 ```
 
-### HTTP要求
+### HTTP 要求
 
 `POST https://login.eagleeyenetworks.com/g/action/recordnow`
 

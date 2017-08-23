@@ -163,10 +163,10 @@ curl -v -G "https://login.eagleeyenetworks.com/asset/play/video.flv?id=[CAMERA_I
 
 パラメータ             | データ型式     | 詳細           | 必須？
 ---------           | -----------  | -----------   | -----------
-**id**              | 文字列        | カメラID        | true
+**id**              | 文字列        | カメラ ID        | true
 **start_timestamp** | 文字列        | EENフォーマットでの開始タイムスタンプ: YYYYMMDDHHMMSS.NNN | true
 **end_timestamp**   | 文字列        | EENフォーマットでの終了タイムスタンプ: YYYYMMDDHHMMSS.NNN | true
-quality             | 文字列, 数値付きリスト  | ***(将来実装機能)*** もし複数存在する場合、要求した解像度を表示します<br><br>選択リスト: low, mid, high
+quality             | 文字列, 選択リスト  | ***(将来実装機能)*** もし複数存在する場合、要求した解像度を表示します<br><br>選択リスト: low, mid, high
 
 > 応答
 

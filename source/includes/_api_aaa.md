@@ -154,7 +154,7 @@ curl --request POST https://login.eagleeyenetworks.com/g/aaa/check_pw_reset_toke
 
 パラメータ  		 | データ型式     | 詳細           	| 必須？
 ---------  		| ----------- | -----------   	| -----------
-**token**   	| 文字列       | Password reset token provided in email | True
+**token**   	| 文字列       | 電子メールでパスワードリセットトークンを提供 | True
 
 ### エラー状態コード
 
@@ -390,7 +390,7 @@ curl --request POST https://login.eagleeyenetworks.com/g/sso
 
 ### エラー状態コード
 
-HTTP Status Code | Description
+HTTP 状態コード    | 詳細
 ---------------- | -----------
 400	| 予期せぬまたは識別不能な引数が与えられました
 401	| 無効なセッションクッキーにより認証されませんでした

@@ -59,17 +59,17 @@ curl -G https://login.eagleeyenetworks.com/pngspan/span.png -d "start_timestamp=
 
 パラメータ              | データ型式     | 詳細         | 必須？
 ---------            | ---------    | ----------- | -----------
-**start_timestamp**  | 文字列       | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**end_timestamp**    | 文字列       | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
-**width**            | int          | Width in pixels of resulting PNG. Must be an integer greater than 0 | true
-**id**               | 文字列       | カメラ ID | true
-**foreground_color** | 文字列       | Color of foreground (active). If both fg and bg have 0 for alpha, assumed fully opaque (0xff). 32 bit ARGB color | true
-**background_color** | 文字列       | Color of background (inactive). 32 bit ARGB color | true
+**start_timestamp**  | 文字列        | Start Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
+**end_timestamp**    | 文字列        | End Timestamp in EEN format: YYYYMMDDHHMMSS.NNN | true
+**width**            | 整数          | Width in pixels of resulting PNG. Must be an integer greater than 0 | true
+**id**               | 文字列        | カメラ ID | true
+**foreground_color** | 文字列        | Color of foreground (active). If both fg and bg have 0 for alpha, assumed fully opaque (0xff). 32 bit ARGB color | true
+**background_color** | 文字列        | Color of background (inactive). 32 bit ARGB color | true
 table                | 文字列, 選択リスト | If provided, specifies name of table to be rendered. Required for type `'span'` and `'event'` <br><br>選択リスト: stream, onoff, video, register
-etag                 | 文字列       | Identifies etag to be rendered, using the 4 character string identifier ([Four CC](#event-objects)). Will utilize matching event tables where possible. Ignored for type `'span'` and `'event'`
-flval                | 文字列       | Identified value of the filter field from the starting etag. Only applicable for type `'span'`
-flname               | 文字列       | Name of field within span start etag to match to flval. Interesting fields are roiid in roim table and videoid for video. Only applicable for type `'span'`
-flflags              | 文字列       | Limits span rendering to spans with the flag asserted. ALERTS is asserted for roim and motion spans when an alert is active
+etag                 | 文字列        | Identifies etag to be rendered, using the 4 character string identifier ([Four CC](#event-objects)). Will utilize matching event tables where possible. Ignored for type `'span'` and `'event'`
+flval                | 文字列        | Identified value of the filter field from the starting etag. Only applicable for type `'span'`
+flname               | 文字列        | Name of field within span start etag to match to flval. Interesting fields are roiid in roim table and videoid for video. Only applicable for type `'span'`
+flflags              | 文字列        | Limits span rendering to spans with the flag asserted. ALERTS is asserted for roim and motion spans when an alert is active
 
 HTTP 状態コード    | 詳細
 ---------------- | -----------

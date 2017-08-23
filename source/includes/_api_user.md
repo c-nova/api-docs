@@ -378,11 +378,11 @@ id        | 文字列    | ユーザーの一意の識別子 | false
 
 HTTP 状態コード     | 詳細
 ---------------- | -----------
-400	| Unexpected or non-identifiable arguments are supplied
-401	| Unauthorized due to invalid session cookie
-403	| Forbidden due to the user missing the necessary privileges
-404	| No user matching the unique identifier was found
-200	| Request succeeded
+400	| 予期せぬまたは識別不能な引数が与えられました
+401	| 不正なセッションCookieのため認可できませんでした
+403	| ユーザーに必要な権限がないため拒否されました
+404	| 指定された一意の識別子のユーザーが見つかりません
+200	| 要求は成功しました
 
 <!--===================================================================-->
 ## ユーザーの作成
@@ -402,10 +402,10 @@ curl -X PUT https://login.eagleeyenetworks.com/g/user -d '{"first_name": "[FIRST
 
 パラメータ        | データ形式  | 詳細         | 必須？
 ---------      | --------- | ----------- | -----------
-**first_name** | 文字列     | The first name of the user | true
-**last_name**  | 文字列     | The last name of the user | true
-**email**      | 文字列     | The email address of the user | true
-sms_phone      | 文字列     | Phone number to be used for SMS notifications
+**first_name** | 文字列     | ユーザーの名   | true
+**last_name**  | 文字列     | ユーザーの姓   | true
+**email**      | 文字列     | ユーザーのEメール | true
+sms_phone      | 文字列     | SMS通知に使用する電話番号
 
 <aside class="notice">TFA認証が使用され、SMSによる認証コードの配信が設定されている場合、ユーザーの `'sms_phone'` 番号を定義する必要があります</aside>
 
@@ -427,11 +427,11 @@ id        | 文字列     | ユーザーの一意の識別子
 
 HTTP 状態コード    | 詳細
 ---------------- | -----------
-400	| Unexpected or non-identifiable arguments are supplied
-401	| Unauthorized due to invalid session cookie
-403	| Forbidden due to the user missing the necessary privileges
-409	| The email address is currently already in use
-200	| Request succeeded
+400	| 予期せぬまたは識別不能な引数が与えられました
+401	| 不正なセッションCookieのため認可できませんでした
+403	| ユーザーに必要な権限がないため拒否されました
+409	| 指定されたEメールアドレスはすでに使用されています
+200	| 要求は成功しました
 
 <!--===================================================================-->
 ## ユーザー情報の更新
@@ -517,11 +517,11 @@ id        | 文字列     | ユーザーの一意の識別子
 
 HTTP 状態コード    | 詳細
 ---------------- | -----------
-400	| Unexpected or non-identifiable arguments are supplied
-401	| Unauthorized due to invalid session cookie
-403	| Forbidden due to the user missing the necessary privileges
-404	| No user matching the unique identifier was found
-200	| Request succeeded
+400	| 予期せぬまたは識別不能な引数が与えられました
+401	| 不正なセッションCookieのため認可できませんでした
+403	| ユーザーに必要な権限がないため拒否されました
+404	| 指定された一意の識別子のユーザーが見つかりません
+200	| 要求は成功しました
 
 <!--===================================================================-->
 ## ユーザーの削除
@@ -547,11 +547,11 @@ curl -X DELETE https://login.eagleeyenetworks.com/g/user -d "id=[USER_ID]" -G -H
 
 HTTP 状態コード    | 詳細
 ---------------- | -----------
-400	| Unexpected or non-identifiable arguments are supplied
-401	| Unauthorized due to invalid session cookie
-403	| Forbidden due to the user missing the necessary privileges
-404	| No user matching the unique identifier was found
-200	| Request succeeded
+400	| 予期せぬまたは識別不能な引数が与えられました
+401	| 不正なセッションCookieのため認可できませんでした
+403	| ユーザーに必要な権限がないため拒否されました
+404	| 指定された一意の識別子のユーザーが見つかりません
+200	| 要求は成功しました
 
 <!--===================================================================-->
 ## ユーザーリストの取得
@@ -613,12 +613,12 @@ curl --request GET https://login.eagleeyenetworks.com/g/user/list --cookie "auth
 
 配列インデックス | 属性        | データ形式      | 詳細
 ---------   | ----------- | ---------     | -----------
-0           | id          | 文字列         | Unique identifier of the user
-1           | first_name  | 文字列         | First name of the user
-2           | last_name   | 文字列         | Last name of the user
-3           | email       | 文字列         | Email address of the user
-4           | permissions | 配列[文字列]    | List of user permissions
-5           | last_login  | 文字列         | EEN timestamp of the last login by the user. Format: YYYYMMDDHHMMSS.NNN
+0           | id          | 文字列         | ユーザーの一意な識別子
+1           | first_name  | 文字列         | ユーザーの名
+2           | last_name   | 文字列         | ユーザーの姓
+3           | email       | 文字列         | ユーザーのEメール
+4           | permissions | 配列[文字列]    | ユーザー権限のリスト
+5           | last_login  | 文字列         | EENユーザーによる最後のログインのタイムスタンプ。 フォーマット：YYYYMMDDHHMMSS.NNN
 
 <aside class="success">モデル定義にはプロパティキーがありますが、これは単なる標準配列なので参照用です</aside>
 
@@ -626,6 +626,6 @@ curl --request GET https://login.eagleeyenetworks.com/g/user/list --cookie "auth
 
 HTTP 状態コード    | 詳細
 ---------------- | -----------
-401	| Unauthorized due to invalid session cookie
-403	| Forbidden due to the user missing the necessary privileges
-200	| Request succeeded
+401	| 不正なセッションCookieのため認可できませんでした
+403	| ユーザーに必要な権限がないため拒否されました
+200	| 要求は成功しました

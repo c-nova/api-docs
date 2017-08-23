@@ -448,7 +448,7 @@ curl --request GET https://login.eagleeyenetworks.com/g/account/list --cookie "a
 
 `GET https://login.eagleeyenetworks.com/g/account/list`
 
-> JSON応答
+> JSON 応答
 
 ```JSON
 [

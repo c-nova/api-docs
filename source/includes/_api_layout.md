@@ -98,42 +98,42 @@ Web及びモバイルでのレイアウト描画は以下のようになりま�
 
 プロパティ              | データ形式              | 詳細                                                                                                  | 編集可能      | 必須？
 --------              | ---------            | -----------                                                                                          |:-----------:| --------
-**id**                | 文字列               | Unique identifier for the layout                                                                     | **&cross;** | **<sub><form action="#get-layout"><button>GET</button></form></sub>** <br>**<sub><form action="#update-layout"><button>POST</button></form></sub>** <br>**<sub><form action="#delete-layout"><button>DELETE</button></form></sub>**
-**name**              | 文字列               | Name of the layout                                                                                   | **&check;** | **<sub><form action="#create-layout"><button>PUT</button></form></sub>**
-**types**             | 配列[文字列]        | Specifies target(s) for layout. Multiple values are allowed                                          | **&check;** | **<sub><form action="#create-layout"><button>PUT</button></form></sub>**
-**[configuration](#layout-configuration)** | JSON             | Json object of layout configuration                                                     | **&check;** | **<sub><form action="#create-layout"><button>PUT</button></form></sub>**
-json                  | 文字列               | Json encoded string. The same content as the 'configuration' field. **Deprecated**
-permissions           | 文字列               | String of zero or more characters. Each character defines a permission that the current user has for the layout  <br><br>Permissions include: <br>`'R'` - user can view this layout <br>`'W'` - user can modify this layout <br>`'D'` - user can delete this layout <br>`'S'` - user can share this layout             | **&cross;** |
-current_recording_key | 文字列               | String key representing a recording currently being made with the cameras in the layout, which was initiated using the action/recordnow service                                                                                                                            | **&cross;** |
-shares                | 配列[配列[文字列]] | Array of arrays, one per user account for whom sharing is enabled for this layout. Each string contains two field separated by comma. The first field is a user id and the second field are permissions for the user. `'account'` specifies that the layout is shared with all users of the account. Second field contains permissions for users in the account <br><br>Example: <br>[`'1005f2ed'`,`'RWDS'`] = user can view, change, delete or share this layout <br>[`'1005f2ed'`,`'RW'`] = user can view this layout and change this layout <br>[`'1005f2ed'`, `'R'`] = All users of the account can view this layout <br><br>Permissions for the user issuing the /layout GET are not included in this array                                                                                                                                               | **&check;** |
+**id**                | 文字列                | レイアウトの一意の識別子                                                                                    | **&cross;** | **<sub><form action="#get-layout"><button>GET</button></form></sub>** <br>**<sub><form action="#update-layout"><button>POST</button></form></sub>** <br>**<sub><form action="#delete-layout"><button>DELETE</button></form></sub>**
+**name**              | 文字列                | レイアウトの名前                                                                                          | **&check;** | **<sub><form action="#create-layout"><button>PUT</button></form></sub>**
+**types**             | 配列[文字列]           | レイアウトのターゲットの指定。複数の値が許可されます                                                               | **&check;** | **<sub><form action="#create-layout"><button>PUT</button></form></sub>**
+**[configuration](#layout-configuration)**  | JSON             | レイアウト構成のJSONオブジェクト                                                          | **&check;** | **<sub><form action="#create-layout"><button>PUT</button></form></sub>**
+json                  | 文字列                | JSON符号化された文字列。 'configuration' フィールドと同じ内容です。 **廃止予定**
+permissions           | 文字列                | ゼロ個以上の文字列。各文字は現在のユーザがレイアウトに対して持っている権限を定義します  <br><br>権限は以下のものを含みます：<br>`'R'` - ユーザーはこのレイアウトを表示できます <br>`'W'` - ユーザーはこのレイアウトを変更できます <br>`'D'` - ユーザーはこのレイアウトを削除できます <br>`'S'` - ユーザーはこのレイアウトを共有できます                  | **&cross;** |
+current_recording_key | 文字列                | action/recordnowサービスを使用して開始された、レイアウト内で現在録画されているカメラを表す文字列キー                       | **&cross;** |
+shares                | 配列[配列[文字列]] | このレイアウトで共有を有効にしているユーザーアカウントごとに1つの、配列の配列です。各文字列にはカンマで区切られた2つのフィールドがあります。 最初のフィールドはユーザーIDで、2番目のフィールドはユーザーのアクセス許可です。`'account'` はレイアウトがアカウントのすべてのユーザーと共有されることを指定します。2番目のフィールドには、アカウント内のユーザーのアクセス許可が含まれています <br><br>例： <br>[`'1005f2ed'`,`'RWDS'`] = ユーザーはこのレイアウトを表示、変更、 削除、共有が可能です <br>[`'1005f2ed'`,`'RW'`] = このレイアウトの表示、変更が可能です <br>[`'1005f2ed'`, `'R'`] = アカウントの全ユーザがこのレイアウトを表示できます <br><br> /layout GETを発行するユーザの権限はこの配列に含まれていません                                                                                                                                                   | **&check;** |
 
 
 ### レイアウト - 構成
 
 パラメータ   | データ型式  | 詳細       
 --------- | --------- | -----------
-panes | 配列[json]      | Array of Json objects. Each object represents a [pane structure](#layout-configuration-panes)
-[settings](#layout-configuration-settings) | json       | Json object of layout settings
+panes | 配列[JSON]     | JSONオブジェクトの配列。 各オブジェクトは、[pane structure](#layout-configuration-panes) として表されます
+[settings](#layout-configuration-settings) | JSON       | レイアウト設定のJSONオブジェクト
 
 ### レイアウト - 構成 - ペイン
 
 パラメータ   | データ型式      | 詳細       
 --------- | ---------     | -----------
-name      | 文字列        | Layout pane name
-type      | 文字列        | Layout types: <br>`'preview'` - shows live preview images form cameras <br>`'carousel'` - rotates between preview images, IDs of cameras need to be included in the cameras array along with an integer in the delay array. The delay is an integer value of milliseconds as too how long the Camera will be displayed before switching to the next Camera. A `'carousel'` with only one camera is the same as preview <br>`'click'` - respond to click for other cameras in layout <br>`'motion'` - respond to motion for other cameras in layout <br>`'map'` - a static map with camera icons located on it <br>`'url'` - displays the contents of the url in the pane as a frame
-pane_id   | 整数           | ID given to pane when created from the Layout Manager
-size      | 整数           | Size of displayed image: <br>`1` - small <br>`2` - medium <br>`3` - large
-cameras   | 配列[文字列] | Array of camera IDs (For `'carousel'`, cycle through the camera IDs with the delay setting in the corresponding `'delay'` property)
+name      | 文字列          | レイアウト ペイン名
+type      | 文字列          | レイアウト形式： <br>`'プレビュー(preview)'` - カメラからライブプレビュー画像を表示します <br>`'カルーセル（carousel）'` - プレビュー画像間を巡回するモードで、カメラのIDは遅延配列の整数とともにカメラ配列に含まれる必要があります。遅延はミリ秒の整数値で、次のカメラに切り替えるまでにカメラが表示される時間も長くなります。カメラが1台しかない `'カルーセル'` はプレビューと同じです <br>`'クリック(click)'` - レイアウト内の他のカメラのクリックに応答します <br>`'モーション(motion)'` - レイアウト内の他のカメラのモーションに反応します <br>`'マップ(map)'` - カメラアイコンが配置された静的マップ <br>`'url'` - ペイン内のURLの内容をフレームとして表示します
+pane_id   | 整数           | レイアウトマネージャから作成されたときにペインに与えられたID
+size      | 整数           | 画像の表示サイズ： <br>`1` - 小 <br>`2` - 中 <br>`3` - 大
+cameras   | 配列[文字列]     | カメラIDの配列 (`'カルーセル(carousel)'` の場合は、対応する `'遅延(delay)'` プロパティの遅延設定を使用してカメラIDを循環させます)
 
 ### レイアウト - 構成 - 設定
 
 パラメータ             | データ型式  | 詳細       
 ---------           | --------- | -----------
-camera_border       | ブール   | Show camera pane borders
-camera_name         | ブール   | Show camera name
-camera_aspect_ratio | 浮動小数点     | Aspect ratio of images: <br>`0.5625` - 16x9 <br>`0.75` - 4x3
-camera_row_limit    | 整数       | Max number of cameras to show per row: <br>`3` - 3 cameras per row <br>`4` - 4 cameras per row  <br>`5` - 5 cameras per row
-custom_id           | 文字列    |
+camera_border       | ブール     | カメラペインの枠線の表示
+camera_name         | ブール     | カメラ名の表示
+camera_aspect_ratio | 浮動小数点  | 画像のアスペクト比： <br>`0.5625` - 16x9 <br>`0.75` - 4x3
+camera_row_limit    | 整数       | 1行に表示するカメラの最大数： <br>`3` - 1行あたり 3 カメラ <br>`4` - 1行あたり 4 カメラ <br>`5` - 1行あたり 5 カメラ
+custom_id           | 文字列     |
 
 <!--===================================================================-->
 ## レイアウトの取得

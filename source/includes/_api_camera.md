@@ -32,7 +32,7 @@ Putメソッドはアカウントスーパーユーザーでのみ有効です�
 
 このモデルに反する "ユーザー設定" オブジェクトは、デバイスによって必要最小限の介入を受ける一般オブジェクトです。既知の名前（例えばカメラベースまたはmmv設定）に合致する設定は利用されますが、全ての値は"ユーザー設定"フィールドに格納され、返されます。これはブリッジ/カメラが介入しない値を持つカメラの原則により、ユーザー インターフェイス要素をサポートするために利用されます。
 
-### カメラ設定の読込 (<small>GET device "camera_settings" property</small>)
+### カメラ設定の読込 (<small>デバイスの "camera_settings" プロパティの GET</small>)
 
 カメラ設定を取得すると、JSONオブジェクトは以下のJSON文字列として返されます:
 
@@ -975,14 +975,14 @@ ROME
 ---------                     | ---------------   | -----------                                                                                    |:-----------:| --------
 id                            | 文字列            | デバイスの一意な識別子 (ブリッジにカメラを追加した際に自動的に生成、割当て)                    | **&cross;** | **<sub><form action="#get-camera"><button>GET</button></form></sub>** <br>**<sub><form action="#update-camera"><button>POST</button></form></sub>** <br>**<sub><form action="#delete-camera"><button>DELETE</button></form></sub>**
 name                          | 文字列            | デバイスの名前                                                                                 | **&check;** | **<sub><form action="#add-camera-to-bridge"><button>PUT</button></form></sub>**
-**[settings](#camera-settings)** | json           | 基本設定のJSONオブジェクト (場所、モーションの領域など)                                        | **&check;** | **<sub><form action="#add-camera-to-bridge"><button>PUT</button></form></sub>**
+**[settings](#camera-settings)** | JSON           | 基本設定のJSONオブジェクト (場所、モーションの領域など)                                        | **&check;** | **<sub><form action="#add-camera-to-bridge"><button>PUT</button></form></sub>**
 camera_settings_status_code   | 整数              | デバイス設定を取得することができたか（200）かどうか、できなかった（404）かどうかを示します     | **&cross;** |
 timezone                      | 文字列            | カメラのタイムゾーンを示します。ブリッジのタイムゾーンがカメラのデフォルトになります。例： US/Alaska, US/Arizona, US/Central, US/Pacific, US/Eastern, US/Mountain, US/Hawaii, UTC    | **&check;** |
 utcOffset                     | 整数              | デバイスが導入されている場所のタイムゾーンとUTCとの符号付きUTCオフセット秒
 guid                          | 文字列            | GUID（Globally Unique Identifier）は、製造プロセス中にデバイスに割り当てられる不変のデバイス識別子です。    | **&check;** |
 permissions                   | 文字列            | 一文字またはそれ以上の文字列。それぞれの文字は権限を表します。<br><br>権限は次のものを含みます: <br>'R' - ユーザーはこのカメラに対して画像及び動画の表示アクセスを行えます。 <br>'W' - ユーザーはこのカメラの編集、削除が行えます。 'S' - ユーザーはこのカメラに対してグループ共有内で共有できます。                                      | **&check;** |
 tags                          | 配列[文字列]      | 文字列の配列で、それぞれ "tag" を表します。                                                     | **&check;** |
-[bridges](#camera-bridges)    | json              | Jsonオブジェクトのブリッジ（ESN）にはこのデバイスが表示され、カメラの接続状態: <br>`'ATTD'` - このカメラはブリッジに接続されています <br>`'IGND'` - このカメラは接続可能だが接続されていない状態です    | **&cross;** |
+[bridges](#camera-bridges)    | JSON              | Jsonオブジェクトのブリッジ（ESN）にはこのデバイスが表示され、カメラの接続状態: <br>`'ATTD'` - このカメラはブリッジに接続されています <br>`'IGND'` - このカメラは接続可能だが接続されていない状態です    | **&cross;** |
 camera_parameters             | オブジェクト      | カメラのパラメータ/設定(詳細は概要を参照)を含むJSONオブジェクト。もしカメラのパラメータが様々な理由(カメラとの通信が途絶するなど)により取得できない場合にはこの項目は空白となり、camera_parameters_status_code は404となります。    | **&cross;** |
 camera_parameters_status_code | 整数              | 200 はデバイスのパラメータが取得できたことを表します。404 はデバイスのパラメータが取得できなかったことを表します。    | **&cross;** |
 [CameraInfo](#camera-camera_info) | json          | カメラに関連する基本情報のJsonオブジェクト。 何らかの理由でカメラ情報を取得できない場合（例：カメラとの通信が失われた場合）、これは空になり、camera_info_status_codeは404になります    | **&cross;** |
@@ -1011,9 +1011,9 @@ azimuth             | 浮動小数点                             | カメラ中
 range               | 整数                               | カメラの有効な「表示」距離をフィートで表します。
 floor               | 整数                               | 建物が複数階の場合、回数を表します。
 share_email         | 文字列                            | このデバイスが共有されているeメールのカンマ区切りリスト
-local_retention_days| json                              | 以下のように表現される総保存期間を定義したJSONオブジェクト： <br><br>`{` <br>&nbsp;&nbsp;&nbsp;&nbsp;`'max'`: `10000`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'min'`: `1`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'d'`: `14`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'v'`: `14` <br>`}` <br><br>'d' - デフォルト値 <br>'v' - 現在の設定値
-cloud_retention_days| json                              | 以下のように表現される総保存期間を定義したJSONオブジェクト： <br><br>`{` <br>&nbsp;&nbsp;&nbsp;&nbsp;`'max'`: `10000`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'min'`: `1`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'d'`: `14`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'v'`: `14` <br>`}` <br><br>'d' - デフォルト値 <br>'v' - 現在の設定値
-bridge_retention_days| json                             | 以下のように表現される総保存期間を定義したJSONオブジェクト： <br><br>`{` <br>&nbsp;&nbsp;&nbsp;&nbsp;`'max'`: `10000`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'min'`: `1`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'d'`: `14`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'v'`: `14` <br>`}` <br><br>'d' - デフォルト値 <br>'v' - 現在の設定値
+local_retention_days| JSON                              | 以下のように表現される総保存期間を定義したJSONオブジェクト： <br><br>`{` <br>&nbsp;&nbsp;&nbsp;&nbsp;`'max'`: `10000`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'min'`: `1`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'d'`: `14`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'v'`: `14` <br>`}` <br><br>'d' - デフォルト値 <br>'v' - 現在の設定値
+cloud_retention_days| JSON                              | 以下のように表現される総保存期間を定義したJSONオブジェクト： <br><br>`{` <br>&nbsp;&nbsp;&nbsp;&nbsp;`'max'`: `10000`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'min'`: `1`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'d'`: `14`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'v'`: `14` <br>`}` <br><br>'d' - デフォルト値 <br>'v' - 現在の設定値
+bridge_retention_days| JSON                             | 以下のように表現される総保存期間を定義したJSONオブジェクト： <br><br>`{` <br>&nbsp;&nbsp;&nbsp;&nbsp;`'max'`: `10000`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'min'`: `1`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'d'`: `14`, <br>&nbsp;&nbsp;&nbsp;&nbsp;`'v'`: `14` <br>`}` <br><br>'d' - デフォルト値 <br>'v' - 現在の設定値
 
 <aside class="success">モデルはデバイスによって異なるため、リストされた設定は最も一般的な例となります</aside>
 
@@ -1192,11 +1192,11 @@ curl -X POST https://login.eagleeyenetworks.com/g/device -d '{"id": "[CAMERA_ID]
 name                      | 文字列        | カメラの名前
 timezone                  | 文字列        | 指定しない場合、カメラが接続するブリッジのタイムゾーンに設定されます
 tags                      | 配列[文字列]   | 文字列の配列で、それぞれの文字列は "tag" を表します
-[settings](#camera-settings) | json       | 基本設定のJSONオブジェクト (場所、モーションの領域など)
-camera_parameters_add     | json          | 追加または更新するカメラのパラメータ/設定のJSONオブジェクト
-camera_parameters_delete  | json          | 削除するカメラのパラメータ/設定のJSONオブジェクト
+[settings](#camera-settings) | JSON       | 基本設定のJSONオブジェクト (場所、モーションの領域など)
+camera_parameters_add     | JSON          | 追加または更新するカメラのパラメータ/設定のJSONオブジェクト
+camera_parameters_delete  | JSON          | 削除するカメラのパラメータ/設定のJSONオブジェクト
 
-> JSON応答
+> JSON 応答
 
 ```json
 {
@@ -1204,7 +1204,7 @@ camera_parameters_delete  | json          | 削除するカメラのパラメー
 }
 ```
 
-### HTTP 応答 (JSON　属性)
+### HTTP 応答 (JSON 属性)
 
 パラメータ       | データ型式   | 詳細       
 ---------       | ----------- | -----------
@@ -1275,7 +1275,7 @@ n         | 文字列      | カメラの名前
 t         | 文字列      | デバイス形式
 s         | 文字列      | デバイスのサービス状態
 
-> JSON応答
+> JSON 応答
 
 ```json
 [
@@ -1359,16 +1359,16 @@ s         | 文字列      | デバイスのサービス状態
 ]
 ```
 
-### HTTP応答 (属性の配列)
+### HTTP 応答 (属性の配列)
 
 配列のインデックス | 属性           | データ型式             | 詳細        
 ---------   | -----------         | -----------           | -----------           
 0           | account_id          | 文字列                | デバイスのアカウントの一意な識別子
 1           | id                  | 文字列                | デバイスの一意な識別子
 2           | name                | 文字列                | デバイスの名前
-3           | type                | 文字列, 数値付きリスト          | デバイスの形式 <br><br>数値付きリスト: camera, bridge
+3           | type                | 文字列, 選択リスト          | デバイスの形式 <br><br>選択リスト: camera, bridge
 4           | bridges             | 配列[配列[文字列]]  | これは文字列配列の配列で、それぞれの配列はカメラから認識できるブリッジを表します。文字列配列の最初の要素はブリッジのESNを表します。2個目の要素は状態を表します。
-5           | service_status      | 文字列, 数値付きリスト          | デバイスのサービス状態。`'ATTD'` - カメラはブリッジに割り当て済み。 <br>`'IGND'` - カメラは全てのブリッジから未割り当てでブリッジに割当が可能。 <br>`'IDLE'` - カメラは登録可能ですが操作はできません (ブリッジに接続されていません) <br>`'ERSE'` - 一括ですべてのカメラデータが消去されます <br><br>数値付きリスト:  ATTD, IGND, IDLE, ERSE
+5           | service_status      | 文字列, 選択リスト          | デバイスのサービス状態。`'ATTD'` - カメラはブリッジに割り当て済み。 <br>`'IGND'` - カメラは全てのブリッジから未割り当てでブリッジに割当が可能。 <br>`'IDLE'` - カメラは登録可能ですが操作はできません (ブリッジに接続されていません) <br>`'ERSE'` - 一括ですべてのカメラデータが消去されます <br><br>選択リスト:  ATTD, IGND, IDLE, ERSE
 6           | permissions         | 文字列                | 0以上の文字を持つ文字列。それぞれの文字は現在のユーザーのデバイスへの権限の定義を表します。権限は次の内容を含みます: 'R' - ユーザーはこのデバイスの表示が可能。 'W' - ユーザーはこのデバイスの変更、削除が可能。 'S' - ユーザーはこのデバイスの共有が可能。
 7           | tags                | 配列[文字列]         | タグ名を表す文字列の配列
 8           | guid                | 文字列                | GUID（Globally Unique Identifier）は、製造プロセス中にデバイスに割り当てられる不変のデバイス識別子

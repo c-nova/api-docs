@@ -39,7 +39,7 @@ TFA方式が使用されている場合、認可コールは、認証コール�
 curl -v --request POST https://login.eagleeyenetworks.com/g/aaa/authenticate --data-urlencode "username=[USERNAME]" --data-urlencode "password=[PASSWORD]"
 ```
 
-### HTTP Request
+### HTTP 要求
 
 `POST https://login.eagleeyenetworks.com/g/aaa/authenticate`
 
@@ -95,7 +95,7 @@ TFA関連のユーザ データ（すなわちSMS電話またはEメール）は
 
 ### エラー ステータス コード
 
-HTTP ステータス コード | Description
+HTTP ステータス コード | 詳細
 ---------------- | -----------
 400 | いくつかの引数が不足しているか不正です
 401 | 与えられた認証情報が不正です
@@ -106,7 +106,7 @@ HTTP ステータス コード | Description
 462 | ユーザーは保留中です。これはユーザー名が正しく、アカウントがアクティブな際に 401 の前に投げられます。
 200 | ユーザーが認証されました。ボディにはJSON形式の結果が含まれます
 
-\* Code 412 is also returned if TFA is used and the user's account has been locked due to more than 3 failed attempts to authorize with a TFA code
+\* TFAを使用し、TFAコードを使用して3回以上失敗したためにユーザーのアカウントがロックされている場合は、コード412も返されます
 
 
 

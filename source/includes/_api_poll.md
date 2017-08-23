@@ -24,62 +24,62 @@
 
 <aside class="success">このサービスは継続的に拡張されます</aside>
 
-Poll is a stateful request for updates any time a matching event occurs within the service. The initial Poll request is a POST (Default GET with [WebSocket](#websocket-polling)) with a Json-formatted body indicating the resources to track. Resources that are video, pre and thumbnail automatically register the API caller to their respective events. However, resource type `'event'` requires the API caller to tell the API what events to listen for
+ポール(またはポーリング)はサービス内で発生し、合致したイベントをいつでも更新するステートフルな要求です。初期化のポール要求は、追跡するリソースを示すJSONでフォーマットされた文書をPOST (デフォルトは [WebSocket](#websocket-polling) に GET で要求します) で要求することで行います。動画、プレビュー、サムネイルのようなリソースは、それぞれのイベントを呼び出し元のAPIに自動的に登録を行います。しかし `'event'` 形式のリソースは、API呼び出し元に対してどのようなイベントをリッスンするか要求します
 
-Each object consists of an ID element and a list of resource types to be monitored. The POST transaction receives and immediately responds with a Json-formatted body indicating the current timestamp for all requested resources. The response also includes a cookie, which can be used to track changes to the indicated resources via GET transaction
+それぞのオブジェクトは、モニターするID要素とリソースの形式から成ります。POSTトランザクションは、全ての要求されたリソースの現在のタイムスタンプが即時に返されたJSONフォーマット文書を受け取ります。応答にはクッキーも含まれ、これはGETトランザクション経由で変化点が示されたリソースを追跡するために使用されます
 
 ### 応答リソース形式
 
 各リソース形式は、特定のオブジェクト形式で応答します：
 
-Type                      | Response         | Description
+形式                       | 応答              | 詳細
 ----                      | --------         | -----------
-pre                       | prets            | Timestamp of latest preview image
-thumb                     | thumbts          | Timestamp of latest thumbnail image
-video                     | [startts, endts] | List of start and end timestamps for a video segment. Updates at start and per key frame received until end
-[status](#status-bitmask) | bitmask          | A numerical bitmask defining the status. Bit position defines status
-[event](#event-objects)   | object           | Events are a key value pair, where the key is the Four CC of the event and event structure is the actual meta data for that specific event
+pre                       | prets            | 最新のプレビュー画像のタイムスタンプ
+thumb                     | thumbts          | 最新のサムネイル画像のタイムスタンプ
+video                     | [startts, endts] | 動画セグメントの開始と終了タイムスタンプのリスト。開始から終了までキーフレーム毎に更新が行われる
+[status](#status-bitmask) | bitmask          | 状態を定義した数値のビットマスク。ビット位置は状態を定義する。それぞれのビットは、以下の表のとおり定義される
+[event](#event-objects)   | object           | イベントはキーと値のペアであり、キーは四文字 (four cc)、そしてイベント構造は特定イベントの実際のメタデータで構成される。有効なイベントは以下の表に表される
 
 ## 状態のビットマスク
 
-HEX Value | Status
+HEX値      | 状態
 --------- | ------
-0x000001  | Camera online <small>**(廃止予定)**</small>
-0x000002  | Stream attached (camera communicating with bridge) <small>**(廃止予定)**</small>
-0x000004  | Camera on (user setting) <small>**(廃止予定)**</small>
-0x000008  | Camera recording <small>**(廃止予定)**</small>
-0x000010  | Camera sending previews
-0x000020  | Camera located (bridge has found the camera)
-0x000040  | Camera not supported
-0x000080  | Camera configuration in process (bridge configuring camera)
-0x000100  | Camera needs ONVIF password
-0x000200  | Camera available but not yet attached
+0x000001  | カメラ オンライン  <small>**(廃止予定)**</small>
+0x000002  | ストリーム割り当て済み (カメラはブリッジと通信中)  <small>**(廃止予定)**</small>
+0x000004  | カメラ オン (ユーザー設定) <small>**(廃止予定)**</small>
+0x000008  | カメラ録画中 <small>**(廃止予定)**</small>
+0x000010  | カメラはプレビューを送信中
+0x000020  | カメラ検出中 (ブリッジからカメラが見えている)
+0x000040  | カメラは未サポート
+0x000080  | カメラは構成中 (ブリッジはカメラを構成中)
+0x000100  | カメラはONVIFパスワードが必要
+0x000200  | カメラは有効だがブリッジに接続されていない
 0x000400  | *内部ステータス*
-0x000800  | Camera error
+0x000800  | カメラ エラー
 0x001000  | *内部ステータス*
 0x002000  | *内部ステータス*
 0x004000  | *予約済み*
 0x008000  | *予約済み*
-0x010000  | Invalid state (unknown state)
-0x020000  | Camera on (user setting)
-0x040000  | Camera streaming video
-0x080000  | Camera recording
-0x100000  | Camera online
+0x010000  | 不正な状態 (不明な状態)
+0x020000  | カメラ オン (ユーザーによる設定)
+0x040000  | カメラは動画をストリーミング中
+0x080000  | カメラは録画中
+0x100000  | カメラ オンライン
 
-This status bitmask is used to determine what the high-level/overall device status is
+この状態のビットマスクは以下のロジックに従い、
 
-<aside class="notice">Overall status uses the following logic:</aside>
+<aside class="notice">カメラの高レベル/全体的な状態がどうなっているか決定されます：</aside>
 
-IF "Camera On" (**bit 17**)==0 THEN "Off" (orange forbidden icon)
-<br>ELSE IF "Registered" (**bit 20**)==0 THEN "Internet Offline" (red exclamation icon)
-<br>ELSE IF "Streaming" (**bit 18**)==1 THEN "Online" (green check icon)
-<br>ELSE IF "Password" (**bit 8**)==1 THEN "Password Needed" (effectively "Offline") (red padlock icon)
-<br>ELSE "Offline" (red X icon)
+IF "Camera On" (**bit 17**)==0 THEN "Off" (オレンジの禁止アイコン)
+<br>ELSE IF "Registered" (**bit 20**)==0 THEN "Internet Offline" (赤の！アイコン)
+<br>ELSE IF "Streaming" (**bit 18**)==1 THEN "Online" (緑のチェック アイコン)
+<br>ELSE IF "Password" (**bit 8**)==1 THEN "Password Needed" (実体は “Offline”) (赤の鍵ロック アイコン)
+<br>ELSE "Offline" (赤の×アイコン)
 
-<aside class="notice">Recording status uses the following logic:</aside>
+<aside class="notice">録画状態は以下のロジックを使用します：</aside>
 
-IF "Recording" (**bit 19**) THEN Recording (green circle icon)
-IF "Invalid" (**bit 16**)==1 THEN no status change (use whatever status bits were set previously)
+IF "Recording" (**bit 19**) THEN Recording (緑の●アイコン))
+IF "Invalid" (**bit 16**)==1 THEN no status change (どんな状態であっても直前の状態ビットをセット)
 
 <!--===================================================================-->
 ## イベント オブジェクト
@@ -113,110 +113,110 @@ IF "Invalid" (**bit 16**)==1 THEN no status change (use whatever status bits wer
 }
 ```
 
-<aside class="notice">Each event type is returned with the EEN formatted timestamp: YYYYMMDDhhmmss.xxx</aside>
+<aside class="notice">各イベントタイプは、EENフォーマットのタイムスタンプで返されます： YYYYMMDDhhmmss.xxx</aside>
 
-**Note:** Event object descriptions marked with '&#9702;' can be expanded for additional information on the event
+**注:** '&#9702;' とマークされたイベントオブジェクトの説明については、イベントに関する追加情報のために拡張することが可能です
 
-Four&nbsp;CC | Description                                                     | Returned parameters
+Four&nbsp;CC | 詳細                                                             | 戻り パラメータ
 ------------ | -----------                                                     | -------------------
-VRES	| Video record start event                                               | cameraid, videoid, format, status
-VREE	| Video record end event                                                 | cameraid, videoid, videosize, format, status
-VRKF	| Video record key frame event                                           | cameraid, videoid, file_offset, format
-EAES	| <details><summary>Always record video start event&nbsp;&#9702;</summary><p><br>Background "always" record video event has started</br></p></details> | cameraid, videoid, eventid
-EAEE	| <details><summary>Always record video end event&nbsp;&#9702;</summary><p><br>Background "always" record video event has ended</br></p></details> | cameraid, eventid
-AEDO	| Video download event                                                   | cameraid, status, source_userid, source_accountid, resource_type, deviceid, endtime
-EVVS	| <details><summary>Video swap event&nbsp;&#9702;</summary><p><br>The event spans across two different video IDs: `'eventid'` and `'videoid'` (new swapped-in ID)</br></p></details> | cameraid, videoid, eventid
-PRTH	| Thumbnail event                                                        | cameraid, previewid, eventid, file_offset, frame_size
-PRFR	| <details><summary>Preview event&nbsp;&#9702;</summary><p><br>indicates a preview frame has been recorded</br></p></details> | cameraid, previewid, file_offset, frame_size
-PRFB	| Preview backing event                                                  | cameraid, previewid, file_offset, frame_size
-EMES	| Motion start event                                                     | cameraid, videoid, eventid
-EMEE	| Motion end event                                                       | cameraid, eventid
-EMEU	| <details><summary>Motion update event&nbsp;&#9702;</summary><p><br>Heartbeat for a motion event <br>(10 sec interval)</br></p></details> | cameraid, videoid, eventid
-MRBX	| <details><summary>Motion box event&nbsp;&#9702;</summary><p><br>Motion has occurred in the indicated region (coordinates are from top right corner in fraction of 0xffff)</br></p></details> | cameraid
-MRSZ	| <details><summary>Motion size reports event&nbsp;&#9702;</summary><p><br>Indicates the amount of motion on screen and for each active ROI (in ratio over 0xffff as percentage of screen) <br><br>Flag is `'0x1'` - motion greater than defined threshold (region is *in motion*)</br></p></details> | cameraid, flags, motion
-ALMS	| <details><summary>Motion alert start event&nbsp;&#9702;</summary><p><br>Motion event has occurred (related to the indicated alert)</br></p></details> | cameraid, eventid, alertid, alertmotionid
-ALME	| <details><summary>Motion alert end event&nbsp;&#9702;</summary><p><br>Motion event has ended (related to the indicated alert)</br></p></details> | cameraid, alertmotionid
-ROMS	| <details><summary>ROI motion start event&nbsp;&#9702;</summary><p><br>Region of interest motion start event</br></p></details> | cameraid, roiid, videoid, eventid
-ROME	| <details><summary>ROI motion end event&nbsp;&#9702;</summary><p><br>Region of interest motion end event</br></p></details> | cameraid, eventid
-ROMU	| <details><summary>ROI motion update event&nbsp;&#9702;</summary><p><br>Heartbeat for a ROI motion event</br></p></details> | cameraid, roiid, videoid, eventid
-ALRS	| <details><summary>ROI alert start event&nbsp;&#9702;</summary><p><br>ROI motion event linked to alert has started</br></p></details> | cameraid, eventid, alertid, alertroiid
-ALRE	| <details><summary>ROI alert end event&nbsp;&#9702;</summary><p><br>ROI motion event linked to alert has ended</br></p></details> | cameraid, alertroiid
-AEDA	| Device alert event                                                     | cameraid, status, deviceid, source_userid, source_accountid, values
-AEDN	| Device alert notification event                                        | cameraid, status, target_deviceid, triggerid, starttime, endtime, target_userid, json
-AEDC	| <details><summary>Create device event&nbsp;&#9702;</summary><p><br>`'cameraid'` understood as ESN (Electronic Serial Number). It can represent an account, bridge, camera or user</br></p></details> | cameraid, status, deviceid, source_userid, source_accountid
-AEDD	| <details><summary>Delete device event&nbsp;&#9702;</summary><p><br>`'cameraid'` understood as ESN (Electronic Serial Number). It can represent an account, bridge, camera or user</br></p></details> | cameraid, status, deviceid, source_userid, source_accountid
-AEDH	| <details><summary>Device change event&nbsp;&#9702;</summary><p><br>`'cameraid'` understood as ESN (Electronic Serial Number). It can represent an account, bridge, camera or user</br></p></details> | cameraid, status, deviceid, source_userid, source_accountid, values
-ESES	| <details><summary>Stream start event&nbsp;&#9702;</summary><p><br>User-requested stream event has started</br></p></details> | cameraid, videoid, eventid
-ESEE	| <details><summary>Stream end event&nbsp;&#9702;</summary><p><br>User-requested stream event has ended</br></p></details> | cameraid, eventid
-SBWS	| <details><summary>Stream bw sample event&nbsp;&#9702;</summary><p><br>If enabled, the last N seconds of bandwidth from the camera</br></p></details> | cameraid, bw10, bw60, bw300, streamtype
-SBW0  | <details><summary>Stream bw sample 0 event&nbsp;&#9702;</summary><p><br>Samples of camera bandwidth for stream 0 <br><br>`'PREV'` - base bandwidth preview channel+thumbs (all frames at selected rate/quality, no compression)</br></p></details> | cameraid, bw10, bw60, bw300
-SBW1  | <details><summary>Stream bw sample 1 event&nbsp;&#9702;</summary><p><br>Samples of camera bandwidth for stream 1 <br><br>`'PSND'` - bandwidth of what *should be sent* <br>`'VIDC'` - video captured bandwidth (video and audio together)</br></p></details> | cameraid, bw10, bw60, bw300
-SBW2  | <details><summary>Stream bw sample 2 event&nbsp;&#9702;</summary><p><br>Samples of camera bandwidth for stream 2 <br><br>`'VIDE'` - base bandwidth of the video stream (not motion filtered)</br></p></details> | cameraid, bw10, bw60, bw300
-SBW3  | <details><summary>Stream bw sample 3 event&nbsp;&#9702;</summary><p><br>Samples of camera bandwidth for stream 3 <br><br>`'AUDI'` - base bandwidth of the audio stream (not motion filtered)</br></p></details> | cameraid, bw10, bw60, bw300
-SBW4  | <details><summary>Stream bw sample 4 event&nbsp;&#9702;</summary><p><br>Samples of camera bandwidth for stream 4 <br><br>`'VIDC'` - video captured bandwidth (video and audio together)</br></p></details> | cameraid, bw10, bw60, bw300
-SSTE	| Streamer status event                                                  | cameraid, stype, event, seconds
-CSAU	| <details><summary>Camera stream attach event&nbsp;&#9702;</summary><p><br>Camera has started streaming data to bridge (`'streamid'` is common with CSDU and CSSU)</br></p></details> | cameraid, streamid, stream_format, stream_type
-CSDU	| <details><summary>Camera stream detach event&nbsp;&#9702;</summary><p><br>Camera has stopped streaming data to bridge</br></p></details> | cameraid, streamid, stream_format, stream_type
-CSSU	| <details><summary>Camera stream stats event&nbsp;&#9702;</summary><p><br>Camera is sending stats for the stream between camera and bridge (Heartbeat for CSAU/CSDU)</br></p></details> | cameraid, streamtype, streamformat, total_expected, total_rcvd, delta_expected, delta_rcvd, interval, streamid
-CECF	| <details><summary>Camera found event&nbsp;&#9702;</summary><p><br>Camera has been detected by the bridge</br></p></details> | cameraid, uuid, svc_state
-CECL	| <details><summary>Camera lost event&nbsp;&#9702;</summary><p><br>Camera has stopped responding correctly after being found by the bridge</br></p></details> | cameraid
-RCON	| Camera online event                                                    | cameraid, registerid
-RCOF	| Camera offline event                                                   | cameraid, registerid
-CONN	| Camera on event                                                        | cameraid
-COFF	| Camera off event                                                       | cameraid
-RCHB	| <details><summary>Camera heartbeat event&nbsp;&#9702;</summary><p><br>Heartbeat indicating a camera is still registered</br></p></details> | cameraid, registerid
-ABRT	| <details><summary>Camera abort event&nbsp;&#9702;</summary><p><br>Bridge process restarted (abort all camera streams)</br></p></details> | cameraid, aborted
-COBC	| <details><summary>Camera bounce event&nbsp;&#9702;</summary><p><br>Camera has camera has been forced to restart</br></p></details> | cameraid
-CZTC	| <details><summary>Camera setting change event&nbsp;&#9702;</summary><p><br>Indicated camera setting has changed to the new value (data is zlib compressed)</br></p></details> | cameraid, userid, flags, command, change
-CZTS	| <details><summary>Camera settings change event&nbsp;&#9702;</summary><p><br>Camera settings have been changed (data is zlib compressed)</br></p></details> | cameraid, sequence, settings
-CZDC	| <details><summary>Camera settings change event&nbsp;&#9702;</summary><p><br>Camera settings have changed from old to new (data is zlib compressed)</br></p></details> | cameraid, userid, flags, command, change
-CPRG	| <details><summary>Camera purge event&nbsp;&#9702;</summary><p><br>Camera has purged data due to storage limitations</br></p></details> | cameraid, day, bytes
-CDLT	| <details><summary>Camera data lost event&nbsp;&#9702;</summary><p><br>Camera has deleted data within retention interval due to storage limitations</br></p></details> | cameraid, day, bytes
-CBWS	| <details><summary>Camera bw sample event&nbsp;&#9702;</summary><p><br>Data amount a camera has captured/sent to the cloud</br></p></details> | cameraid, kbytesondisk, bytesstored, bytesshaped, bytesstreamed, bytesfreed, daysondisk
-BBWS	| <details><summary>Bridge bw sample event&nbsp;&#9702;</summary><p><br>Stats regarding the amount of data all devices on this bridge have captured and sent to the cloud</br></p></details> | cameraid, kbytessize, kbytesavail, bytesstored, bytesshaped, bytesstreamed, bytesfreed
-BBTW	| <details><summary>Bridge bw tagflow event&nbsp;&#9702;</summary><p><br>Stats regarding bandwidth between bridge and cloud</br></p></details> | cameraid, ip, bytes_sent, bytes_rcvd, active_write_us, paused_write_us
-BUBW	| <details><summary>Upload bw sample event&nbsp;&#9702;</summary><p><br>Metric of data being periodically sent to the cloud to test bandwidth (`'bytessent'` in N millisec)</br></p></details> | cameraid, bytessent, millisecs
-BBOO	| Bridge boot event                                                      | cameraid, booted
-NOOP	| No operation event                                                     | cameraid
-AEAC	| Create account event                                                   | cameraid, status, new_accountid, source_userid, source_accountid
-AEAD	| Delete account event                                                   | cameraid, status, source_userid, source_accountid
-AEAH	| Account change event                                                   | cameraid, status, source_userid, source_accountid, values
-AELI	| Account log in event                                                   | cameraid, status, source_userid
-AELO	| Account log out event                                                  | cameraid, status, source_userid
-AEUC	| Create user event                                                      | cameraid, status, target_userid, source_userid, source_accountid
-AEUD	| Delete user event                                                      | cameraid, status, target_userid, source_userid, source_accountid
-AECC	| User setting change event                                              | cameraid, status, target_userid, source_userid, source_accountid, values
-AEEC	| Create layout event                                                    | cameraid, status, source_userid, source_accountid, layoutid
-AEED	| Delete layout event                                                    | cameraid, status, source_userid, source_accountid, layoutid
-AEEL	| Layout change event                                                    | cameraid, status, source_userid, source_accountid, layoutid, values
-CCCF	| <details><summary>Curl fail event&nbsp;&#9702;</summary><p><br>Failed communication between bridge and camera with indicated cURL error code</br></p></details> | cameraid, errcode
-ANNT	| Annotation event                                                       | cameraid, ns, flags, uuid, seq, op, mpack
-NVPT	| Name value table event                                                 | cameraid, ns, key_offset, op, mpack
-ITFU	| Interface update event                                                 | cameraid, ip, flags, valid, mpack
-SCRN	| Screen connect event                                                   | cameraid, ns, uuid, mpack
-AELD	| Live display event                                                     | cameraid, status, source_userid, deviceid
-CCLC	| <details><summary>Cloud connect event&nbsp;&#9702;</summary><p><br>Bridge connected to the cloud over indicated connection</br></p></details> | cameraid, src_ip, dest_ip, src_port, dest_port, ctype
-CCLD	| <details><summary>Cloud disconnect event&nbsp;&#9702;</summary><p><br>Bridge lost connection to the cloud</br></p></details> | cameraid, src_ip, dest_ip, src_port, dest_port, ctype, reason, seconds
-ENES	| App-specific event start                                               | cameraid, videoid, eventid, ns
-ENEE	| App-specific event end                                                 | cameraid, eventid, ns
-ENEU	| <details><summary>App-specific update event&nbsp;&#9702;</summary><p><br>Heartbeat for an application event <br>(10 sec interval)</br></p></details> | cameraid, videoid, eventid, ns
-AEPT	| <details><summary>PTZ event&nbsp;&#9702;</summary><p><br>Pan tilt zoom event</br></p></details> | cameraid, status, source_userid, deviceid
-EPES	| <details><summary>PTZ camera event start&nbsp;&#9702;</summary><p><br>PTZ camera move/change event has started</br></p></details> | cameraid, videoid, eventid
-EPEE	| <details><summary>PTZ camera event end&nbsp;&#9702;</summary><p><br>PTZ camera move/change event has ended</br></p></details> | cameraid, eventid
-PTZS	| <details><summary>PTZ status event&nbsp;&#9702;</summary><p><br>Snapshot of the PTZ state as point in time (For tracking PTZ during movement)</br></p></details> | cameraid, userid, flags, reason, pan_status, zoom_status, x, y, z
-PRSS	| <small>Preview stream start event <br>**(内部使用のみ)**</small>  | cameraid, previewid, frame_delay, duration, flags, format, status
-PRSE	| <small>Preview stream end event <br>**(内部使用のみ)**</small>    | cameraid, previewid, status
-PRFU	| <small>Preview upload event <br>**(内部使用のみ)**</small>        | cameraid, file_offset, frame_size
-AABT	| <small>Camera archiver abort event <br>**(内部使用のみ)**</small> | cameraid, aborted
-ECON	| <small>Camera online event <br>**(廃止予定)**</small>                | cameraid
-ECOF	| <small>Camera offline event <br>**(廃止予定)**</small>               | cameraid
-CSTS	| <small>Camera settings change event <br>**(廃止予定)**</small>       | cameraid, sequence, settings
-CSTC	| <small>Camera settings change event <br>**(廃止予定)**</small>       | cameraid, sequence, settings
-CSAT	| <small>Camera stream attach event <br>**(廃止予定)**</small>         | cameraid, stream_format, stream_type
-CSDT	| <small>Camera stream detach event <br>**(廃止予定)**</small>         | cameraid, stream_format, stream_type
-CSST	| <small>Camera stream stats event <br>**(廃止予定)**</small>          | cameraid, streamtype, total_expected, total_rcvd, delta_expected, delta_rcvd, interval
-PRSU	| <small>Preview stream update event <br>**(廃止予定)**</small>        | cameraid, previewid, status
-VRSU	| <small>Video update event <br>**(廃止予定)**</small>                 | cameraid, videoid, format, status
+VRES	| 動画開始イベント                                                           | cameraid, videoid, format, status
+VREE	| 動画終了イベント                                                           | cameraid, videoid, videosize, format, status
+VRKF	| 動画キーフレーム イベント                                                    | cameraid, videoid, file_offset, format
+EAES	| <details><summary>常時動画録画開始イベント&nbsp;&#9702;</summary><p><br>バックグラウンドで「常時」動画録画イベントが開始されました</br></p></details> | cameraid, videoid, eventid
+EAEE	| <details><summary>常時動画録画終了イベント&nbsp;&#9702;</summary><p><br>バックグラウンドで「常時」動画録画イベントが終了しました</br></p></details> | cameraid, eventid
+AEDO	| 動画ダウンロード イベント                                                    | cameraid, status, source_userid, source_accountid, resource_type, deviceid, endtime
+EVVS	| <details><summary>動画スワップ イベント&nbsp;&#9702;</summary><p><br>このイベントは次の2つの異なるビデオIDにまたがります： `'eventid'` 、 `'videoid'`（新しいスワップインID）</br></p></details> | cameraid, videoid, eventid
+PRTH	| サムネイル イベント                                                       　| cameraid, previewid, eventid, file_offset, frame_size
+PRFR	| <details><summary>プレビュー イベント&nbsp;&#9702;</summary><p><br>プレビューフレームが録画されたことを示します</br></p></details> | cameraid, previewid, file_offset, frame_size
+PRFB	| プレビュー支援イベント                                                  　　　| cameraid, previewid, file_offset, frame_size
+EMES	| モーション開始イベント                                                      | cameraid, videoid, eventid
+EMEE	| モーション終了イベント                                                      | cameraid, eventid
+EMEU	| <details><summary>モーション更新イベント&nbsp;&#9702;</summary><p><br>モーションイベントのハートビート <br>(10秒間隔)</br></p></details> | cameraid, videoid, eventid
+MRBX	| <details><summary>モーション ボックス イベント&nbsp;&#9702;</summary><p><br>指定された領域でモーションが発生しました（座標は右上隅から 0xffff の小数部にあります）</br></p></details> | cameraid
+MRSZ	| <details><summary>モーションサイズ レポートイベント&nbsp;&#9702;</summary><p><br>画面上でのモーション数と各アクティブROI（0xffff 以上の比率が画面の割合で表示されます）を示します。 <br>フラグ `'0x1'` は  - 定義済みのしきい値を超えるモーションを指します</br></p></details> | cameraid, flags, motion
+ALMS	| <details><summary>モーションアラート 開始イベント&nbsp;&#9702;</summary><p><br>モーションイベントが発生しました（示されたアラートに関連しています）</br></p></details> | cameraid, eventid, alertid, alertmotionid
+ALME	| <details><summary>モーションアラート 終了イベント&nbsp;&#9702;</summary><p><br>モーションイベントが終了しました（示されたアラートに関連しています）</br></p></details> | cameraid, alertmotionid
+ROMS	| <details><summary>ROI モーション開始イベント&nbsp;&#9702;</summary><p><br>関心領域モーション開始イベント</br></p></details> | cameraid, roiid, videoid, eventid
+ROME	| <details><summary>ROI モーション終了イベント&nbsp;&#9702;</summary><p><br>関心領域モーション終了イベント</br></p></details> | cameraid, eventid
+ROMU	| <details><summary>ROI モーション更新イベント&nbsp;&#9702;</summary><p><br>ROIモーションイベントのハートビート</br></p></details> | cameraid, roiid, videoid, eventid
+ALRS	| <details><summary>ROI アラート開始イベント&nbsp;&#9702;</summary><p><br>アラートにリンクしたROIモーションイベントが開始されました</br></p></details> | cameraid, eventid, alertid, alertroiid
+ALRE	| <details><summary>ROI アラート終了イベント&nbsp;&#9702;</summary><p><br>アラートにリンクしたROIモーションイベントが終了しました</br></p></details> | cameraid, alertroiid
+AEDA	| デバイスアラート イベント                                                    | cameraid, status, deviceid, source_userid, source_accountid, values
+AEDN	| デバイスアラート通知イベント                                                  | cameraid, status, target_deviceid, triggerid, starttime, endtime, target_userid, json
+AEDC	| <details><summary>デバイスイベントの作成&nbsp;&#9702;</summary><p><br>`'cameraid'` はESN（電子シリアル番号）として理解されます。アカウント、ブリッジ、カメラまたはユーザーを表すことができます</br></p></details> | cameraid, status, deviceid, source_userid, source_accountid
+AEDD	| <details><summary>デバイスイベントの削除&nbsp;&#9702;</summary><p><br>`'cameraid'` はESN（電子シリアル番号）として理解されます。アカウント、ブリッジ、カメラまたはユーザーを表すことができます</br></p></details> | cameraid, status, deviceid, source_userid, source_accountid
+AEDH	| <details><summary>デバイス変更イベント&nbsp;&#9702;</summary><p><br>`'cameraid'` はESN（電子シリアル番号）として理解されます。アカウント、ブリッジ、カメラまたはユーザーを表すことができます</br></p></details> | cameraid, status, deviceid, source_userid, source_accountid, values
+ESES	| <details><summary>ストリーム開始イベント&nbsp;&#9702;</summary><p><br>ユーザー要求のストリームイベントが開始されました</br></p></details> | cameraid, videoid, eventid
+ESEE	| <details><summary>ストリーム終了イベント&nbsp;&#9702;</summary><p><br>ユーザー要求のストリームイベントが終了しました</br></p></details> | cameraid, eventid
+SBWS	| <details><summary>ストリーム帯域サンプルイベント&nbsp;&#9702;</summary><p><br>有効にした場合、カメラからの最後のN秒間のストリームで帯域幅のサンプリングを行います</br></p></details> | cameraid, bw10, bw60, bw300, streamtype
+SBW0  | <details><summary>ストリーム帯域サンプル0イベント&nbsp;&#9702;</summary><p><br>ストリーム0のカメラ帯域幅のサンプル <br><br>`'PREV'` - プレビューチャンネル+サムネイルのベースの帯域幅（選択したレート/品質のすべてのフレーム、圧縮なし）</br></p></details> | cameraid, bw10, bw60, bw300
+SBW1  | <details><summary>ストリーム帯域サンプル1イベント&nbsp;&#9702;</summary><p><br>ストリーム1のカメラ帯域幅のサンプル <br><br>`'PSND'` - *送信する必要がある* 帯域幅 <br>`'VIDC'` - 動画キャプチャ帯域幅 (動画と音声同一)</br></p></details> | cameraid, bw10, bw60, bw300
+SBW2  | <details><summary>ストリーム帯域サンプル2イベント&nbsp;&#9702;</summary><p><br>ストリーム2のカメラ帯域幅のサンプル <br><br>`'VIDE'` - 動画ストリームのベース帯域幅 (非モーション フィルタ)</br></p></details> | cameraid, bw10, bw60, bw300
+SBW3  | <details><summary>ストリーム帯域サンプル3イベント&nbsp;&#9702;</summary><p><br>ストリーム3のカメラ帯域幅のサンプル <br><br>`'AUDI'` - 音声ストリームのベース帯域幅 (非モーション フィルタ)</br></p></details> | cameraid, bw10, bw60, bw300
+SBW4  | <details><summary>ストリーム帯域サンプル4イベント&nbsp;&#9702;</summary><p><br>ストリーム4のカメラ帯域幅のサンプル <br><br>`'VIDC'` - 動画キャプチャ帯域幅 (動画と音声同一)</br></p></details> | cameraid, bw10, bw60, bw300
+SSTE	| ストリーマ状態イベント                                                     | cameraid, stype, event, seconds
+CSAU	| <details><summary>カメラストリーム接続イベント&nbsp;&#9702;</summary><p><br>カメラがブリッジへのデータのストリーミングを開始しました（ `'streamid'`はCSDUとCSSUで共通です）</br></p></details> | cameraid, streamid, stream_format, stream_type
+CSDU	| <details><summary>カメラストリーム除去イベント&nbsp;&#9702;</summary><p><br>カメラがブリッジへのデータのストリーミングを停止しました</br></p></details> | cameraid, streamid, stream_format, stream_type
+CSSU	| <details><summary>カメラストリーム統計イベント&nbsp;&#9702;</summary><p><br>カメラがカメラとブリッジ間のストリームの統計情報を送信しています（CSAU / CSDUのハートビート）</br></p></details> | cameraid, streamtype, streamformat, total_expected, total_rcvd, delta_expected, delta_rcvd, interval, streamid
+CECF	| <details><summary>カメラ検出イベント&nbsp;&#9702;</summary><p><br>ブリッジによってカメラが検出されました</br></p></details> | cameraid, uuid, svc_state
+CECL	| <details><summary>カメラ逸失イベント&nbsp;&#9702;</summary><p><br>ブリッジが検出した後、カメラは正常に応答を停止しました</br></p></details> | cameraid
+RCON	| カメラオンライン イベント                                                   | cameraid, registerid
+RCOF	| カメラオフライン イベント                                                   | cameraid, registerid
+CONN	| カメラオン イベント                                                       | cameraid
+COFF	| カメラオフ イベント                                                       | cameraid
+RCHB	| <details><summary>カメラハートビート イベント&nbsp;&#9702;</summary><p><br>カメラがまだ登録されていることをハートビートが示します</br></p></details> | cameraid, registerid
+ABRT	| <details><summary>カメラア中断イベント&nbsp;&#9702;</summary><p><br>ブリッジのプロセスが再開しました（すべてのカメラストリームを中止）</br></p></details> | cameraid, aborted
+COBC	| <details><summary>カメラバウンス イベント&nbsp;&#9702;</summary><p><br>カメラは強制的に再起動されました</br></p></details> | cameraid
+CZTC	| <details><summary>カメラ設定変更イベント&nbsp;&#9702;</summary><p><br>示されたカメラの設定が新しい値に変更されました（データはzlib圧縮されています）</br></p></details> | cameraid, userid, flags, command, change
+CZTS	| <details><summary>カメラ設定変更イベント&nbsp;&#9702;</summary><p><br>カメラ設定が変更されました（データはzlib圧縮されています）</br></p></details> | cameraid, sequence, settings
+CZDC	| <details><summary>カメラ設定変更イベント&nbsp;&#9702;</summary><p><br>カメラの設定が古いものから新しいものに変更されました（データはzlib圧縮されています）</br></p></details> | cameraid, userid, flags, command, change
+CPRG	| <details><summary>カメラパージ イベント&nbsp;&#9702;</summary><p><br>ストレージの制限によりカメラのデータをパージしました</br></p></details> | cameraid, day, bytes
+CDLT	| <details><summary>カメラデータ消失イベント&nbsp;&#9702;</summary><p><br>ストレージの制限により、カメラの保存期間内にデータを削除しました</br></p></details> | cameraid, day, bytes
+CBWS	| <details><summary>カメラ帯域幅サンプルイベント&nbsp;&#9702;</summary><p><br>カメラがクラウドに取り込み/送信したデータ量</br></p></details> | cameraid, kbytesondisk, bytesstored, bytesshaped, bytesstreamed, bytesfreed, daysondisk
+BBWS	| <details><summary>ブリッジ帯域幅サンプルイベント&nbsp;&#9702;</summary><p><br>このブリッジ上のすべてのデバイスが取り込んでクラウドに送信したデータ量に関する統計</br></p></details> | cameraid, kbytessize, kbytesavail, bytesstored, bytesshaped, bytesstreamed, bytesfreed
+BBTW	| <details><summary>ブリッジ帯域幅タグフロー イベント&nbsp;&#9702;</summary><p><br>ブリッジとクラウド間の帯域幅に関する統計</br></p></details> | cameraid, ip, bytes_sent, bytes_rcvd, active_write_us, paused_write_us
+BUBW	| <details><summary>アップロード帯域幅サンプル イベント&nbsp;&#9702;</summary><p><br>クラウドに定期的に送信して帯域幅をテストするためのデータのメトリック（Nミリ秒単位での `'bytessent'`）</br></p></details> | cameraid, bytessent, millisecs
+BBOO	| ブリッジ起動イベント                                                      | cameraid, booted
+NOOP	| 非操作イベント                                                           | cameraid
+AEAC	| アカウント作成イベント                                                     | cameraid, status, new_accountid, source_userid, source_accountid
+AEAD	| アカウント削除イベント                                                     | cameraid, status, source_userid, source_accountid
+AEAH	| アカウント変更イベント                                                     | cameraid, status, source_userid, source_accountid, values
+AELI	| アカウント ログイン イベント                                                | cameraid, status, source_userid
+AELO	| アカウント ログアウト イベント                                               | cameraid, status, source_userid
+AEUC	| ユーザー作成イベント                                                       | cameraid, status, target_userid, source_userid, source_accountid
+AEUD	| ユーザー削除イベント                                                       | cameraid, status, target_userid, source_userid, source_accountid
+AECC	| ユーザー設定変更イベント                                                    | cameraid, status, target_userid, source_userid, source_accountid, values
+AEEC	| レイアウト作成イベント                                                  　  | cameraid, status, source_userid, source_accountid, layoutid
+AEED	| レイアウト削除イベント                                                     | cameraid, status, source_userid, source_accountid, layoutid
+AEEL	| レイアウト変更イベント                                                     | cameraid, status, source_userid, source_accountid, layoutid, values
+CCCF	| <details><summary>Curl失敗イベント&nbsp;&#9702;</summary><p><br>示されたcURLエラーコードにより、ブリッジとカメラ間の通信に失敗しました</br></p></details> | cameraid, errcode
+ANNT	| アノテーション イベント                                                    | cameraid, ns, flags, uuid, seq, op, mpack
+NVPT	| 名称、値表イベント                                                        | cameraid, ns, key_offset, op, mpack
+ITFU	| インターフェイス更新イベント                                                 | cameraid, ip, flags, valid, mpack
+SCRN	| 画面接続イベント                                                          | cameraid, ns, uuid, mpack
+AELD	| ライブ表示イベント                                                        | cameraid, status, source_userid, deviceid
+CCLC	| <details><summary>クラウド接続イベント&nbsp;&#9702;</summary><p><br>指定された接続を介してクラウドに接続されたブリッジ</br></p></details> | cameraid, src_ip, dest_ip, src_port, dest_port, ctype
+CCLD	| <details><summary>クラウド切断イベント&nbsp;&#9702;</summary><p><br>ブリッジはクラウドとの接続を失いました</br></p></details> | cameraid, src_ip, dest_ip, src_port, dest_port, ctype, reason, seconds
+ENES	| アプリケーション指定イベント開始                                              | cameraid, videoid, eventid, ns
+ENEE	| アプリケーション指定イベント終了                                              | cameraid, eventid, ns
+ENEU	| <details><summary>アプリケーション指定更新イベントApp-specific update event&nbsp;&#9702;</summary><p><br>アプリケーションイベントのハートビート <br>（10秒間隔）</br></p></details> | cameraid, videoid, eventid, ns
+AEPT	| <details><summary>PTZ イベント&nbsp;&#9702;</summary><p><br>パン チルト ズーム イベント</br></p></details> | cameraid, status, source_userid, deviceid
+EPES	| <details><summary>PTZ カメラ イベント開始&nbsp;&#9702;</summary><p><br>PTZ カメラの移動/変更イベントは開始しました</br></p></details> | cameraid, videoid, eventid
+EPEE	| <details><summary>PTZ カメラ イベント終了&nbsp;&#9702;</summary><p><br>PTZ カメラの移動/変更イベントは終了しました</br></p></details> | cameraid, eventid
+PTZS	| <details><summary>PTZ 状態イベント&nbsp;&#9702;</summary><p><br>特定時点のPTZ状態のスナップショット（移動中のPTZを追跡するため）</br></p></details> | cameraid, userid, flags, reason, pan_status, zoom_status, x, y, z
+PRSS	| <small>プレビューストリーム開始イベント <br>**(内部使用のみ)**</small>           | cameraid, previewid, frame_delay, duration, flags, format, status
+PRSE	| <small>プレビューストリーム終了イベント <br>**(内部使用のみ)**</small>           | cameraid, previewid, status
+PRFU	| <small>プレビュー アップロード イベント <br>**(内部使用のみ)**</small>          | cameraid, file_offset, frame_size
+AABT	| <small>カメラ アーカイバ 中断イベント <br>**(内部使用のみ)**</small>            | cameraid, aborted
+ECON	| <small>カメラ オンライン イベント <br>**(廃止予定)**</small>                  | cameraid
+ECOF	| <small>カメラ オフライン イベント <br>**(廃止予定)**</small>                  | cameraid
+CSTS	| <small>カメラ設定変更イベント <br>**(廃止予定)**</small>                     | cameraid, sequence, settings
+CSTC	| <small>カメラ設定変更イベント <br>**(廃止予定)**</small>                     | cameraid, sequence, settings
+CSAT	| <small>カメラストリーム接続イベント <br>**(廃止予定)**</small>                 | cameraid, stream_format, stream_type
+CSDT	| <small>カメラストリーム切断イベント <br>**(廃止予定)**</small>                 | cameraid, stream_format, stream_type
+CSST	| <small>カメラストリーム統計イベント <br>**(廃止予定)**</small>                 | cameraid, streamtype, total_expected, total_rcvd, delta_expected, delta_rcvd, interval
+PRSU	| <small>プレビューストリーム更新イベント <br>**(廃止予定)**</small>              | cameraid, previewid, status
+VRSU	| <small>動画更新イベント <br>**(廃止予定)**</small>                          | cameraid, videoid, format, status
 
 <!-- TODO: Unhide and fill out the below table when the information gets delivered -->
 
@@ -320,9 +320,9 @@ zoom_status      | <p hidden>???</p>
 ## ポーリングの初期化
 <!--===================================================================-->
 
-<aside class="notice">Subscribe to the poll service, which is required for GET /poll. Response: token=xxxxx / Response headers: set_cookie: ee-poll-ses/poll_id=xxxxx</aside>
+<aside class="notice">ポール サービスの購読を行うには、GET /poll が必要です。応答： token=xxxxx / 応答ヘッダ： set_cookie: ee-poll-ses/poll_id=xxxxx</aside>
 
-Response includes 2 session cookies and a returned token (which are identical). Only one of the session cookies has to be provided to the GET /poll request
+応答には、2つのセッションCookieと返されたトークン（同一）が含まれます。 GET /poll 要求には、セッションCookieの1つのみを提供する必要があります
 
 > 要求
 
@@ -368,32 +368,33 @@ curl --cookie "auth_key=[AUTH_KEY]" -X POST -H 'Content-Type: application/json' 
 
 `POST https://login.eagleeyenetworks.com/poll`
 
-<aside class="notice">The cameras parameter is an entity, which can contain any object structure keyed by ID (camera, bridge or account ESN)</aside>
+<aside class="notice">カメラパラメータはエンティティであり、ID（カメラ、ブリッジまたはアカウントESN）をキーとした任意のオブジェクト構造を含むことができます</aside>
 
-Due to the progressing expansion of the event polling mechanic, the parameter `'cameras'` has undergone numerous changes and has been kept as such for backwards compatibility. It should be understood as device/account
+イベントポーリングの機構は展開が進んでいるため、パラメータ `'cameras'`
+ は数多くの変更を受けておりますが、下位互換性のためにそのまま維持されています。デバイス/アカウントとしてこれらを理解する必要があります
 
 パラメータ   | データ型式  | 詳細   
 --------- | --------- | -----------
-cameras   | JSON      | Json attribute keyed with the [\<object_id\>](#object-structure) (can contain multiple Json objects, even of different types)
+cameras   | JSON      | [\<object_id\>](#object-structure) をキーとしたJSON属性（異なるタイプの複数のJSONオブジェクトを含むことができます）
 
-### Object Structure
+### オブジェクトの構造
 
 パラメータ       | データ型式  | 詳細   
 ---------     | --------- | -----------
-\<object_id\> | JSON      | Json attribute keyed with `'resource'` and/or `'event'`
+\<object_id\> | JSON      | `'resource'` や `'event'` をキーとしたJSON属性
 
-The Json object allows to narrow down the polling scope by specifying which type of entity to poll for. The types include:
+JSONオブジェクトは、どのタイプのエンティティをポーリングするかを指定することによって、ポーリング範囲を絞り込むことを可能にします。タイプには次のものがあります：
 
 パラメータ      | データ型式      | 詳細         | 必須？
 ---------    | ---------     | ----------- | -----------
-**resource** | 配列[string] | Array of one or more string containing which type of data should be retrieved from the provided device/account<br><br>enum: [pre, thumb, video, status, event](#poll) | true
-event        | 配列[string] | Array of one or more string containing the event [Four CC](#event-objects) (if resource contains `'event'`, the array of events specified here will narrow down the scope of retrieved events)
+**resource** | 配列[文字列]    | 提供されたデバイス/アカウントから検索する必要があるデータの種類を含む1つ以上の文字列の配列 <br><br>選択した：[pre, thumb, video, status, event](#poll) | true
+event        | 配列[文字列]    | イベント [Four CC](#event-objects) （リソースに `'event'` が含まれる場合、ここで指定されたイベントの配列は検索されたイベントの範囲を絞り込みます）を含む1つまたは複数の文字列の配列
 
 <!--TODO: Find out why the video as a feasible resource has been excluded from the above table-->
 
-<aside class="warning">The event parameter is required to have the event resource present when polling over HTTP (instead of WebSocket)</aside>
+<aside class="warning">イベントパラメータには、（WebSocketの代わりに）HTTP経由でポーリングする際にイベントリソースが存在する必要があります</aside>
 
-> JSON応答
+> JSON 応答
 
 ```json
 {
@@ -416,37 +417,37 @@ event        | 配列[string] | Array of one or more string containing the event
 
 パラメータ   | データ型式  | 詳細
 --------- | --------- | -----------
-cameras   | json      | Json attribute keyed with the [\<object_id\>](#response-object-structure) (can contain multiple Json objects, even of different types)
-token     | string    | Token to be used for subsequent GET /poll requests
+cameras   | JSON      | [\<object_id\>](#response-object-structure) をキーとしたJSON属性（異なるタイプの複数のJSONオブジェクトを含むことができます）
+token     | 文字列     | 後続のGET /poll 要求に使用されるトークン
 
 ### 応答オブジェクト構造
 
 パラメータ       | データ型式  | 詳細
 ---------     | --------- | -----------
-\<object_id\> | json      | Json attribute keyed with [resource](#poll) types. Retrieved values are the most recent entities for the specified resource
+\<object_id\> | JSON      | JSON属性は [resource](#poll) 型をキーとしています。取得された値は、指定されたリソースの最新のエンティティです
 
-The amount of keys depends on the sent request inquiry (if the request entailed `'pre'` and `'video'`, then the retrieved data will only cover `'pre'` and `'video'` information)
+キーの量は、送信されたリクエストの問い合わせに依存します（要求が `'pre'` と `'video'` を伴う場合、取得されたデータは `'pre'` と `'video'` 情報のみをカバーします）
 
-If a specified event has not been triggered on the device/account, it will not be listed by the poll service (no error will be reported)
+指定されたイベントがデバイス/アカウントでトリガーされていない場合は、ポーリングサービスによってリストされません（エラーは報告されません）
 
-The returned values are in accordance with the [returned resource types](#response-resource-types)
+返される値は、[returned resource types](#response-resource-types) と合致します
 
-<aside class="warning">The status parameter takes precedence (if multiple) and all others will become suppressed when polling over HTTP POST /poll</aside>
+<aside class="warning">状態パラメータが優先され（複数の場合）、HTTP POST /pollでポーリングすると他のすべては抑制されます</aside>
 
 ### エラー状態コード
 
 HTTP 状態コード     | 詳細
 ---------------- | -----------
-400	| Unexpected or non-identifiable arguments are supplied
-401	| Unauthorized due to invalid session cookie
-403	| Forbidden due to the user missing the necessary privileges
-200	| Request succeeded
+400	| 予期せぬまたは識別不能な引数が指定されました
+401	| 無効なセッションCookieにより認可されませんでした
+403	| ユーザーに必要な権限がないため拒否されました
+200	| 要求は成功しました
 
 <!--===================================================================-->
 ## ポーリング
 <!--===================================================================-->
 
-<aside class="notice">Used to receive updates on real-time changes. This API call requires a valid 'ee-poll-ses' cookie from POST /poll</aside>
+<aside class="notice">リアルタイムの変更に関するアップデートを受信するために使用されます。 このAPIコールでは、POST /poll で生成された有効な 'ee-poll-ses' クッキーが必要です</aside>
 
 > 要求
 
@@ -454,7 +455,7 @@ HTTP 状態コード     | 詳細
 curl --cookie "auth_key=[AUTH_KEY];ee-poll-ses=[TOKEN]" --request GET https://c001.eagleeyenetworks.com/poll
 ```
 
-### HTTP要求
+### HTTP 要求
 
 `GET https://login.eagleeyenetworks.com/poll`
 
@@ -519,38 +520,38 @@ curl --cookie "auth_key=[AUTH_KEY];ee-poll-ses=[TOKEN]" --request GET https://c0
 
 パラメータ   | データ型式  | 詳細
 --------- | --------- | -----------
-cameras   | json      | Json attribute keyed with the \<object_id\> (can contain multiple Json objects, even of different types)
+cameras   | JSON      | \<object_id\> をキーとしたJSON属性（異なるタイプの複数のJSONオブジェクトを含むことができます）
 
-### Response Object Structure
+### 応答オブジェクトの構造
 
 パラメータ       | データ型式  | 詳細
 ---------     | --------- | -----------
-\<object_id\> | json      | Json attribute keyed with [resource](#poll) types. Retrieved values are the most recent entities for the specified resource
+\<object_id\> | JSON      | JSON属性は [resource](#poll) 型をキーとしています。取得された値は、指定されたリソースの最新のエンティティです
 
-The amount of keys depends on the sent POST request (if the request entailed `'pre'` and `'video'`, then the retrieved data will only cover `'pre'` and `'video'` information)
+キーの量は送信されたPOST要求に依存します（要求が `'pre'` と `'video'` を伴う場合、取得されたデータは `'pre'` と `'video'` 情報のみをカバーします）
 
-If a specified event has not been triggered on the device/account, it will not be listed by the poll service (no error will be reported)
+指定されたイベントがデバイス/アカウントでトリガーされていない場合は、ポーリングサービスによってリストされません（エラーは報告されません）
 
-The returned values are in accordance with the [returned resource types](#response-resource-types)
+返される値は、[returned resource types](#response-resource-types) に対応します
 
-<aside class="warning">The status parameter will be omitted (if multiple), all others will be returned when polling over HTTP GET /poll</aside>
+<aside class="warning">状態パラメータが優先され（複数の場合）、HTTP POST /pollでポーリングすると他のすべては抑制されます</aside>
 
 ### エラー状態コード
 
 HTTP 状態コード     | 詳細
 ---------------- | -----------
-400	| Unexpected or non-identifiable arguments are supplied
-401	| Unauthorized due to invalid session cookie
-403	| Forbidden due to the user missing the necessary privileges
-200	| Request succeeded
+400	| 予期せぬまたは識別不能な引数が指定されました
+401	| 無効なセッションCookieにより認可されませんでした
+403	| ユーザーに必要な権限がないため拒否されました
+200	| 要求は成功しました
 
 <!--===================================================================-->
 ## WebSocket ポーリング
 <!--===================================================================-->
 
-WebSockets provide a persistent connection between a client and server. This uplink enables a two-way data stream over which chunked data can be sent and received as messages. This protocol provides a full-duplex communications channel over a single TCP connection, allowing the client to receive event-driven responses without having to poll the server for a reply (effectively decreasing data traffic)
+WebSocketは、クライアントとサーバー間の永続的な接続を提供します。 このアップリンクは、ブロック化されたデータをメッセージとして送受信できる双方向のデータストリームを有効可します。このプロトコルは、単一のTCP接続を介して全二重通信チャネルを提供し、クライアントが応答をサーバーにポーリングすることなくイベントドリブンの応答を受信できるようにします（実質的にデータトラフィックを減少させます）
 
-<aside class="notice">The WebSocket similarity to the HTTP protocol is that its handshake is interpreted by HTTP servers as a HTTP 'upgrade request'</aside>
+<aside class="notice">WebSocketのHTTPプロトコルとの類似点は、そのハンドシェイクがHTTPサーバーによってHTTPの「アップグレード要求」として解釈されることです</aside>
 
 > 要求 JSON
 
@@ -586,7 +587,7 @@ WebSockets provide a persistent connection between a client and server. This upl
 }
 ```
 
-### Client Handshake Request
+### クライアント ハンドシェイク要求
 
 `GET /api/v2/Device/00001007/Events HTTP/1.1`  
 `Upgrade: websocket`  
@@ -597,16 +598,16 @@ WebSockets provide a persistent connection between a client and server. This upl
 `Sec-WebSocket-Version: 13`  
 `Cookie: auth_key=[AUTH_KEY]`
 
-The WebSocket protocol has two parts:
+WebSocket プロトコルは2つの部分に分かれます:
 
-  - Handshake (to establish the upgraded connection)
-  - Data transfer
+  - ハンドシェイク（アップグレードされた接続を確立するため）
+  - データ転送
 
-<aside class="notice">The handshake process has to be initiated from the client side via a standard HTTP request (the HTTP version must be 1.1 or greater and the method must be GET)</aside>
+<aside class="notice">ハンドシェイクプロセスは、クライアント側から標準のHTTPリクエスト（HTTPバージョンは1.1以上でなければならず、メソッドはGETでなければならない）によって開始されなければならななりません</aside>
 
 <table>
     <tr>
-        <th colspan=7>The WebSocket request URL is composed in the following way:</th>
+        <th colspan=7>WebSocketリクエストURLは、次のように構成されています：</th>
     </tr>
     <tr>
         <th style="text-align:center;">wss:&#47;&#47;</th>
@@ -618,23 +619,23 @@ The WebSocket protocol has two parts:
         <th style="text-align:center;">&#47;Events</th>
     </tr>
     <tr>
-        <td style="text-align:center;">secure <br>websocket <br>protocol</td>
-        <td style="text-align:center;">branded <br>subdomain</td>
-        <td style="text-align:center;">server</td>
-        <td style="text-align:center;">API version</td>
-        <td style="text-align:center;">resource</td>
-        <td style="text-align:center;">account ID</td>
-        <td style="text-align:center;">'Events' suffix</td>
+        <td style="text-align:center;">セキュア <br>websocket <br>プロトコル</td>
+        <td style="text-align:center;">ブランド <br>サブドメイン</td>
+        <td style="text-align:center;">サーバー</td>
+        <td style="text-align:center;">API バージョン</td>
+        <td style="text-align:center;">リソース</td>
+        <td style="text-align:center;">アカウント ID</td>
+        <td style="text-align:center;">'イベント' 接尾辞</td>
     </tr>
 </table>
 
-WebSocket URLs use the WS scheme or alternatively WSS for secure connections which is the equivalent of HTTPS
+WebSocket URLは、WSSを使用するか、HTTPSと同等の安全な接続にWSSを使用します
 
-Parameter | Data Type | Description | Is Required
+パラメータ   | データ形式  | 詳細         | 必須？
 --------- | --------- | ----------- | -----------
-**A**     | string    | Used to replace the `'auth_key'` cookie | false
+**A**     | 文字列      | `'auth_key'` クッキーを置き換えるために使われます | false
 
-### Server Handshake Response
+### サーバー ハンドシェイク応答
 
 `HTTP/1.1 101 Switching Protocols`  
 `Server: openresty`  
@@ -645,34 +646,34 @@ Parameter | Data Type | Description | Is Required
 `set-cookie: ee-ws-poll-ses=kjxZXVrDyIkK`  
 `x-een-lb-tried-proxies: 209.94.238.21:80`
 
-The server reply completes the handshake. A successful server reply is followed by data transfer
+ハンドシェイクの完了をサーバーが応答します。 成功したサーバーは応答の後にデータ転送を続けます
 
-### Error Status Codes
+### エラー状態コード
 
-HTTP Status Code | Description
+HTTP 状態コード     | 詳細
 ---------------- | -----------
-400	| Header is not understood or has an incorrect value
-101	| Switching protocols
+400	| ヘッダーが理解不能か、値が正しくありません
+101	| プロトコルを切り替えました
 
-### Data Exchange
+### データ交換
 
-The client communicates with the server after a successful handshake by sending an object as Json-formatted string. The *message* send is being triggered by the client by calling the appropriate WebSocket *send* function (the method depends on the client environment)
+クライアントは、JSON形式の文字列のオブジェクトを送信することによってハンドシェイクが成功した後、サーバーと通信します。*message* の送信は、適切なWebSocket *send* 関数を呼び出すことによってクライアントによってトリガーされています（このメソッドはクライアント環境に依存します）
 
-The client has to specify via Json what kind of data it is going to be polling and from which devices (See [Initialize Poll](#initialize-poll), [Resource Type](#poll), [Event Objects](#event-objects))
+クライアントは、JSON経由でどのデバイスからどのような種類のデータをポーリングするかを指定する必要があります（[Initialize Poll](#initialize-poll), [Resource Type](#poll)、 [Event Objects](#event-objects) を参照）
 
-WebSocket is an event-driven API. When messages are received a message event is delivered to the the *onmessage* function, where the message is being received and parsed
+WebSocketはイベント駆動型APIです。メッセージが受信されると、メッセージイベントが *onmessage* 関数に渡され、メッセージが受信され、解析されます
 
-The connection can be severed at any given time using the *close* function
+接続は *close* 関数を使っていつでも切断することができます
 
-<aside class="warning">A successful handshake can be established even with an incorrect data set in the Json-formatted string</aside>
+<aside class="warning">JSON形式の文字列に不正なデータがセットされていても、正常なハンドシェイクを確立できます</aside>
 
-WebSocket polling will additionally return *message* response error codes for each individual encountered problem based on the [Errors](#errors) section
+WebSocketポーリングは、[Errors](#errors) セクションに基づいて発生した個々の問題ごとに *message* 応答エラーコードをさらに返します
 
-### Message Error Status Codes
+### メッセージ エラー状態コード
 
-Status Code | Description
+状態コード     | 詳細
 ----------- | -----------
-400	| Invalid resource
-401	| Access denied
-412	| Auth lost
+400	| 不正なリソース
+401	| アクセス拒否
+412	| 認証が失われました
 200	| OK

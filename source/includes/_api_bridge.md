@@ -169,77 +169,77 @@
 
 ### ブリッジ (属性)
 
-パラメータ                      | データ形式       | 詳細                                                                                                 | 編集可？      | 必須？
+パラメータ                       | データ形式      | 詳細                                                                                                 | 編集可？      | 必須？
 ---------                     | ---------     | -----------                                                                                         |:-----------:| --------
-**id**                        | 文字列        | Unique identifier automatically generated and assigned while adding a device                        | **&cross;** | **<sub><form action="#get-bridge"><button>GET</button></form></sub>** <br>**<sub><form action="#update-bridge"><button>POST</button></form></sub>** <br>**<sub><form action="#delete-bridge"><button>DELETE</button></form></sub>**
-**name**                      | 文字列        | Name of the bridge                                                                                  | **&check;** | **<sub><form action="#add-bridge-to-eevb"><button>PUT</button></form></sub>**
-guid                          | 文字列        | The GUID (Globally Unique Identifier) is an immutable device identifier assigned to a device during the production process                                                                                                                                             | **&cross;** |
-timezone                      | 文字列        | Indicates the timezone of where the device is installed. Defaults to the account timezone. Example: `'US/Alaska'`, `'US/Arizona'`, `'US/Central'`, `'US/Eastern'`, `'US/Hawaii'`, `'America/Anchorage'` or `'UTC'`                                                     | **&check;** |
-utcOffset                     | 整数           | The signed integer offset in seconds of a timezone from UTC. Automatically generated based on the timezone field                                                                                                                                               | **&cross;** |
-tags                          | 配列[文字列] | Array of strings each representing a tag name                                                       | **&check;** |
-permissions                   | 文字列        | String of characters each defining a permission level of the current user                           | **&cross;** |
-[bridges](#camera-bridges)    | JSON          | <small>**(APPLIES ONLY TO CAMERAS)**</small>                                                        | **&cross;** |
-[settings](#bridge-settings)  | JSON          | Json object of basic settings (location, etc.)                                                      | **&check;** |
-[camera_info](#bridge-camera_info) | JSON          | Json object of basic bridge information. If bridge information cannot be retrieved for whatever reason (example: communication with the bridge has been lost), this will be empty and camera_info_status_code will be 404                                            | **&cross;** |
-camera_info_status_code       | 整数           | Indicates whether it was possible to retrieve information about the device (200) or not (404)       | **&cross;** |
-camera_parameters             | JSON          | Json object of bridge parameters. If bridge parameters cannot be retrieved for whatever reason (example: communication with the bridge has been lost), this will be empty and camera_parameters_status_code will be 404                                                         | **&check;** |
-camera_parameters_status_code | 整数           | Indicates whether it was possible to retrieve parameters of the device (200) or not (404)           | **&cross;** |
-camera_settings               | 文字列        | This is for backwards compatibility <small>**(DEPRECATED)**</small>                                 | **&cross;** |
-camera_settings_status_code   | 整数           | This is for backwards compatibility <small>**(DEPRECATED)**</small>                                 | **&cross;** |
+**id**                        | 文字列         | デバイスの追加時に一意の識別子が自動的に生成され、割り当てられます                                                   | **&cross;** | **<sub><form action="#get-bridge"><button>GET</button></form></sub>** <br>**<sub><form action="#update-bridge"><button>POST</button></form></sub>** <br>**<sub><form action="#delete-bridge"><button>DELETE</button></form></sub>**
+**name**                      | 文字列         | ブリッジの名前                                                                                          | **&check;** | **<sub><form action="#add-bridge-to-eevb"><button>PUT</button></form></sub>**
+guid                          | 文字列         | GUID（Globally Unique Identifier）は、製造プロセス中にデバイスに割り当てられる不変のデバイス識別子です                 | **&cross;** |
+timezone                      | 文字列         | デバイスがインストールされている場所の時間帯を示します。デフォルトはアカウントのタイムゾーンです。 例： `'US/Alaska'`, `'US/Arizona'`, `'US/Central'`, `'US/Eastern'`, `'US/Hawaii'`, `'America/Anchorage'` or `'UTC'` など                                                                                 | **&check;** |
+utcOffset                     | 整数           | UTCからのタイムゾーンの秒単位の符号付き整数オフセット。タイムゾーンフィールドに基づいて自動的に生成されます                   | **&cross;** |
+tags                          | 配列[文字列]    | タグ名を表す文字列の配列                                                                                   | **&check;** |
+permissions                   | 文字列         | 現在のユーザーの権限レベルを定義する文字列                                                                     | **&cross;** |
+[bridges](#camera-bridges)    | JSON          | <small>**(カメラにのみ適用)**</small>                                                                   | **&cross;** |
+[settings](#bridge-settings)  | JSON          | 基本設定のJSONオブジェクト（場所など）                                                                       | **&check;** |
+[camera_info](#bridge-camera_info) | JSON     | 基本的なブリッジ情報のJSONオブジェクト。何らかの理由でブリッジ情報を取得できない場合（たとえば、ブリッジとの通信が失われた場合）にはこれは空になり、camera_info_status_codeは404になります                                                                                                                                             | **&cross;** |
+camera_info_status_code       | 整数           | デバイスに関する情報を取得することが可能か(200)、否か(404)                                                      | **&cross;** |
+camera_parameters             | JSON          | ブリッジパラメータのJSONオブジェクト。何らかの理由でブリッジパラメータを取得できない場合（例：ブリッジとの通信が失われた場合）にはこれは空になり、camera_parameters_status_codeは404になります                                                                                                                                        | **&check;** |
+camera_parameters_status_code | 整数           | デバイスのパラメータを取得することができたか(200)、否かを示します(404)                                             | **&cross;** |
+camera_settings               | 文字列         | これは下位互換性のためのパラメータです <small>**(廃止予定)**</small>                                            | **&cross;** |
+camera_settings_status_code   | 整数           | これは下位互換性のためのパラメータです <small>**(廃止予定)**</small>                                            | **&cross;** |
 
 ### ブリッジ - 設定
 
-Parameter                     | Data Type     | Description
+パラメータ                       | データ形式      | 詳細
 ---------                     | ---------     | -----------
-analog_inputs_ignored         | 配列[文字列] | An array of numbers of analog inputs which the user wants to ignore
-event_data_start_timestamp    | 文字列        | <p hidden>???</p>
-local_display_layout_ids      | 配列[文字列] | An array of available layouts on a local display
-bridge                        | null          | <small>**(APPLIES ONLY TO CAMERAS)**</small>
-site_name                     | 文字列        | User-defined bridge location name
-floor                         | 整数           | The floor of the building given that it is a multi-storey
-retention_days                | 整数           | Total amount of days the bridge should store data. Data exceeding this threshold will gradually be deleted
-local_retention_days          | 整数           | Total amount of days the bridge should store data locally. Normally data is not being stored and the value is set to `'-1'`, meaning the bridge should directly upload any and all data during the specified times. Data exceeding this threshold will gradually be deleted
-longitude                     | float         | Longitude of the bridge location
-latitude                      | float         | Latitude of the bridge location
-street_address                | 文字列        | Street address of the bridge location
+analog_inputs_ignored         | 配列[文字列]     | ユーザが無視したいアナログ入力の数の配列
+event_data_start_timestamp    | 文字列          | <p hidden>???</p>
+local_display_layout_ids      | 配列[文字列]     | ローカルディスプレイ上で利用可能なレイアウトの配列
+bridge                        | null          | <small>**(カメラにのみ適用)**</small>
+site_name                     | 文字列          | ユーザー定義のブリッジロケーション名
+floor                         | 整数           | 複数階の建物におけるブリッジの設置フロア数
+retention_days                | 整数           | ブリッジがデータを格納する日数の合計。このしきい値を超えたデータは徐々に削除されます
+local_retention_days          | 整数           | ブリッジがデータをローカルに格納する日数の合計。通常、データは格納されず、値は `'-1'` に設定されています。これは、ブリッジが指定された時間内にすべてのデータを直接アップロードすることを意味します。このしきい値を超えたデータは徐々に削除されます
+longitude                     | 浮動小数点       | ブリッジの設置位置の経度
+latitude                      | 浮動小数点       | ブリッジの設置位置の緯度
+street_address                | 文字列          | ブリッジの設置位置の住所
 
-<aside class="notice">local_retention_days and cloud_retention_days are unpurposed in CMVR mode</aside>
+<aside class="notice">CMVRモードでは、local_retention_daysとcloud_retention_daysは使用されません</aside>
 
 ### ブリッジ - カメラ
 
-Parameter                     | Data Type | Description
+パラメータ                       | データ形式  | 詳細
 ---------                     | --------- | -----------
-camera_property_model         | 文字列    | <p hidden>???</p>
-model                         | 文字列    | <p hidden>???</p>
-camera_property_version       | 文字列    | <p hidden>???</p>
-version                       | 文字列    | <p hidden>???</p>
-camera_property_make          | 文字列    | <p hidden>???</p>
-make                          | 文字列    | <p hidden>???</p>
-camera_abs_newest             | 文字列    | <p hidden>???</p>
-camera_newest                 | 文字列    | <p hidden>???</p>
-camera_abs_oldest             | 文字列    | <p hidden>???</p>
-camera_oldest                 | 文字列    | <p hidden>???</p>
-uuid                          | 文字列    | Identical to `'guid'` from the [bridge attributes](#bridge-model) section
-ipaddr                        | 文字列    | IP addresses assigned to the device, comma delimited, with the one in use prefixed by an asterisk (\*)
-esn                           | 文字列    | Identical to `'id'` from the [bridge attributes](#bridge-model) section
-class                         | 文字列    | Determines the type of a device (`'bridge'` or `'camera'`)
-service                       | 文字列    | <p hidden>???</p>
-[status](#status-bitmask)     | 文字列    | The device status bitmask
+camera_property_model         | 文字列      | <p hidden>???</p>
+model                         | 文字列      | <p hidden>???</p>
+camera_property_version       | 文字列      | <p hidden>???</p>
+version                       | 文字列      | <p hidden>???</p>
+camera_property_make          | 文字列      | <p hidden>???</p>
+make                          | 文字列      | <p hidden>???</p>
+camera_abs_newest             | 文字列      | <p hidden>???</p>
+camera_newest                 | 文字列      | <p hidden>???</p>
+camera_abs_oldest             | 文字列      | <p hidden>???</p>
+camera_oldest                 | 文字列      | <p hidden>???</p>
+uuid                          | 文字列      | [ブリッジの属性](#bridge-model) セクションの `'guid' と同じです
+ipaddr                        | 文字列      | デバイスに割り当てられたIPアドレス。カンマで区切られ、アスタリスク (\*) の接頭辞が使用されます
+esn                           | 文字列      | [ブリッジの属性](#bridge-model) セクションの `'id' と同じです
+class                         | 文字列      | デバイスのタイプを決定します（`'bridge'` または `'camera'`）
+service                       | 文字列      | <p hidden>???</p>
+[status](#status-bitmask)     | 文字列      | デバイス状態のビットマスク
 camera_state_version          | 整数       | <p hidden>???</p>
 no_video                      | 整数       | <p hidden>???</p>
 tagmap_status_state           | 整数       | <p hidden>???</p>
 camera_retention_asset        | 整数       | <p hidden>???</p>
 camera_retention_etag         | 整数       | <p hidden>???</p>
-run_mode                      | 文字列    | <p hidden>???</p>
+run_mode                      | 文字列      | <p hidden>???</p>
 register_id                   | 整数       | <p hidden>???</p>
-camera_now                    | 文字列    | <p hidden>???</p>
-ssn                           | 文字列    | The serial number of a bridge
-proxy                         | 文字列    | <p hidden>???</p>
-now                           | 文字列    | The current time of when the request has been completed in EEN format: YYYYMMDDHHMMSS.NNN
-camera_property_analog        | ブール   | <p hidden>???</p>
-[status_hex](#status-bitmask) | 文字列    | The device status bitmask as a hexadecimal value
+camera_now                    | 文字列      | <p hidden>???</p>
+ssn                           | 文字列      | ブリッジのシリアル番号
+proxy                         | 文字列      | <p hidden>???</p>
+now                           | 文字列      | 要求が完了した現在の時刻のEEN形式：YYYYMMDDHHMMSS.NNN
+camera_property_analog        | ブール      | <p hidden>???</p>
+[status_hex](#status-bitmask) | 文字列      | デバイス状態のビットマスク16進数値表示
 camera_retention_interval     | 整数       | <p hidden>???</p>
-camera_valid_ts               | 文字列    | <p hidden>???</p>
+camera_valid_ts               | 文字列      | <p hidden>???</p>
 
 <!--TODO: Add the full bridge model bridge attributes table-->
 
@@ -369,7 +369,7 @@ HTTP 状態コード    | 詳細
 401 | 無効なセッションCookieにより認可されませんでした
 403 | ユーザーに必要な権限がないため拒否されました
 404 | IDと一致するデバイスが見つかりませんでした
-463 | 設定の追加/削除を行うカメラと通信できません。サポートに連絡してください。
+463 | 設定の追加/削除を行うカメラと通信できません。サポートに連絡してください
 200 | 要求は成功しました
 
 <!--===================================================================-->
@@ -400,7 +400,7 @@ HTTP 状態コード     | 詳細
 401 | 無効なセッションCookieにより認可されませんでした
 403 | ユーザーに必要な権限がないため拒否されました
 404 | IDと一致するデバイスが見つかりませんでした
-463 | カメラまたはブリッジと通信できません。サポートに連絡してください。
+463 | カメラまたはブリッジと通信できません。サポートに連絡してください
 200 | 要求は成功しました
 
 <!--===================================================================-->
@@ -562,32 +562,32 @@ s         | 文字列     | デバイスのサービス状態
 
 配列インデックス| 属性                 | データ型式              | 詳細
 ----------- | ---------           | ---------            | -----------
-0           | account_id          | 文字列               | Unique identifier of the device’s account
-1           | id                  | 文字列               | Unique identifier of a device
-2           | name                | 文字列               | Device name
-3           | type                | 文字列, 選択リスト         | Device type <br><br>選択リスト: bridge, camera
-4           | cameras             | array[array[文字列]] | This is an array of string arrays, each array representing a camera that is attached to the bridge. The first element of the array is the camera ESN. The second element is the service status
-5           | service_status      | 文字列, 選択リスト         | Device service status: <br>`'ATTD'` - camera is attached to a bridge <br>`'IGND'` - camera is unattached from all bridges and is available to be attached to a bridge <br>`'IDLE'` - camera will register but will not operate (unregistered bridges) <br>`'ERSE'` - one shot, all camera data will be erased <br><br>For bridges this field is always `'ATTD'` <br><br>選択リスト: ATTD, IGND, IDLE, ERSE
-6           | permissions         | 文字列               | String of zero or more characters each defining a permission level (of the current user)
-7           | tags                | 配列[文字列]        | Array of strings each representing a tag name
-8           | guid                | 文字列               | The GUID (Globally Unique Identifier) is an immutable device identifier assigned to a device during the production process
-9           | serial_number       | 文字列               | Serial number of the device
-10          | [device_status](#status-bitmask) | 整数                  | The device status bitmask
-11          | timezone            | 文字列               | Indicates the timezone of where the device is installed. Defaults to the account timezone. Example: `'US/Alaska'`, `'US/Arizona'`, `'US/Central'`, `'US/Eastern'`, `'US/Hawaii'`, `'America/Anchorage'` or `'UTC'`
-12          | timezone_utc_offset | 整数                  | The signed integer offset in seconds of a timezone from UTC
-13          | is_unsupported      | 整数                  | Indicates whether the device is NOT supported (1) or is supported (0)
-14          | ip_address          | 文字列               | IP address assigned to the device
-15          | is_shared           | 整数                  | Indicates whether the device is shared (1) or not (0) <small>**(APPLIES ONLY TO CAMERAS)**</small>
-16          | owner_account_name  | 文字列               | Name of the account that owns the device
-17          | is_upnp             | boolean              | Indicates whether the device is a UPNP device (1) or not (0) <small>**(APPLIES ONLY TO CAMERAS THAT HAVEN’T YET BEEN ATTACHED TO THE ACCOUNT, IN WHICH THEY COULD HAVE BEEN DETECTED VIA ONVIF OR UPNP)**</small>
-18          | video_input         | 文字列               | Indicates the video input channel of the camera <small>**(APPLIES TO ANALOG CAMERAS)**</small>
-19          | video_status        | 文字列               | Indicates the video status of the camera: <small>**(APPLIES TO ANALOG CAMERAS)**</small> <br>`'0x00000000'` - signal ok <br>`'0x00000102'` - no signal
-20          | location            | 配列                | Location of the device specified in the following way: <br><br>`[` <br>&nbsp;&nbsp;&nbsp;&nbsp;`latitude(float),` <br>&nbsp;&nbsp;&nbsp;&nbsp;`longitude(float),` <br>&nbsp;&nbsp;&nbsp;&nbsp;`azimuth(float/null for bridge),` <br>&nbsp;&nbsp;&nbsp;&nbsp;`range(int/null for bridge),` <br>&nbsp;&nbsp;&nbsp;&nbsp;`street address(文字列),` <br>&nbsp;&nbsp;&nbsp;&nbsp;`floor(int),` <br>&nbsp;&nbsp;&nbsp;&nbsp;`location name(string)` <br>`]` <br><br>Note: If any field is not set, the value is null
-21          | parent_camera_id    | 文字列               | Parent camera ID
-22          | child_camera_view   | 文字列               | Child camera view
-23          | is_hidden           | 整数                  | GUI control to not show device
-24          | ignored_inputs      | 配列[文字列]        | Array of analog port numbers which should be ignored by the bridge
-25          | responder_camera    | 整数                  | Indicates whether the camera is a first responder camera (1) or not (0)
+0           | account_id          | 文字列                 | デバイスを管理するアカウントの一意の識別子
+1           | id                  | 文字列          　     | デバイスの一意の識別子
+2           | name                | 文字列            　   | デバイス名
+3           | type                | 文字列, 選択リスト       | デバイス形式 <br><br>選択リスト: bridge, camera
+4           | cameras             | 配列[配列[文字列]]       | これは文字列配列の配列で、各配列はブリッジに接続されたカメラを表します。 配列の最初の要素はカメラESNです。 2番目の要素はサービス状態です
+5           | service_status      | 文字列, 選択リスト       | デバイスサービス状態： <br>`'ATTD'` - カメラはブリッジにアタッチしています <br>`'IGND'` - カメラは全てのブリッジに接続しておらず、ブリッジに接続可能な状態です <br>`'IDLE'` - カメラは登録済みですが、操作されていません (登録されていないブリッジ) <br>`'ERSE'` - この状態になると、全てのカメラ データは削除されます <br><br>ブリッジではこのフィールドは常に `'ATTD'` になります <br><br>選択リスト: ATTD, IGND, IDLE, ERSE
+6           | permissions         | 文字列                 | （現在のユーザの）権限レベルをそれぞれ定義する0文字以上の文字列
+7           | tags                | 配列[文字列]            | タグ名を表す文字列の配列
+8           | guid                | 文字列                 | GUID（Globally Unique Identifier）は、製造プロセス中にデバイスに割り当てられる不変のデバイス識別子です
+9           | serial_number       | 文字列                 | デバイスのシリアル番号
+10          | [device_status](#status-bitmask) | 整数      | デバイス状態のビットマスク
+11          | timezone            | 文字列                 | デバイスがインストールされている場所の時間帯を示します。デフォルトはアカウントのタイムゾーンです。例： `'US/Alaska'`, `'US/Arizona'`, `'US/Central'`, `'US/Eastern'`, `'US/Hawaii'`, `'America/Anchorage'` または `'UTC'` など
+12          | timezone_utc_offset | 整数                  | UTCからのタイムゾーンの秒単位の符号付き整数オフセット
+13          | is_unsupported      | 整数                  | デバイスがサポートされていないか(1)、されているか(0)
+14          | ip_address          | 文字列                 | デバイスに割り当てられたIPアドレス
+15          | is_shared           | 整数                  | デバイスが共有されているか(1)、いないか(0) <small>**(カメラにのみ適用)**</small>
+16          | owner_account_name  | 文字列                 | デバイスを所有するアカウントの名前
+17          | is_upnp             | ブール                 | デバイスがUPNPデバイスか(1)否か(0)を示します <small>**(ONVIFまたはUPNP経由で検出されたカメラのうち、まだ割り当てられていないカメラにのみ適用されます)**</small>
+18          | video_input         | 文字列                 | カメラのビデオ入力チャネルを示します。 <small>**(アナログカメラに適用)**</small>
+19          | video_status        | 文字列                 | カメラのビデオ状態を示します： <small>**(アナログカメラに適用)**</small> <br>`'0x00000000'` - シグナル OK <br>`'0x00000102'` - シグナルなし
+20          | location            | 配列                  | 次の方法で指定されたデバイスの設置場所: <br><br>`[` <br>&nbsp;&nbsp;&nbsp;&nbsp;`latitude(浮動小数点),` <br>&nbsp;&nbsp;&nbsp;&nbsp;`longitude(浮動小数点),` <br>&nbsp;&nbsp;&nbsp;&nbsp;`azimuth(浮動小数点/null for bridge),` <br>&nbsp;&nbsp;&nbsp;&nbsp;`range(整数/null for bridge),` <br>&nbsp;&nbsp;&nbsp;&nbsp;`street address(文字列),` <br>&nbsp;&nbsp;&nbsp;&nbsp;`floor(整数),` <br>&nbsp;&nbsp;&nbsp;&nbsp;`location name(文字列)` <br>`]` <br><br>注：フィールドが設定されていない場合、値はnullになります
+21          | parent_camera_id    | 文字列                | 親カメラ ID
+22          | child_camera_view   | 文字列                | 子カメラビュー
+23          | is_hidden           | 整数                  | 非表示デバイスのGUI制御
+24          | ignored_inputs      | 配列[文字列]           | ブリッジが無視すべきアナログポート番号の配列
+25          | responder_camera    | 整数                  | カメラがファースト・レスポンダカメラか(1)、否か(0)を示します
 
 <aside class="success">モデル定義にはプロパティ キーがありますが、これは単なる標準配列なので参照用です</aside>
 
